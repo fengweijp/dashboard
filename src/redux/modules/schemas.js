@@ -36,23 +36,23 @@ export const removeFieldFromSchema = (schemaName, fieldName) => ({
   fieldName
 })
 
-export const fetchSchemas = (): Function => {
+export const fetchSchemas = (projectName): Function => {
   return (dispatch: Function, getState: Function): Promise => {
     const reduceByName = (obj, val) => {
       obj[val.name] = val
       return obj
     }
-    return fetch('http://localhost:5000/api/testApp1/schema')
+    return fetch(`http://${__SERVER_ADDR__}/api/${projectName}/schema`)
       .then((req) => req.json())
-      .then((json) => json.schema.reduce(reduceByName, {}))
+      .then((json) => json.schema.schema.reduce(reduceByName, {}))
       .then(Immutable.fromJS)
       .then((schemas) => dispatch(receiveSchemas(schemas)))
   }
 }
 
-export const publishSchemas = (): Function => {
+export const publishSchemas = (projectName): Function => {
   return (dispatch: Function, getState: Function): Promise => {
-    return fetch('http://localhost:5000/api/testApp1/schema', {
+    return fetch(`http://${__SERVER_ADDR__}/api/${projectName}/schema`, {
       method: 'post',
       headers: {
         'Accept': 'application/json',
@@ -63,12 +63,6 @@ export const publishSchemas = (): Function => {
       })
     })
   }
-}
-
-export const actions = {
-  receiveSchemas,
-  fetchSchemas,
-  addFieldToSchema
 }
 
 // ------------------------------------

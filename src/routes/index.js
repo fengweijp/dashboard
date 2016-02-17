@@ -10,7 +10,8 @@ import CoreLayout from 'layouts/CoreLayout/CoreLayout'
 import HomeView from 'views/HomeView/HomeView'
 
 export default (store) => (
-  <Route path='/' component={CoreLayout}>
+  <Route path='/:project' component={CoreLayout}>
+    <Route path='schemas/:schema' component={HomeView}/>
     <IndexRoute component={HomeView} />
   </Route>
 )

@@ -9,14 +9,13 @@ export default class Schemas extends React.Component {
     addFieldToSchema: PropTypes.func.isRequired,
     addSchema: PropTypes.func.isRequired,
     removeFieldFromSchema: PropTypes.func.isRequired,
-    schemas: PropTypes.object.isRequired
+    schemas: PropTypes.object.isRequired,
+    updateCurrentSchemaName: PropTypes.func.isRequired,
+    currentSchemaName: PropTypes.string.isRequired
   };
 
   constructor (props) {
     super(props)
-    this.state = {
-      currentSchemaName: Object.keys(props.schemas)[0]
-    }
 
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this)
 
@@ -25,17 +24,18 @@ export default class Schemas extends React.Component {
   }
 
   _onSelect (e) {
-    //debugger
-    this.setState({ currentSchemaName: e.target.value })
+    this.props.updateCurrentSchemaName(e.target.value)
   }
 
   _addSchema () {
     const schemaName = window.prompt('Schema name')
-    this.props.addSchema(schemaName)
+    if (schemaName) {
+      this.props.addSchema(schemaName)
+    }
   }
 
   render () {
-    const addField = (field) => this.props.addFieldToSchema(this.state.currentSchemaName, field)
+    const addField = (field) => this.props.addFieldToSchema(this.props.currentSchemaName, field)
     const removeField = (fieldName) => this.props.removeFieldFromSchema(this.state.currentSchemaName, fieldName)
 
     return (
@@ -43,7 +43,7 @@ export default class Schemas extends React.Component {
         <p className={`control ${classes.select}`}>
           <label>Select Schema</label>
           <span className='select'>
-            <select ref='schema' onChange={this._onSelect} value={this.state.currentSchemaName}>
+            <select ref='schema' onChange={this._onSelect} value={this.props.currentSchemaName}>
               {Object.keys(this.props.schemas).map((name) => (
                 <option key={name} value={name}>{name}</option>
               ))}
@@ -54,7 +54,7 @@ export default class Schemas extends React.Component {
           </span>
         </p>
         <FieldList
-          schema={this.props.schemas[this.state.currentSchemaName]}
+          schema={this.props.schemas[this.props.currentSchemaName]}
           addField={addField}
           removeField={removeField}
           />

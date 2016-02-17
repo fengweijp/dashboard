@@ -23,6 +23,9 @@
     "space-infix-ops": 0,
     "max-len": [2, 120, 2],
     "flow-vars/define-flow-type": 1,
-    "flow-vars/use-flow-type": 1
+    "flow-vars/use-flow-type": 1,
+    "react/jsx-no-bind": [1, {
+      "allowArrowFunctions": true
+    }]
   }
 }

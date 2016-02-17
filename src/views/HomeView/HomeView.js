@@ -16,11 +16,20 @@ export class HomeView extends React.Component {
     addFieldToSchema: PropTypes.func.isRequired,
     removeFieldFromSchema: PropTypes.func.isRequired,
     fetchOnDidMount: PropTypes.func.isRequired,
-    schemas: PropTypes.object.isRequired
+    params: PropTypes.object.isRequired,
+    schemas: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
   };
 
   componentDidMount () {
     this.props.fetchOnDidMount()
+  }
+
+  componentWillReceiveProps (nextProps) {
+    const schemaNames = Object.keys(nextProps.schemas)
+    if (schemaNames.length > 0 && !schemaNames.includes(nextProps.params.schema)) {
+      nextProps.history.replace(`/${nextProps.params.project}/schemas/${schemaNames[0]}`)
+    }
   }
 
   render () {
@@ -31,6 +40,10 @@ export class HomeView extends React.Component {
     return (
       <Schemas
         schemas={this.props.schemas}
+        currentSchemaName={this.props.params.schema}
+        updateCurrentSchemaName={(schemaName) => (
+          this.props.history.push(`/${this.props.params.project}/schemas/${schemaName}`)
+        )}
         addSchema={this.props.addSchema}
         addFieldToSchema={this.props.addFieldToSchema}
         removeFieldFromSchema={this.props.removeFieldFromSchema}
@@ -42,10 +55,10 @@ export class HomeView extends React.Component {
 const mapStateToProps = (state) => ({
   schemas: state.schemas.toJS()
 })
-const mapDispatchToProps = (dispatch, _) => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     fetchOnDidMount: () => {
-      dispatch(fetchSchemas())
+      dispatch(fetchSchemas(ownProps.params.project))
     },
     addSchema: (schemaName) => {
       dispatch(addSchema(schemaName))
@@ -53,11 +66,11 @@ const mapDispatchToProps = (dispatch, _) => {
     },
     addFieldToSchema: (schemaName, field) => {
       dispatch(addFieldToSchema(schemaName, field))
-      dispatch(publishSchemas())
+      dispatch(publishSchemas(ownProps.params.project))
     },
     removeFieldFromSchema: (schemaName, fieldName) => {
       dispatch(removeFieldFromSchema(schemaName, fieldName))
-      dispatch(publishSchemas())
+      dispatch(publishSchemas(ownProps.params.project))
     }
   }
 }
