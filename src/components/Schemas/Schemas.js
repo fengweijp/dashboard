@@ -25,6 +25,7 @@ export default class Schemas extends React.Component {
   }
 
   _onSelect (e) {
+    //debugger
     this.setState({ currentSchemaName: e.target.value })
   }
 

@@ -42,7 +42,7 @@ export const fetchSchemas = (): Function => {
       obj[val.name] = val
       return obj
     }
-    return fetch('http://localhost:5000/api/schema')
+    return fetch('http://localhost:5000/api/testApp1/schema')
       .then((req) => req.json())
       .then((json) => json.schema.reduce(reduceByName, {}))
       .then(Immutable.fromJS)
@@ -52,7 +52,7 @@ export const fetchSchemas = (): Function => {
 
 export const publishSchemas = (): Function => {
   return (dispatch: Function, getState: Function): Promise => {
-    return fetch('http://localhost:5000/api/schema', {
+    return fetch('http://localhost:5000/api/testApp1/schema', {
       method: 'post',
       headers: {
         'Accept': 'application/json',
