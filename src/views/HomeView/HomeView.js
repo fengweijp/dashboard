@@ -1,20 +1,20 @@
 /* @flow */
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
+import Schemas from 'components/Schemas/Schemas'
 import {
   fetchSchemas,
   addSchema,
   addFieldToSchema,
   removeFieldFromSchema,
   publishSchemas
-} from '../../redux/modules/schemas'
-import Schemas from '../../components/Schemas/Schemas'
-//import classes from './HomeView.scss'
+} from 'redux/modules/schemas'
 
 export class HomeView extends React.Component {
   static propTypes = {
     addSchema: PropTypes.func.isRequired,
     addFieldToSchema: PropTypes.func.isRequired,
+    removeFieldFromSchema: PropTypes.func.isRequired,
     fetchOnDidMount: PropTypes.func.isRequired,
     schemas: PropTypes.object.isRequired
   };
@@ -42,7 +42,7 @@ export class HomeView extends React.Component {
 const mapStateToProps = (state) => ({
   schemas: state.schemas.toJS()
 })
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch, _) => {
   return {
     fetchOnDidMount: () => {
       dispatch(fetchSchemas())

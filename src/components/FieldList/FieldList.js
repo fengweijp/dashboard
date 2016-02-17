@@ -70,25 +70,32 @@ export default class FieldList extends React.Component {
             <td><input ref='nullable' type='checkbox' /></td>
             <td><input ref='unique' type='checkbox' /></td>
             <td className='table-link table-icon'>
-              <a href='#' onClick={this.addField}>
+              <span onClick={this.addField}>
                 <i className='fa fa-plus'></i>
-              </a>
+              </span>
             </td>
           </tr>
-          {this.props.schema.fields.sort(sortByAttr('name')).map((field) => (
-            <tr key={field.name}>
-              <td>{field.name}</td>
-              <td>{types[field.type.name]}</td>
-              <td><input disabled type='checkbox' /></td>
-              <td><input disabled type='checkbox' /></td>
-              <td><input disabled type='checkbox' /></td>
-              <td className='table-link table-icon'>
-                <a href='#' onClick={() => this.props.removeField(field.name)}>
-                  <i className='fa fa-minus'></i>
-                </a>
-              </td>
-            </tr>
-          ))}
+          {
+            this.props.schema.fields
+              .sort(sortByAttr('name'))
+              .map((field) => {
+                const removeField = () => this.props.removeField(field.name)
+                return (
+                  <tr key={field.name}>
+                    <td>{field.name}</td>
+                    <td>{types[field.type.name]}</td>
+                    <td><input disabled type='checkbox' /></td>
+                    <td><input disabled type='checkbox' /></td>
+                    <td><input disabled type='checkbox' /></td>
+                    <td className='table-link table-icon'>
+                      <span onClick={removeField}>
+                        <i className='fa fa-minus'></i>
+                      </span>
+                    </td>
+                  </tr>
+                )
+              })
+          }
         </tbody>
       </table>
     )

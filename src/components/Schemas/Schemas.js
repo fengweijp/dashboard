@@ -1,6 +1,7 @@
 /* @flow */
 import React, { PropTypes } from 'react'
-import FieldList from '../../components/FieldList/FieldList'
+import PureRenderMixin from 'react-addons-pure-render-mixin'
+import FieldList from 'components/FieldList/FieldList'
 import classes from './Schemas.scss'
 
 export default class Schemas extends React.Component {
@@ -16,6 +17,8 @@ export default class Schemas extends React.Component {
     this.state = {
       currentSchemaName: Object.keys(props.schemas)[0]
     }
+
+    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this)
 
     this._onSelect = this._onSelect.bind(this)
     this._addSchema = this._addSchema.bind(this)
@@ -45,9 +48,9 @@ export default class Schemas extends React.Component {
               ))}
             </select>
           </span>
-          <a href='#' onClick={this._addSchema}>
+          <span onClick={this._addSchema}>
             <i className='fa fa-plus'></i>
-          </a>
+          </span>
         </p>
         <FieldList
           schema={this.props.schemas[this.state.currentSchemaName]}

@@ -58,8 +58,8 @@
   "author": "David Zukowski <david@zuko.me> (http://zuko.me)",
   "license": "MIT",
   "dependencies": {
-    "better-npm-run": "0.0.5",
-    "bulma": "0.0.13",
+    "better-npm-run": "0.0.7",
+    "bulma": "0.0.14",
     "co-request": "^1.0.0",
     "debug": "^2.2.0",
     "font-awesome": "^4.5.0",
@@ -71,6 +71,7 @@
     "koa-convert": "^1.2.0",
     "koa-static": "^2.0.0",
     "react": "^0.14.0",
+    "react-addons-pure-render-mixin": "^0.14.7",
     "react-dom": "^0.14.0",
     "react-redux": "^4.0.0",
     "react-router": "^2.0.0",
@@ -78,7 +79,7 @@
     "redux": "^3.0.0",
     "redux-thunk": "^1.0.0",
     "url": "^0.11.0",
-    "yargs": "^3.18.0"
+    "yargs": "^4.1.0"
   },
   "devDependencies": {
     "babel-cli": "^6.5.1",
@@ -99,8 +100,8 @@
     "codecov": "^1.0.1",
     "css-loader": "^0.23.0",
     "cssnano": "^3.3.2",
-    "enzyme": "^1.5.0",
-    "eslint": "2.0.0-rc.1",
+    "enzyme": "^2.0.0",
+    "eslint": "2.1.0",
     "eslint-config-standard": "^5.1.0",
     "eslint-config-standard-react": "^2.2.0",
     "eslint-loader": "^1.1.1",
@@ -143,7 +144,7 @@
     "sinon-chai": "^2.8.0",
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.6",
-    "webpack": "1.12.9",
+    "webpack": "1.12.13",
     "webpack-dev-middleware": "^1.4.0",
     "webpack-hot-middleware": "^2.6.0"
   }
