@@ -27,7 +27,6 @@ export class CoreLayout extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    console.log(nextProps);
     if (nextProps.projects.length > 0 && !nextProps.projects.includes(nextProps.params.project)) {
       nextProps.history.replace(`/${nextProps.projects[0]}`)
     }
