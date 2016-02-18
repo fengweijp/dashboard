@@ -50,6 +50,8 @@ export class CoreLayout extends React.Component {
       )
     }
 
+    const graphQL = `http://${__SERVER_ADDR__}/graphql/${this.props.params.project}`
+
     return (
       <div>
         <header className='header'>
@@ -71,7 +73,7 @@ export class CoreLayout extends React.Component {
 
             <div className='header-right header-menu'>
               <span className='header-item'>
-                <a className='button' target='_blank' href={`http://${__SERVER_ADDR__}/graphql/${this.props.params.project}`}>GraphQL</a>
+                <a className='button' target='_blank' href={graphQL}>GraphQL</a>
               </span>
             </div>
           </div>
