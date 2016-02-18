@@ -1,5 +1,6 @@
 /* @flow */
 import React, { PropTypes } from 'react'
+import PureRenderMixin from 'react-addons-pure-render-mixin'
 import { connect } from 'react-redux'
 import Schemas from 'components/Schemas/Schemas'
 import {
@@ -15,26 +16,37 @@ export class HomeView extends React.Component {
     addSchema: PropTypes.func.isRequired,
     addFieldToSchema: PropTypes.func.isRequired,
     removeFieldFromSchema: PropTypes.func.isRequired,
-    fetchOnDidMount: PropTypes.func.isRequired,
+    fetchSchemas: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
     schemas: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired
   };
 
-  componentDidMount () {
-    this.props.fetchOnDidMount()
-  }
-
-  componentWillReceiveProps (nextProps) {
+  shouldComponentUpdate (nextProps, nextState) {
     const schemaNames = Object.keys(nextProps.schemas)
     if (schemaNames.length > 0 && !schemaNames.includes(nextProps.params.schema)) {
       nextProps.history.replace(`/${nextProps.params.project}/schemas/${schemaNames[0]}`)
+      return false
+    }
+
+    return PureRenderMixin.shouldComponentUpdate(nextProps, nextState)
+  }
+
+  componentWillMount () {
+    this.props.fetchSchemas(this.props.params.project)
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (this.props.params.project !== nextProps.params.project) {
+      this.props.fetchSchemas(nextProps.params.project)
     }
   }
 
   render () {
     if (Object.keys(this.props.schemas).length === 0) {
-      return false
+      return (
+        <h2>Loading</h2>
+      )
     }
 
     return (
@@ -57,8 +69,8 @@ const mapStateToProps = (state) => ({
 })
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    fetchOnDidMount: () => {
-      dispatch(fetchSchemas(ownProps.params.project))
+    fetchSchemas: (projectName) => {
+      dispatch(fetchSchemas(projectName))
     },
     addSchema: (schemaName) => {
       dispatch(addSchema(schemaName))

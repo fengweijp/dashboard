@@ -42,11 +42,22 @@ export const fetchSchemas = (projectName): Function => {
       obj[val.name] = val
       return obj
     }
+    const checkStatus = (response) => {
+      if (response.status >= 200 && response.status < 300) {
+        return response
+      } else {
+        var error = new Error(response.statusText)
+        error.response = response
+        throw error
+      }
+    }
     return fetch(`http://${__SERVER_ADDR__}/api/${projectName}/schema`)
+      .then(checkStatus)
       .then((req) => req.json())
       .then((json) => json.schema.schema.reduce(reduceByName, {}))
       .then(Immutable.fromJS)
       .then((schemas) => dispatch(receiveSchemas(schemas)))
+      .catch((err) => console.log(err))
   }
 }
 

@@ -16,7 +16,7 @@
     "dev": "better-npm-run dev",
     "dev:nw": "npm run dev -- --nw",
     "dev:no-debug": "npm run dev -- --no_debug",
-    "test": "better-npm-run test",
+    "test": "echo 'No tests so far'",
     "test:dev": "npm run test -- --watch",
     "deploy": "better-npm-run deploy",
     "flow:check": "babel-node bin/flow-check",

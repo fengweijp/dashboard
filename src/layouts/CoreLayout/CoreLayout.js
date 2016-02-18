@@ -10,17 +10,30 @@ export class CoreLayout extends React.Component {
     children: PropTypes.element.isRequired,
     fetchOnDidMount: PropTypes.func.isRequired,
     addProject: PropTypes.func.isRequired,
-    projects: PropTypes.array.isRequired
+    projects: PropTypes.array.isRequired,
+    params: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
   };
 
   constructor (props) {
     super(props)
 
+    this._onSelect = this._onSelect.bind(this)
     this._addProject = this._addProject.bind(this)
   }
 
   componentDidMount () {
     this.props.fetchOnDidMount()
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.projects.length > 0 && !nextProps.projects.includes(nextProps.params.project)) {
+      nextProps.history.replace(`/${nextProps.projects[0]}`)
+    }
+  }
+
+  _onSelect (e) {
+    this.props.history.push(`/${e.target.value}`)
   }
 
   _addProject () {
@@ -32,7 +45,9 @@ export class CoreLayout extends React.Component {
 
   render () {
     if (this.props.projects.length === 0) {
-      return false
+      return (
+        <h2>Loading</h2>
+      )
     }
 
     return (
@@ -42,7 +57,7 @@ export class CoreLayout extends React.Component {
             <div className='header-left'>
               <span className='header-item'>
                 <span className='select'>
-                  <select>
+                  <select onChange={this._onSelect} value={this.props.params.project}>
                     {this.props.projects.map((project) => (
                       <option key={project} value={project}>{project}</option>
                     ))}

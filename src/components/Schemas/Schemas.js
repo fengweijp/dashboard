@@ -36,14 +36,14 @@ export default class Schemas extends React.Component {
 
   render () {
     const addField = (field) => this.props.addFieldToSchema(this.props.currentSchemaName, field)
-    const removeField = (fieldName) => this.props.removeFieldFromSchema(this.state.currentSchemaName, fieldName)
+    const removeField = (fieldName) => this.props.removeFieldFromSchema(this.props.currentSchemaName, fieldName)
 
     return (
       <div className={classes.root}>
         <p className={`control ${classes.select}`}>
           <label>Select Schema</label>
           <span className='select'>
-            <select ref='schema' onChange={this._onSelect} value={this.props.currentSchemaName}>
+            <select onChange={this._onSelect} value={this.props.currentSchemaName}>
               {Object.keys(this.props.schemas).map((name) => (
                 <option key={name} value={name}>{name}</option>
               ))}
