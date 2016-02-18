@@ -6,6 +6,7 @@ machine:
 
 dependencies:
   override:
+    - npm rebuild node-sass
     - npm install
     - npm run deploy
 
