@@ -14,10 +14,14 @@ export default (store) => (
     <Route path=':project' component={CoreLayout}>
       <Route path='schemas'>
         <Route path=':schema' component={HomeView}/>
-        <IndexRedirect to='default' />
+        <IndexRedirect to='default' onEnter={quickFix} />
       </Route>
-      <IndexRedirect to='schemas' />
+      <IndexRedirect to='schemas' onEnter={quickFix} />
     </Route>
-    <IndexRedirect to='default' />
+    <IndexRedirect to='default' onEnter={quickFix} />
   </Route>
 )
+
+const quickFix = (nextState, replace, callback) => {
+  setTimeout(callback, 0)
+}

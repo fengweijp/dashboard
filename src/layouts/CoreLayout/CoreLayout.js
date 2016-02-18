@@ -27,6 +27,7 @@ export class CoreLayout extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
+    console.log(nextProps);
     if (nextProps.projects.length > 0 && !nextProps.projects.includes(nextProps.params.project)) {
       nextProps.history.replace(`/${nextProps.projects[0]}`)
     }
@@ -72,6 +73,11 @@ export class CoreLayout extends React.Component {
             </div>
 
             <div className='header-right header-menu'>
+              <span className='header-item'>
+                <a target='_blank' href='http://slack.graph.cool'>
+                  <img src='http://slack.graph.cool/badge.svg' />
+                </a>
+              </span>
               <span className='header-item'>
                 <a className='button' target='_blank' href={graphQL}>GraphQL</a>
               </span>
