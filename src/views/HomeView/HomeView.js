@@ -18,14 +18,17 @@ export class HomeView extends React.Component {
     removeFieldFromSchema: PropTypes.func.isRequired,
     fetchSchemas: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
-    schemas: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired
+    schemas: PropTypes.object.isRequired
+  };
+
+  static contextTypes = {
+    router: PropTypes.object.isRequired
   };
 
   shouldComponentUpdate (nextProps, nextState) {
     const schemaNames = Object.keys(nextProps.schemas)
     if (schemaNames.length > 0 && !schemaNames.includes(nextProps.params.schema)) {
-      nextProps.history.replace(`/${nextProps.params.project}/schemas/${schemaNames[0]}`)
+      this.context.router.replace(`/${nextProps.params.project}/schemas/${schemaNames[0]}`)
       return false
     }
 
@@ -54,7 +57,7 @@ export class HomeView extends React.Component {
         schemas={this.props.schemas}
         currentSchemaName={this.props.params.schema}
         updateCurrentSchemaName={(schemaName) => (
-          this.props.history.push(`/${this.props.params.project}/schemas/${schemaName}`)
+          this.context.router.push(`/${this.props.params.project}/schemas/${schemaName}`)
         )}
         addSchema={this.props.addSchema}
         addFieldToSchema={this.props.addFieldToSchema}

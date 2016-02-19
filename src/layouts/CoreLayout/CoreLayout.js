@@ -15,6 +15,10 @@ export class CoreLayout extends React.Component {
     history: PropTypes.object.isRequired
   };
 
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  };
+
   constructor (props) {
     super(props)
 
@@ -28,12 +32,12 @@ export class CoreLayout extends React.Component {
 
   componentWillReceiveProps (nextProps) {
     if (nextProps.projects.length > 0 && !nextProps.projects.includes(nextProps.params.project)) {
-      nextProps.history.replace(`/${nextProps.projects[0]}`)
+      this.context.router.replace(`/${nextProps.projects[0]}`)
     }
   }
 
   _onSelect (e) {
-    this.props.history.push(`/${e.target.value}`)
+    this.context.router.push(`/${e.target.value}`)
   }
 
   _addProject () {
