@@ -2,20 +2,17 @@
 import React, { PropTypes } from 'react'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import { connect } from 'react-redux'
-import Schemas from 'components/Schemas/Schemas'
+import SideNav from 'components/SideNav/SideNav'
 import {
   fetchSchemas,
   addSchema,
-  addFieldToSchema,
-  removeFieldFromSchema,
   publishSchemas
 } from 'redux/modules/schemas'
 
 export class HomeView extends React.Component {
   static propTypes = {
+    children: PropTypes.element.isRequired,
     addSchema: PropTypes.func.isRequired,
-    addFieldToSchema: PropTypes.func.isRequired,
-    removeFieldFromSchema: PropTypes.func.isRequired,
     fetchSchemas: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
     schemas: PropTypes.object.isRequired
@@ -27,8 +24,8 @@ export class HomeView extends React.Component {
 
   shouldComponentUpdate (nextProps, nextState) {
     const schemaNames = Object.keys(nextProps.schemas)
-    if (schemaNames.length > 0 && !schemaNames.includes(nextProps.params.schema)) {
-      this.context.router.replace(`/${nextProps.params.project}/schemas/${schemaNames[0]}`)
+    if (schemaNames.length > 0 && !schemaNames.includes(nextProps.params.model)) {
+      this.context.router.replace(`/${nextProps.params.project}/models/${schemaNames[0]}`)
       return false
     }
 
@@ -53,16 +50,18 @@ export class HomeView extends React.Component {
     }
 
     return (
-      <Schemas
-        schemas={this.props.schemas}
-        currentSchemaName={this.props.params.schema}
-        updateCurrentSchemaName={(schemaName) => (
-          this.context.router.push(`/${this.props.params.project}/schemas/${schemaName}`)
-        )}
-        addSchema={this.props.addSchema}
-        addFieldToSchema={this.props.addFieldToSchema}
-        removeFieldFromSchema={this.props.removeFieldFromSchema}
-        />
+      <div className='columns'>
+        <div className='column is-3'>
+          <SideNav
+            params={this.props.params}
+            models={Object.keys(this.props.schemas)}
+            addSchema={this.props.addSchema}
+            />
+        </div>
+        <div className='column is-9'>
+          {this.props.children}
+        </div>
+      </div>
     )
   }
 }
@@ -78,14 +77,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     addSchema: (schemaName) => {
       dispatch(addSchema(schemaName))
       dispatch(publishSchemas())
-    },
-    addFieldToSchema: (schemaName, field) => {
-      dispatch(addFieldToSchema(schemaName, field))
-      dispatch(publishSchemas(ownProps.params.project))
-    },
-    removeFieldFromSchema: (schemaName, fieldName) => {
-      dispatch(removeFieldFromSchema(schemaName, fieldName))
-      dispatch(publishSchemas(ownProps.params.project))
     }
   }
 }

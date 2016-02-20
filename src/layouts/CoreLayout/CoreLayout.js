@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { fetchProjects, addProject } from 'redux/modules/projects'
+import { resetSchemas } from 'redux/modules/schemas'
 import 'bulma/css/bulma.css'
 import 'font-awesome/css/font-awesome.css'
 import '../../styles/core.scss'
@@ -37,6 +38,7 @@ export class CoreLayout extends React.Component {
   }
 
   _onSelect (e) {
+    this.props.reset()
     this.context.router.push(`/${e.target.value}`)
   }
 
@@ -99,6 +101,9 @@ const mapStateToProps = (state) => ({
   projects: state.projects.toJS()
 })
 const mapDispatchToProps = (dispatch, ownProps) => ({
+  reset: () => {
+    dispatch(resetSchemas())
+  },
   fetchOnDidMount: () => {
     dispatch(fetchProjects())
   },

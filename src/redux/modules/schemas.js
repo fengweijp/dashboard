@@ -6,6 +6,7 @@ import Immutable, { Map } from 'immutable'
 // Constants
 // ------------------------------------
 export const SCHEMAS_RECEIVED = 'SCHEMAS_RECEIVED'
+export const SCHEMAS_RESET = 'SCHEMAS_RESET'
 export const SCHEMAS_SCHEMA_ADDED = 'SCHEMAS_SCHEMA_ADDED'
 export const SCHEMAS_FIELD_ADDED = 'SCHEMAS_FIELD_ADDED'
 export const SCHEMAS_FIELD_REMOVED = 'SCHEMAS_FIELD_REMOVED'
@@ -17,6 +18,10 @@ export const SCHEMAS_FIELD_REMOVED = 'SCHEMAS_FIELD_REMOVED'
 export const receiveSchemas = (schemas) => ({
   type: SCHEMAS_RECEIVED,
   schemas
+})
+
+export const resetSchemas = () => ({
+  type: SCHEMAS_RESET
 })
 
 export const addSchema = (schemaName) => ({
@@ -81,6 +86,7 @@ export const publishSchemas = (projectName): Function => {
 // ------------------------------------
 const ACTION_HANDLERS = {
   [SCHEMAS_RECEIVED]: (state, action) => state.mergeDeep(action.schemas),
+  [SCHEMAS_RESET]: (state, action) => Map(),
   [SCHEMAS_SCHEMA_ADDED]: (state, action) => state.set(action.schemaName, Immutable.fromJS({
     name: action.schemaName,
     kind: 'OBJECT',

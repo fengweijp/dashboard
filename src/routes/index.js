@@ -8,15 +8,19 @@ import { Route, IndexRedirect } from 'react-router'
 // your current file is.
 import CoreLayout from 'layouts/CoreLayout/CoreLayout'
 import HomeView from 'views/HomeView/HomeView'
+import SchemaView from 'views/HomeView/SchemaView'
 
 export default (store) => (
   <Route path='/'>
     <Route path=':project' component={CoreLayout}>
-      <Route path='schemas'>
-        <Route path=':schema' component={HomeView}/>
+      <Route path='models'>
+        <Route path=':model' component={HomeView}>
+          <Route path='schema' component={SchemaView} />
+          <IndexRedirect to='schema' />
+        </Route>
         <IndexRedirect to='default' />
       </Route>
-      <IndexRedirect to='schemas' />
+      <IndexRedirect to='models' />
     </Route>
     <IndexRedirect to='default' />
   </Route>
