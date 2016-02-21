@@ -11,6 +11,7 @@ export class CoreLayout extends React.Component {
     children: PropTypes.element.isRequired,
     fetchOnDidMount: PropTypes.func.isRequired,
     addProject: PropTypes.func.isRequired,
+    reset: PropTypes.func.isRequired,
     projects: PropTypes.array.isRequired,
     params: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired

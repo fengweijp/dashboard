@@ -6,17 +6,39 @@ import classes from './DataView.scss'
 
 export class DataView extends React.Component {
   static propTypes = {
-    params: PropTypes.object.isRequired
+    params: PropTypes.object.isRequired,
+    fields: PropTypes.array.isRequired
   };
 
+  constructor (props) {
+    super(props)
+
+    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this)
+  }
+
   render () {
-    console.log(this.props.fields);
+    if (this.props.fields.length === 0) {
+      return (
+        <h2>Loading</h2>
+      )
+    }
+
     return (
       <div>
         <div>
-          <Link to={`/${this.props.params.project}/models/${this.props.params.model}/schema`} activeClassName={classes.active}>Schema</Link>
+          <Link
+            to={`/${this.props.params.project}/models/${this.props.params.model}/schema`}
+            activeClassName={classes.active}
+            >
+            Schema
+          </Link>
           <span> </span>
-          <Link to={`/${this.props.params.project}/models/${this.props.params.model}/data`} activeClassName={classes.active}>Data</Link>
+          <Link
+            to={`/${this.props.params.project}/models/${this.props.params.model}/data`}
+            activeClassName={classes.active}
+            >
+            Data
+          </Link>
         </div>
         <div>
           ok

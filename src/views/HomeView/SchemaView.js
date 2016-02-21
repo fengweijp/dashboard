@@ -38,12 +38,23 @@ export class SchemaView extends React.Component {
     return (
       <div>
         <div>
-          <Link to={`/${this.props.params.project}/models/${this.props.params.model}/schema`} activeClassName={classes.active}>Schema</Link>
+          <Link
+            to={`/${this.props.params.project}/models/${this.props.params.model}/schema`}
+            activeClassName={classes.active}
+            >
+            Schema
+          </Link>
           <span> </span>
-          <Link to={`/${this.props.params.project}/models/${this.props.params.model}/data`} activeClassName={classes.active}>Data</Link>
+          <Link
+            to={`/${this.props.params.project}/models/${this.props.params.model}/data`}
+            activeClassName={classes.active}
+            >
+            Data
+          </Link>
         </div>
         <div>
           <FieldList
+            models={Object.keys(this.props.schemas)}
             schema={schema}
             addField={addField}
             removeField={removeField}

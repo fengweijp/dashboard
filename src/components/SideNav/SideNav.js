@@ -37,7 +37,12 @@ export default class SideNav extends React.Component {
           <div>
             {this.props.models.map((model) => (
               <div key={model}>
-                <Link to={`/${this.props.params.project}/models/${model}`} activeClassName={classes.active}>{model}</Link>
+                <Link
+                  to={`/${this.props.params.project}/models/${model}`}
+                  activeClassName={classes.active}
+                  >
+                  {model}
+                </Link>
                 {
                 // <div>20</div>
                 }
