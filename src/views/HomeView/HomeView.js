@@ -76,7 +76,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     addSchema: (schemaName) => {
       dispatch(addSchema(schemaName))
-      dispatch(publishSchemas())
+      dispatch(publishSchemas(ownProps.params.project))
     }
   }
 }
