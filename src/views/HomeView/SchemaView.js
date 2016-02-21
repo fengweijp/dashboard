@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import { connect } from 'react-redux'
-import Schemas from 'components/Schemas/Schemas'
+import FieldList from 'components/FieldList/FieldList'
 import {
   addFieldToSchema,
   removeFieldFromSchema,
@@ -18,9 +18,11 @@ export class SchemaView extends React.Component {
     schemas: PropTypes.object.isRequired
   };
 
-  static contextTypes = {
-    router: PropTypes.object.isRequired
-  };
+  constructor (props) {
+    super(props)
+
+    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this)
+  }
 
   render () {
     if (Object.keys(this.props.schemas).length === 0) {
@@ -28,6 +30,10 @@ export class SchemaView extends React.Component {
         <h2>Loading</h2>
       )
     }
+
+    const schema = this.props.schemas[this.props.params.model]
+    const addField = (field) => this.props.addFieldToSchema(schema.name, field)
+    const removeField = (fieldName) => this.props.removeFieldFromSchema(schema.name, fieldName)
 
     return (
       <div>
@@ -37,10 +43,10 @@ export class SchemaView extends React.Component {
           <Link to={`/${this.props.params.project}/models/${this.props.params.model}/data`} activeClassName={classes.active}>Data</Link>
         </div>
         <div>
-          <Schemas
-            schema={this.props.schemas[this.props.params.model]}
-            addFieldToSchema={this.props.addFieldToSchema}
-            removeFieldFromSchema={this.props.removeFieldFromSchema}
+          <FieldList
+            schema={schema}
+            addField={addField}
+            removeField={removeField}
             />
         </div>
       </div>

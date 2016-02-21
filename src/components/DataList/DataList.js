@@ -1,9 +1,9 @@
 import React, { PropTypes } from 'react'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import FieldList from 'components/FieldList/FieldList'
-import classes from './Schemas.scss'
+import classes from './DataList.scss'
 
-export default class Schemas extends React.Component {
+export default class DataList extends React.Component {
   static propTypes = {
     addFieldToSchema: PropTypes.func.isRequired,
     removeFieldFromSchema: PropTypes.func.isRequired,
