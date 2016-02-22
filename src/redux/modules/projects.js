@@ -17,10 +17,17 @@ export const receiveProjects = (projects) => ({
   projects
 })
 
-export const addProject = (projectName) => ({
-  type: PROJECTS_ADD,
-  projectName
-})
+export const addProject = (projectName): Function => {
+  return (dispatch: Function, getState: Function): Promise => {
+    return fetch(`http://${__SERVER_ADDR__}/api/${projectName}/create`, {
+      method: 'post'
+    })
+    .then(() => dispatch({
+      type: PROJECTS_ADD,
+      projectName
+    }))
+  }
+}
 
 export const fetchProjects = (): Function => {
   return (dispatch: Function, getState: Function): Promise => {

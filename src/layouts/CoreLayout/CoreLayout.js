@@ -44,10 +44,9 @@ export class CoreLayout extends React.Component {
   }
 
   _addProject () {
-    const schemaName = window.prompt('Project name')
-    if (schemaName) {
-      fetch(`http://${__SERVER_ADDR__}/api/${schemaName}/create`, {method: 'post'}).then(() =>
-        this.props.addProject(schemaName))
+    const projectName = window.prompt('Project name')
+    if (projectName) {
+      this.props.addProject(projectName)
     }
   }
 
