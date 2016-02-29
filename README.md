@@ -1,3 +1,9 @@
+Heads UP!!!
+===========
+
+I moved this to https://github.com/graphcool/graphcool
+
+
 React Redux Starter Kit
 =======================
 
