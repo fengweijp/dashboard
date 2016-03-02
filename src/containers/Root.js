@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
-import { Provider } from 'react-redux'
+//import { Provider } from 'react-redux'
 import { Router } from 'react-router'
+import { RelayRouter } from 'react-router-relay'
 
 export default class Root extends React.Component {
   static propTypes = {
@@ -34,12 +35,20 @@ export default class Root extends React.Component {
 
   render () {
     return (
-      <Provider store={this.props.store}>
-        <div style={{ height: '100%' }}>
-          {this.content}
-          {this.devTools}
-        </div>
-      </Provider>
+      <RelayRouter history={this.props.history}>
+        {this.props.routes}
+      </RelayRouter>
     )
   }
+
+  //render () {
+    //return (
+      //<Provider store={this.props.store}>
+        //<div style={{ height: '100%' }}>
+          //{this.content}
+          //{this.devTools}
+        //</div>
+      //</Provider>
+    //)
+  //}
 }

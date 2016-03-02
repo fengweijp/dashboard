@@ -1,5 +1,6 @@
 .DS_STORE
 *.log
+schema.json
 
 node_modules
 

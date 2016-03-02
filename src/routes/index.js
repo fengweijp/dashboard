@@ -10,19 +10,29 @@ import CoreLayout from 'layouts/CoreLayout/CoreLayout'
 import HomeView from 'views/HomeView/HomeView'
 import SchemaView from 'views/HomeView/SchemaView'
 import DataView from 'views/HomeView/DataView'
+import LoginView from 'views/LoginView/LoginView'
+
+import UserQuery from 'queries/UserQuery'
+
+//export default (store) => (
+  //<Route path='/' component={LoginView} queries={UserQuery} />
+//)
 
 export default (store) => (
   <Route path='/'>
-    <Route path=':project' component={CoreLayout}>
-      <Route path='models'>
-        <Route path=':model' component={HomeView}>
-          <Route path='schema' component={SchemaView} />
-          <Route path='data' component={DataView} />
-          <IndexRedirect to='schema' />
-        </Route>
-        <IndexRedirect to='default' />
-      </Route>
-      <IndexRedirect to='models' />
+    <Route path=':project' component={CoreLayout} queries={UserQuery}>
+    <Route path=':model' component={LoginView} />
+    {
+      //<Route path='models'>
+        //<Route path=':model' component={HomeView}>
+          //<Route path='schema' component={SchemaView} />
+          //<Route path='data' component={DataView} />
+          //<IndexRedirect to='schema' />
+        //</Route>
+        //<IndexRedirect to='default' />
+      //</Route>
+      //<IndexRedirect to='models' />
+    }
     </Route>
     <IndexRedirect to='default' />
   </Route>

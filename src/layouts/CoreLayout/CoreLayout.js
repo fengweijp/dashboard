@@ -1,7 +1,11 @@
 import React, { PropTypes } from 'react'
-import { connect } from 'react-redux'
-import { fetchProjects, addProject } from 'redux/modules/projects'
-import { resetSchemas } from 'redux/modules/schemas'
+//import { connect } from 'react-redux'
+//import { fetchProjects, addProject } from 'redux/modules/projects'
+//import { resetSchemas } from 'redux/modules/schemas'
+import Relay from 'react-relay'
+import LoginForm from 'components/LoginForm/LoginForm'
+import LoginMutation from 'mutations/LoginMutation'
+import { saveToken, updateNetworkLayer } from 'utils/relay'
 import 'bulma/css/bulma.css'
 import 'font-awesome/css/font-awesome.css'
 import '../../styles/core.scss'
@@ -9,10 +13,11 @@ import '../../styles/core.scss'
 export class CoreLayout extends React.Component {
   static propTypes = {
     children: PropTypes.element.isRequired,
-    fetchOnDidMount: PropTypes.func.isRequired,
-    addProject: PropTypes.func.isRequired,
-    reset: PropTypes.func.isRequired,
-    projects: PropTypes.array.isRequired,
+    //fetchOnDidMount: PropTypes.func.isRequired,
+    //addProject: PropTypes.func.isRequired,
+    //reset: PropTypes.func.isRequired,
+    //projects: PropTypes.array.isRequired,
+    viewer: PropTypes.object,
     params: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired
   };
@@ -26,17 +31,27 @@ export class CoreLayout extends React.Component {
 
     this._onSelect = this._onSelect.bind(this)
     this._addProject = this._addProject.bind(this)
+    this._login = this._login.bind(this)
   }
 
   componentDidMount () {
-    this.props.fetchOnDidMount()
+    //this.props.fetchOnDidMount()
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.projects.length > 0 && !nextProps.projects.includes(nextProps.params.project)) {
-      this.context.router.replace(`/${nextProps.projects[0]}`)
+  shouldComponentUpdate (nextProps, nextState) {
+    if (!this.props.viewer && nextProps.viewer) {
+      this.context.router.replace(`/${nextProps.params.project}/models/${schemaNames[0]}`)
+      return false
     }
+
+    return PureRenderMixin.shouldComponentUpdate(nextProps, nextState)
   }
+
+  //componentWillReceiveProps (nextProps) {
+    //if (nextProps.projects.length > 0 && !nextProps.projects.includes(nextProps.params.project)) {
+      //this.context.router.replace(`/${nextProps.projects[0]}`)
+    //}
+  //}
 
   _onSelect (e) {
     this.props.reset()
@@ -50,15 +65,29 @@ export class CoreLayout extends React.Component {
     }
   }
 
+  _login (email, password) {
+    const payload = { email, password, viewer: this.props.viewer }
+    const onSuccess = (response) => {
+      saveToken(response.signinUser.token)
+      updateNetworkLayer()
+    }
+    Relay.Store.commitUpdate(new LoginMutation(payload), { onSuccess })
+  }
+
   render () {
-    if (this.props.projects.length === 0) {
+    //if (this.props.projects.length === 0) {
+      //return (
+        //<h2>Loading</h2>
+      //)
+    //}
+
+    if (!this.props.viewer) {
       return (
-        <h2>Loading</h2>
+        <LoginForm login={this._login} />
       )
     }
 
     const graphQL = `http://${__SERVER_ADDR__}/graphql/${this.props.params.project}`
-
     return (
       <div>
         <header className='header'>
@@ -67,8 +96,8 @@ export class CoreLayout extends React.Component {
               <span className='header-item'>
                 <span className='select'>
                   <select onChange={this._onSelect} value={this.props.params.project}>
-                    {this.props.projects.map((project) => (
-                      <option key={project} value={project}>{project}</option>
+                    {this.props.viewer.projects.map((project) => (
+                      <option key={project.name} value={project.name}>{project.name}</option>
                     ))}
                   </select>
                 </span>
@@ -98,18 +127,16 @@ export class CoreLayout extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  projects: state.projects.toJS()
-})
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  reset: () => {
-    dispatch(resetSchemas())
-  },
-  fetchOnDidMount: () => {
-    dispatch(fetchProjects())
-  },
-  addProject: (projectName) => {
-    dispatch(addProject(projectName))
+export default Relay.createContainer(CoreLayout, {
+  fragments: {
+    viewer: () => Relay.QL`
+      fragment on User {
+        id
+        projects {
+          name
+        }
+        ${LoginMutation.getFragment('viewer')}
+      }
+    `
   }
 })
-export default connect(mapStateToProps, mapDispatchToProps)(CoreLayout)
