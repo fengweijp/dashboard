@@ -1,7 +1,4 @@
 import React, { PropTypes } from 'react'
-//import { connect } from 'react-redux'
-//import { fetchProjects, addProject } from 'redux/modules/projects'
-//import { resetSchemas } from 'redux/modules/schemas'
 import Relay from 'react-relay'
 import LoginForm from 'components/LoginForm/LoginForm'
 import LoginMutation from 'mutations/LoginMutation'
@@ -13,11 +10,10 @@ import '../../styles/core.scss'
 export class CoreLayout extends React.Component {
   static propTypes = {
     children: PropTypes.element.isRequired,
-    //fetchOnDidMount: PropTypes.func.isRequired,
-    //addProject: PropTypes.func.isRequired,
-    //reset: PropTypes.func.isRequired,
-    //projects: PropTypes.array.isRequired,
-    viewer: PropTypes.object,
+    // addProject: PropTypes.func.isRequired,
+    // reset: PropTypes.func.isRequired,
+    // projects: PropTypes.array.isRequired,
+    viewer: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired
   };
@@ -34,34 +30,15 @@ export class CoreLayout extends React.Component {
     this._login = this._login.bind(this)
   }
 
-  componentDidMount () {
-    //this.props.fetchOnDidMount()
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    if (!this.props.viewer && nextProps.viewer) {
-      this.context.router.replace(`/${nextProps.params.project}/models/${schemaNames[0]}`)
-      return false
-    }
-
-    return PureRenderMixin.shouldComponentUpdate(nextProps, nextState)
-  }
-
-  //componentWillReceiveProps (nextProps) {
-    //if (nextProps.projects.length > 0 && !nextProps.projects.includes(nextProps.params.project)) {
-      //this.context.router.replace(`/${nextProps.projects[0]}`)
-    //}
-  //}
-
   _onSelect (e) {
-    this.props.reset()
+    // this.props.reset()
     this.context.router.push(`/${e.target.value}`)
   }
 
   _addProject () {
     const projectName = window.prompt('Project name')
     if (projectName) {
-      this.props.addProject(projectName)
+      // this.props.addProject(projectName)
     }
   }
 
@@ -75,13 +52,13 @@ export class CoreLayout extends React.Component {
   }
 
   render () {
-    //if (this.props.projects.length === 0) {
-      //return (
-        //<h2>Loading</h2>
-      //)
-    //}
-
     if (!this.props.viewer) {
+      return (
+        <div>Loading</div>
+      )
+    }
+
+    if (!this.props.viewer.user) {
       return (
         <LoginForm login={this._login} />
       )
@@ -96,7 +73,7 @@ export class CoreLayout extends React.Component {
               <span className='header-item'>
                 <span className='select'>
                   <select onChange={this._onSelect} value={this.props.params.project}>
-                    {this.props.viewer.projects.map((project) => (
+                    {this.props.viewer.user.projects.map((project) => (
                       <option key={project.name} value={project.name}>{project.name}</option>
                     ))}
                   </select>
@@ -130,12 +107,15 @@ export class CoreLayout extends React.Component {
 export default Relay.createContainer(CoreLayout, {
   fragments: {
     viewer: () => Relay.QL`
-      fragment on User {
+      fragment on Viewer {
         id
-        projects {
+        tmp
+        user {
           name
+          projects {
+            name
+          }
         }
-        ${LoginMutation.getFragment('viewer')}
       }
     `
   }

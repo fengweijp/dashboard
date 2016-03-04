@@ -2,15 +2,6 @@ import Relay from 'react-relay'
 
 export default class LoginMutation extends Relay.Mutation {
 
-  static fragments = {
-    viewer: () => Relay.QL`
-      fragment on User {
-        id
-        name
-      }
-    `,
-  }
-
   getMutation () {
     return Relay.QL`mutation{signinUser}`
   }
@@ -18,31 +9,26 @@ export default class LoginMutation extends Relay.Mutation {
   getFatQuery () {
     return Relay.QL`
       fragment on SigninUserPayload {
-        user {
-          id
-          projects {
-            name
-          }
+        viewer {
+          user
         }
       }
     `
   }
 
   getConfigs () {
-    const query = Relay.QL`
-      fragment on SigninUserPayload {
-        token
-        user {
-          id
-          projects {
-            name
-          }
-        }
-      }
-    `
     return [{
+      type: 'FIELDS_CHANGE',
+      fieldIDs: {
+        viewer: this.props.viewer.id
+      }
+    }, {
       type: 'REQUIRED_CHILDREN',
-      children: [query]
+      children: [Relay.QL`
+        fragment on SigninUserPayload {
+          token
+        }
+      `]
     }]
   }
 

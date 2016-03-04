@@ -94,7 +94,7 @@
     "babel-preset-react": "^6.3.13",
     "babel-preset-stage-0": "^6.3.13",
     "babel-register": "^6.3.13",
-    "babel-relay-plugin": "^0.7.1",
+    "babel-relay-plugin": "git://github.com/facebook/relay/tree/master/scripts/babel-relay-plugin#master",
     "babel-runtime": "^6.3.19",
     "chai": "^3.4.1",
     "chai-as-promised": "^5.1.0",
