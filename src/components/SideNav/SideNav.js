@@ -7,7 +7,7 @@ export default class SideNav extends React.Component {
   static propTypes = {
     addSchema: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
-    models: PropTypes.array
+    models: PropTypes.array,
   };
 
   constructor (props) {
@@ -36,12 +36,12 @@ export default class SideNav extends React.Component {
         {this.props.models &&
           <div>
             {this.props.models.map((model) => (
-              <div key={model}>
+              <div key={model.name}>
                 <Link
-                  to={`/${this.props.params.project}/models/${model}`}
+                  to={`/${this.props.params.project}/models/${model.name}`}
                   activeClassName={classes.active}
                   >
-                  {model}
+                  {model.name}
                 </Link>
                 {
                 // <div>20</div>

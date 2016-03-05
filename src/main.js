@@ -1,40 +1,15 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import createBrowserHistory from 'history/lib/createBrowserHistory'
-import { useRouterHistory } from 'react-router'
-import { syncHistoryWithStore } from 'react-router-redux'
-import makeRoutes from './routes'
-import Root from './containers/Root'
-import configureStore from './redux/configureStore'
+import { RelayRouter } from 'react-router-relay'
+import { browserHistory } from 'react-router'
+import routes from './routes'
 import { updateNetworkLayer } from './utils/relay'
-
-// Create redux store and sync with react-router-redux. We have installed the
-// react-router-redux reducer under the key "router" in src/routes/index.js,
-// so we need to provide a custom `selectLocationState` to inform
-// react-router-redux of its location.
-const initialState = window.__INITIAL_STATE__
-const store = configureStore(initialState)
-
-// Configure history for react-router
-const browserHistory = useRouterHistory(createBrowserHistory)({
-  basename: __BASENAME__
-})
-const history = syncHistoryWithStore(browserHistory, store, {
-  selectLocationState: (state) => state.router
-})
-
-// history.listen(location => console.log(location.pathname))
-
-// Now that we have the Redux store, we can create our routes. We provide
-// the store to the route definitions so that routes have access to it for
-// hooks such as `onEnter`.
-const routes = makeRoutes(store)
 
 updateNetworkLayer()
 
-// Now that redux and react-router have been configured, we can render the
-// React application to the DOM!
 ReactDOM.render(
-  <Root history={history} routes={routes} store={store} />,
+  <RelayRouter history={browserHistory}>
+    {routes}
+  </RelayRouter>,
   document.getElementById('root')
 )

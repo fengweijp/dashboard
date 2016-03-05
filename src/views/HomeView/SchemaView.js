@@ -1,21 +1,15 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
-import { connect } from 'react-redux'
 import FieldList from 'components/FieldList/FieldList'
-import {
-  addFieldToSchema,
-  removeFieldFromSchema,
-  publishSchemas
-} from 'redux/modules/schemas'
 import classes from './SchemaView.scss'
 
-export class SchemaView extends React.Component {
+export default class SchemaView extends React.Component {
   static propTypes = {
     addFieldToSchema: PropTypes.func.isRequired,
     removeFieldFromSchema: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
-    schemas: PropTypes.object.isRequired
+    schemas: PropTypes.object.isRequired,
   };
 
   constructor (props) {
@@ -64,20 +58,3 @@ export class SchemaView extends React.Component {
     )
   }
 }
-
-const mapStateToProps = (state) => ({
-  schemas: state.schemas.toJS()
-})
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    addFieldToSchema: (schemaName, field) => {
-      dispatch(addFieldToSchema(schemaName, field))
-      dispatch(publishSchemas(ownProps.params.project))
-    },
-    removeFieldFromSchema: (schemaName, fieldName) => {
-      dispatch(removeFieldFromSchema(schemaName, fieldName))
-      dispatch(publishSchemas(ownProps.params.project))
-    }
-  }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(SchemaView)

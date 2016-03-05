@@ -3,7 +3,7 @@ import PureRenderMixin from 'react-addons-pure-render-mixin'
 
 export default class SideNav extends React.Component {
   static propTypes = {
-    login: PropTypes.func.isRequired
+    login: PropTypes.func.isRequired,
   };
 
   constructor (props) {

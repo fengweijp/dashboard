@@ -7,7 +7,7 @@ const types = {
   'Float': 'Float',
   'String': 'Text',
   'Boolean': 'Boolean',
-  'GraphQLID': 'ID'
+  'GraphQLID': 'ID',
 }
 
 const sortByAttr = (attr) => (a, b) => a[attr].localeCompare(b[attr])
@@ -38,7 +38,7 @@ const parseField = (field) => {
     relation,
     nullable,
     list,
-    unique: false
+    unique: false,
   }
 }
 
@@ -46,14 +46,14 @@ const serializeField = (data) => {
   let innerType = {
     kind: data.relation ? 'OBJECT' : 'SCALAR',
     name: data.type,
-    ofType: null
+    ofType: null,
   }
 
   if (data.list) {
     innerType = {
       kind: 'LIST',
       name: null,
-      ofType: innerType
+      ofType: innerType,
     }
   }
 
@@ -61,13 +61,13 @@ const serializeField = (data) => {
     innerType = {
       kind: 'NON_NULL',
       name: null,
-      ofType: innerType
+      ofType: innerType,
     }
   }
 
   return {
     name: data.name,
-    type: innerType
+    type: innerType,
   }
 }
 
@@ -76,7 +76,7 @@ export default class FieldList extends React.Component {
     addField: PropTypes.func.isRequired,
     removeField: PropTypes.func.isRequired,
     schema: PropTypes.object.isRequired,
-    models: PropTypes.array
+    models: PropTypes.array,
   };
 
   constructor (props) {
@@ -96,7 +96,7 @@ export default class FieldList extends React.Component {
       name,
       nullable,
       list,
-      unique
+      unique,
     }))
     findDOMNode(this.refs.name).value = ''
     findDOMNode(this.refs.list).checked = false
