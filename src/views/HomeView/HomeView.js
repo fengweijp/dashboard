@@ -58,18 +58,12 @@ export class HomeView extends React.Component {
 
 export default Relay.createContainer(HomeView, {
   fragments: {
-    viewer: () => Relay.QL`
-      fragment on Viewer {
-        id
-        tmp
-        user {
-          name
-          projects {
-            models {
-              name
-            }
-          }
+    model: () => Relay.QL`
+      fragment on Model {
+        schema {
+          fieldName
         }
+        data
       }
     `,
   },

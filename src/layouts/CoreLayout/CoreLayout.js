@@ -80,7 +80,6 @@ export class CoreLayout extends React.Component {
       )
     }
 
-    // const graphQL = `http://${__SERVER_ADDR__}/graphql/${this.props.params.project}`
     const projects = this.props.viewer.user.projects
     const selectedProject = projects.find((project) => project.id === this.props.params.projectId)
 
@@ -102,11 +101,10 @@ export class CoreLayout extends React.Component {
         <div className={classes.content}>
           <SideNav
             params={this.props.params}
-            models={this.props.viewer.user.projects[0].models}
-            addSchema={this.props.addSchema}
+            project={selectedProject}
             />
             {
-          //{this.props.children}
+          // {this.props.children}
             }
         </div>
       </div>
@@ -124,9 +122,7 @@ export default Relay.createContainer(CoreLayout, {
           projects {
             id
             name
-            models {
-              name
-            }
+            ${SideNav.getFragment('project')}
           }
         }
       }

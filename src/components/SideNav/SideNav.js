@@ -1,11 +1,12 @@
 import React, { PropTypes } from 'react'
+import Relay from 'react-relay'
 import { Link } from 'react-router'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
+import mapProps from 'map-props'
 import classes from './SideNav.scss'
 
-export default class SideNav extends React.Component {
+export class SideNav extends React.Component {
   static propTypes = {
-    addSchema: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
     models: PropTypes.array,
   };
@@ -19,10 +20,10 @@ export default class SideNav extends React.Component {
   }
 
   _addSchema () {
-    const schemaName = window.prompt('Schema name')
-    if (schemaName) {
-      this.props.addSchema(schemaName)
-    }
+    // const schemaName = window.prompt('Schema name')
+    // if (schemaName) {
+      // this.props.addSchema(schemaName)
+    // }
   }
 
   render () {
@@ -54,3 +55,22 @@ export default class SideNav extends React.Component {
     )
   }
 }
+
+const MappedSideNav = mapProps({
+  params: (props) => props.params,
+  models: (props) => props.project.models,
+})(SideNav)
+
+export default Relay.createContainer(MappedSideNav, {
+  fragments: {
+    project: () => Relay.QL`
+      fragment on Project {
+        id
+        name
+        models {
+          name
+        }
+      }
+    `,
+  },
+})

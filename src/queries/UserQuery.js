@@ -1,5 +1,11 @@
 import Relay from 'react-relay'
 
 export default {
-  viewer: () => Relay.QL`query { viewer }`,
+  viewer: (Component) => Relay.QL`
+    query {
+      viewer {
+        ${Component.getFragment('viewer')}
+      }
+    }
+  `,
 }
