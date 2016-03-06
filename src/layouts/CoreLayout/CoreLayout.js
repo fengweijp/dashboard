@@ -1,9 +1,11 @@
 import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
+import PureRenderMixin from 'react-addons-pure-render-mixin'
 import LoginForm from 'components/LoginForm/LoginForm'
 import ProjectSelection from 'components/ProjectSelection/ProjectSelection'
 import SideNav from 'components/SideNav/SideNav'
 import LoginMutation from 'mutations/LoginMutation'
+import AddProjectMutation from 'mutations/AddProjectMutation'
 import { saveToken, updateNetworkLayer } from 'utils/relay'
 import classes from './CoreLayout.scss'
 
@@ -12,9 +14,6 @@ import '../../styles/core.scss'
 export class CoreLayout extends React.Component {
   static propTypes = {
     children: PropTypes.element.isRequired,
-    // addProject: PropTypes.func.isRequired,
-    // reset: PropTypes.func.isRequired,
-    // projects: PropTypes.array.isRequired,
     viewer: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
@@ -28,8 +27,30 @@ export class CoreLayout extends React.Component {
     super(props)
 
     this._selectProject = ::this._selectProject
-    this._addProject = this._addProject.bind(this)
-    this._login = this._login.bind(this)
+    this._addProject = ::this._addProject
+    this._login = ::this._login
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    if (!this._checkProjects(nextProps.viewer.user.projects, nextProps.params.projectId, this.context.router)) {
+      return false
+    }
+
+    return PureRenderMixin.shouldComponentUpdate(nextProps, nextState)
+  }
+
+  componentWillMount () {
+    this._checkProjects(this.props.viewer.user.projects, this.props.params.projectId, this.context.router)
+  }
+
+  _checkProjects (projects, selectedProjectId, router) {
+    const projectIds = projects.map((project) => project.id)
+    if (!projectIds.includes(selectedProjectId)) {
+      router.replace(`/${projectIds[0]}`)
+      return false
+    }
+
+    return true
   }
 
   _selectProject (projectName) {
@@ -39,7 +60,7 @@ export class CoreLayout extends React.Component {
   _addProject () {
     const projectName = window.prompt('Project name')
     if (projectName) {
-      // this.props.addProject(projectName)
+      Relay.Store.commitUpdate(new AddProjectMutation({ projectName, user: this.props.viewer.user }))
     }
   }
 
@@ -53,12 +74,6 @@ export class CoreLayout extends React.Component {
   }
 
   render () {
-    if (!this.props.viewer) {
-      return (
-        <div>Loading</div>
-      )
-    }
-
     if (!this.props.viewer.user) {
       return (
         <LoginForm login={this._login} />
@@ -66,13 +81,22 @@ export class CoreLayout extends React.Component {
     }
 
     // const graphQL = `http://${__SERVER_ADDR__}/graphql/${this.props.params.project}`
+    const projects = this.props.viewer.user.projects
+    const selectedProject = projects.find((project) => project.id === this.props.params.projectId)
+
+    // render nothing since redirect is scheduled
+    if (!selectedProject) {
+      return false
+    }
+
     return (
       <div className={classes.root}>
         <header className={classes.header}>
           <ProjectSelection
-            projects={this.props.viewer.user.projects}
-            selectedProject={this.props.params.project}
+            projects={projects}
+            selectedProject={selectedProject}
             select={this._selectProject}
+            add={this._addProject}
           />
         </header>
         <div className={classes.content}>
@@ -98,6 +122,7 @@ export default Relay.createContainer(CoreLayout, {
         user {
           name
           projects {
+            id
             name
             models {
               name

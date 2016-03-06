@@ -1,27 +1,21 @@
 :global {
-  /*@import 'font-awesome.css';*/
-  /*@import 'vendor/normalize';*/
-
-  @font-face {
-    font-family: 'dashboard';
-    src: url('./fonts/dashboard-01.eot');
-    src: url('./fonts/dashboard-01.eot') format('embedded-opentype'),
-         url('./fonts/dashboard-01.woff') format('woff'),
-         url('./fonts/dashboard-01.ttf') format('truetype'),
-         url('./fonts/dashboard-01.svg') format('svg');
-    font-weight: normal;
-    font-style: normal;
-  }
+  @import '~normalize.css';
+  @import url(https://fonts.googleapis.com/css?family=Roboto:400,500);
 
   html,
   body {
     background: #fff;
     height: 100%;
+    font-family: 'Roboto', sans-serif;
   }
 
-  /**,*/
-  /**:before,*/
-  /**:after {*/
-    /*box-sizing: inherit;*/
-  /*}*/
+  a {
+    text-decoration: none;
+  }
+
+  *,
+  *:before,
+  *:after {
+    box-sizing: border-box;
+  }
 }
