@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 
 export default function Icon ({
   glyph,
-  color = '#000',
+  color = '',
   width = 16,
   height = 16,
   className = '',

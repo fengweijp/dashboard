@@ -9,6 +9,18 @@
   height: 66px;
 }
 
-.content {
+.main {
   height: calc(100% - 66px);
+}
+
+.sidenav {
+  width: 300px;
+  height: 100%;
+  float: left;
+}
+
+.content {
+  width: calc(100% - 300px);
+  height: 100%;
+  float: left;
 }

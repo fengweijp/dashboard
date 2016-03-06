@@ -1,10 +1,9 @@
 import React from 'react'
 import { Route, IndexRedirect } from 'react-router'
 import CoreLayout from 'layouts/CoreLayout/CoreLayout'
-import HomeView from 'views/HomeView/HomeView'
-import SchemaView from 'views/HomeView/SchemaView'
-// import DataView from 'views/HomeView/DataView'
-// import LoginView from 'views/LoginView/LoginView'
+import ModelView from 'views/ModelView/ModelView'
+import SchemaTab from 'views/ModelView/SchemaTab'
+import DataTab from 'views/ModelView/DataTab'
 
 import UserQuery from 'queries/UserQuery'
 
@@ -12,11 +11,9 @@ export default (
   <Route path='/'>
     <Route path=':projectId' component={CoreLayout} queries={UserQuery}>
       <Route path='models'>
-        <Route path=':model' component={HomeView}>
-          <Route path='schema' component={SchemaView} />
-      {
-           // <Route path='data' component={DataView} />
-      }
+        <Route path=':modelId' component={ModelView}>
+          <Route path='schema' component={SchemaTab} queries={UserQuery} />
+          <Route path='data' component={DataTab} queries={UserQuery} />
           <IndexRedirect to='schema' />
         </Route>
         <IndexRedirect to='default' />

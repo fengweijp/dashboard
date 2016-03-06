@@ -98,14 +98,16 @@ export class CoreLayout extends React.Component {
             add={this._addProject}
           />
         </header>
-        <div className={classes.content}>
-          <SideNav
-            params={this.props.params}
-            project={selectedProject}
-            />
-            {
-          // {this.props.children}
-            }
+        <div className={classes.main}>
+          <div className={classes.sidenav}>
+            <SideNav
+              params={this.props.params}
+              project={selectedProject}
+              />
+          </div>
+          <div className={classes.content}>
+            {this.props.children}
+          </div>
         </div>
       </div>
     )

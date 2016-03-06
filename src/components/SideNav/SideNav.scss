@@ -1,13 +1,52 @@
 @import '~styles/variables';
 
 .root {
-  width: 300px;
+  width: 100%;
   height: 100%;
   background: $blue-grey;
   /*margin: 1.5rem 0;*/
 }
 
-.active {
-  font-weight: bold;
-  font-size: 1.1em;
+.head {
+  font-size: 12px;
+  font-weight: 500;
+  color: $blue-grey-dark;
+  padding: 29px 26px 23px;
+  display: flex;
+  align-items: center;
+
+  svg {
+    fill: $blue-grey-dark;
+  }
+
+  span {
+    padding: 0 25px;
+  }
+}
+
+.listElement {
+  width: 100%;
+  height: 35px;
+  display: block;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  padding: 0 0 0 70px;
+  color: #3F4253;
+
+  &.listElementActive {
+    font-weight: 500;
+    background: #E3E3F3;
+    color: $accent;
+    border-right: 6px solid $accent;
+  }
+}
+
+.add {
+  width: 100%;
+  margin: 12px 0;
+  padding: 0 0 0 70px;
+  font-size: 14px;
+  color: $blue-grey-dark;
+  cursor: pointer;
 }

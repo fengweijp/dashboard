@@ -1,12 +1,10 @@
 import React, { PropTypes } from 'react'
-import Relay from 'react-relay'
-import SideNav from 'components/SideNav/SideNav'
+import { Link } from 'react-router'
+import classes from './ModelView.scss'
 
-export class HomeView extends React.Component {
+export default class ModelView extends React.Component {
   static propTypes = {
-    viewer: PropTypes.object.isRequired,
-    // children: PropTypes.element.isRequired,
-    addSchema: PropTypes.func.isRequired,
+    children: PropTypes.element.isRequired,
     // fetchSchemas: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
     // schemas: PropTypes.object.isRequired
@@ -39,32 +37,22 @@ export class HomeView extends React.Component {
   render () {
     return (
       <div className='columns'>
-        <div className='column is-3'>
-          <SideNav
-            params={this.props.params}
-            models={this.props.viewer.user.projects[0].models}
-            addSchema={this.props.addSchema}
-            />
-        </div>
+        <Link
+          to={`/${this.props.params.projectId}/models/${this.props.params.modelId}/schema`}
+          activeClassName={classes.active}
+          >
+          Schema
+        </Link>
+        <Link
+          to={`/${this.props.params.projectId}/models/${this.props.params.modelId}/data`}
+          activeClassName={classes.active}
+          >
+          Data
+        </Link>
         <div className='column is-9'>
-        {
-          // {this.props.children}
-        }
+          {this.props.children}
         </div>
       </div>
     )
   }
 }
-
-export default Relay.createContainer(HomeView, {
-  fragments: {
-    model: () => Relay.QL`
-      fragment on Model {
-        schema {
-          fieldName
-        }
-        data
-      }
-    `,
-  },
-})

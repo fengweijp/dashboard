@@ -3,6 +3,8 @@ import Relay from 'react-relay'
 import { Link } from 'react-router'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import mapProps from 'map-props'
+import Icon from 'components/Icon/Icon'
+import AddModelMutation from 'mutations/AddModelMutation'
 import classes from './SideNav.scss'
 
 export class SideNav extends React.Component {
@@ -16,41 +18,40 @@ export class SideNav extends React.Component {
 
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this)
 
-    this._addSchema = this._addSchema.bind(this)
+    this._addModel = ::this._addModel
   }
 
-  _addSchema () {
-    // const schemaName = window.prompt('Schema name')
-    // if (schemaName) {
-      // this.props.addSchema(schemaName)
-    // }
+  _addModel () {
+    const modelName = window.prompt('Model name')
+    if (modelName) {
+      Relay.Store.commitUpdate(new AddModelMutation({
+        modelName,
+        projectId: this.props.params.projectId,
+        // user: this.props.viewer.user,
+      }))
+    }
   }
 
   render () {
     return (
       <div className={classes.root}>
-        <div>
-          <div>MODELS</div>
-          <div onClick={this._addSchema}><strong>Create new</strong></div>
+        <div className={classes.head}>
+          <Icon width={19} height={19} glyph={require('assets/icons/model.svg')} />
+          <span>MODELS</span>
         </div>
-        <br />
         {this.props.models &&
-          <div>
-            {this.props.models.map((model) => (
-              <div key={model.name}>
-                <Link
-                  to={`/${this.props.params.project}/models/${model.name}`}
-                  activeClassName={classes.active}
-                  >
-                  {model.name}
-                </Link>
-                {
-                // <div>20</div>
-                }
-              </div>
-            ))}
-          </div>
+          this.props.models.map((model) => (
+            <Link
+              key={model.name}
+              to={`/${this.props.params.projectId}/models/${model.name}`}
+              className={classes.listElement}
+              activeClassName={classes.listElementActive}
+              >
+              {model.name}
+            </Link>
+          ))
         }
+        <div className={classes.add} onClick={this._addSchema}>+ Add model</div>
       </div>
     )
   }
