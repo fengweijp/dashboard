@@ -32,7 +32,8 @@ export default class SideNav extends React.Component {
             <label>
               <input type='checkbox' />
               <span className={classes.checkWord}>Unique</span><br />
-              <span className={classes.checkDescription}>Check if every data item need to be different respecting this property</span>
+              <span className={classes.checkDescription}>Check if every data item need to be different
+              respecting this property</span>
             </label>
           </div>
           <div onClick={this.props.hide} className={classes.buttonCancel}>Cancel</div>
