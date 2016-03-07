@@ -1,3 +1,4 @@
+const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const cssnano = require('cssnano')
 const path = require('path')
@@ -5,6 +6,8 @@ const path = require('path')
 module.exports = {
   entry: './src/main.js',
   output: {
+    path: './dist',
+    filename: 'bundle.[hash].js',
     publicPath: '/'
   },
   module: {
@@ -15,7 +18,7 @@ module.exports = {
     }],
     loaders: [{
       test: /\.scss/,
-      loader: 'style!css?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!sass?sourceMap'
+      loader: 'style!css?modules&importLoaders=1!postcss!sass?sourceMap'
     }, {
       test: /\.js$/,
       loader: 'babel',
@@ -33,6 +36,15 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: 'src/index.html'
+    }),
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        unused: true,
+        dead_code: true,
+        warnings: false
+      }
     })
   ],
   postcss: [
@@ -46,7 +58,6 @@ module.exports = {
         removeAll: true
       },
       safe: true,
-      sourcemap: true
     })
   ],
   resolve: {
