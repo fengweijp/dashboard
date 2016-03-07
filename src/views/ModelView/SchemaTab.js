@@ -55,38 +55,46 @@ export default class SchemaTab extends React.Component {
 
   render () {
     return (
-      <table className={classes.root}>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Nullable</th>
-            <th>Unique</th>
-            <th></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {this.props.fields
-            .map((field) => (
-              <tr key={field.fieldName}>
-                <td>{field.fieldName}</td>
-                <td>{field.typeIdentifier} ({field.isList ? 'many' : 'one'})</td>
-                <td>{field.isRequired ? 'required' : ''}</td>
-                <td>{field.isUnique ? 'unique' : ''}</td>
-                <td className='table-link table-icon'>
-                  <span onClick={() => this._removeField(field.name)}>
-                    <Icon
-                      glyph={require('assets/icons/delete.svg')}
-                      color='#000'
-                      />
-                  </span>
-                </td>
-              </tr>
-            )
-          )}
-        </tbody>
-      </table>
+      <div className={classes.root}>
+        <div className={classes.add}>+ Add field</div>
+        <table className={classes.table}>
+          <thead>
+            <tr>
+              <th>Fieldname</th>
+              <th>Type</th>
+              <th>Required</th>
+              <th>Unique</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.props.fields
+              .map((field) => (
+                <tr key={field.fieldName} className={field.isSystem ? classes.disabled : ''}>
+                  <td>{field.fieldName}</td>
+                  <td>
+                    <span className={classes.type}>
+                      {field.typeIdentifier}<span className={classes.cardinality}>{field.isList ? 'many' : 'one'}</span>
+                    </span>
+                  </td>
+                  <td>{field.isRequired ? 'required' : ''}</td>
+                  <td>{field.isUnique ? 'unique' : ''}</td>
+                  <td>
+                    {!field.isSystem &&
+                      <span onClick={() => this._removeField(field.name)}>
+                        <Icon
+                          glyph={require('assets/icons/delete.svg')}
+                          color='#000'
+                          />
+                      </span>
+                    }
+                  </td>
+                </tr>
+              )
+            )}
+          </tbody>
+        </table>
+      </div>
     )
   }
 }

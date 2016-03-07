@@ -36,22 +36,24 @@ export default class ModelView extends React.Component {
 
   render () {
     return (
-      <div className='columns'>
-        <Link
-          to={`/${this.props.params.projectId}/models/${this.props.params.modelId}/schema`}
-          activeClassName={classes.active}
-          >
-          Schema
-        </Link>
-        <Link
-          to={`/${this.props.params.projectId}/models/${this.props.params.modelId}/data`}
-          activeClassName={classes.active}
-          >
-          Data
-        </Link>
-        <div className='column is-9'>
-          {this.props.children}
+      <div className={classes.root}>
+        <div className={classes.head}>
+          <Link
+            to={`/${this.props.params.projectId}/models/${this.props.params.modelId}/schema`}
+            className={classes.tab}
+            activeClassName={classes.tabActive}
+            >
+            Schema
+          </Link>
+          <Link
+            to={`/${this.props.params.projectId}/models/${this.props.params.modelId}/data`}
+            className={classes.tab}
+            activeClassName={classes.tabActive}
+            >
+            Data
+          </Link>
         </div>
+        {this.props.children}
       </div>
     )
   }

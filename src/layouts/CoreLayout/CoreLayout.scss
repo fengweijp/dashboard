@@ -9,6 +9,18 @@
   height: 66px;
 }
 
+.headerLeft {
+  float: left;
+  height: 100%;
+  width: 300px;
+}
+
+.headerRight {
+  float: left;
+  height: 100%;
+  width: calc(100% - 300px);
+}
+
 .main {
   height: calc(100% - 66px);
 }

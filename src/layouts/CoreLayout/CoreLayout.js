@@ -3,6 +3,7 @@ import Relay from 'react-relay'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import LoginForm from 'components/LoginForm/LoginForm'
 import ProjectSelection from 'components/ProjectSelection/ProjectSelection'
+import Header from 'components/Header/Header'
 import SideNav from 'components/SideNav/SideNav'
 import LoginMutation from 'mutations/LoginMutation'
 import AddProjectMutation from 'mutations/AddProjectMutation'
@@ -93,12 +94,17 @@ export class CoreLayout extends React.Component {
     return (
       <div className={classes.root}>
         <header className={classes.header}>
-          <ProjectSelection
-            projects={projects}
-            selectedProject={selectedProject}
-            select={this._selectProject}
-            add={this._addProject}
-          />
+          <div className={classes.headerLeft}>
+            <ProjectSelection
+              projects={projects}
+              selectedProject={selectedProject}
+              select={this._selectProject}
+              add={this._addProject}
+            />
+          </div>
+          <div className={classes.headerRight}>
+            <Header />
+          </div>
         </header>
         <div className={classes.main}>
           <div className={classes.sidenav}>
