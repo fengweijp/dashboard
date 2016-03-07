@@ -17,6 +17,9 @@ module.exports = {
       exclude: /node_modules/
     }],
     loaders: [{
+      test: /\.css/,
+      loader: 'style!css'
+    }, {
       test: /\.scss/,
       loader: 'style!css?modules&importLoaders=1!postcss!sass?sourceMap'
     }, {
