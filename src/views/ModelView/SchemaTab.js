@@ -2,17 +2,9 @@ import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
 import mapProps from 'map-props'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
-// import { findDOMNode } from 'react-dom'
 import Icon from 'components/Icon/Icon'
+import NewFieldOverlay from 'components/NewFieldOverlay/NewFieldOverlay'
 import classes from './SchemaTab.scss'
-
-// const types = {
-//   'Int': 'Integer',
-//   'Float': 'Float',
-//   'String': 'Text',
-//   'Boolean': 'Boolean',
-//   'GraphQLID': 'ID',
-// }
 
 export default class SchemaTab extends React.Component {
   static propTypes = {
@@ -26,27 +18,15 @@ export default class SchemaTab extends React.Component {
 
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this)
 
-    this._addField = ::this._addField
+    this._toggleOverlay = ::this._toggleOverlay
+
+    this.state = {
+      overlayVisibile: false,
+    }
   }
 
-  _addField () {
-    // const name = findDOMNode(this.refs.name).value
-    // const type = JSON.parse(findDOMNode(this.refs.type).value)
-    // const list = findDOMNode(this.refs.list).checked
-    // const nullable = findDOMNode(this.refs.nullable).checked
-    // const unique = findDOMNode(this.refs.unique).checked
-    // this.props.addField(serializeField({
-    //   type: type.name,
-    //   relation: type.relation,
-    //   name,
-    //   nullable,
-    //   list,
-    //   unique,
-    // }))
-    // findDOMNode(this.refs.name).value = ''
-    // findDOMNode(this.refs.list).checked = false
-    // findDOMNode(this.refs.nullable).checked = false
-    // findDOMNode(this.refs.unique).checked = false
+  _toggleOverlay () {
+    this.setState({ overlayVisibile: !this.state.overlayVisibile })
   }
 
   _removeField (fieldName) {
@@ -56,7 +36,12 @@ export default class SchemaTab extends React.Component {
   render () {
     return (
       <div className={classes.root}>
-        <div className={classes.add}>+ Add field</div>
+        {this.state.overlayVisibile &&
+          <NewFieldOverlay
+            hide={this._toggleOverlay}
+            />
+        }
+        <div onClick={this._toggleOverlay} className={classes.add}>+ Add field</div>
         <table className={classes.table}>
           <thead>
             <tr>

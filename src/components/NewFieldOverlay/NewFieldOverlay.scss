@@ -1,0 +1,102 @@
+@import '~styles/variables';
+
+.background {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  width: 400px;
+  background: #fff;
+  color: #A3A3AD;
+}
+
+.head {
+  width: 100%;
+  height: 74px;
+  background: $accent;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  font-size: 22px;
+  padding-left: 34px;
+}
+
+.fieldNameInput {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid #D3D4D5;
+  padding: 34px;
+  font-size: 18px;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.typeSelect {
+  display: block;
+  background: transparent;
+  width: calc(100% - 56px);
+  margin: 0 auto;
+  height: 84px;
+  border: 0;
+  font-size: 18px;
+  padding: 34px;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.check {
+  border-top: 1px solid #D3D4D5;
+  padding: 34px;
+
+  input {
+    margin-right: 10px;
+  }
+
+  .checkWord {
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  .checkDescription {
+    display: inline-block;
+    font-size: 14px;
+    width: 100%;
+    margin: 6px 0 0 24px;
+    cursor: pointer;
+  }
+}
+
+.buttonCancel {
+  width: 40%;
+  background: #DADEE2;
+  color: #626367;
+}
+
+.buttonSubmit {
+  width: 60%;
+  background: $accent;
+  color: #fff;
+}
+
+.buttonCancel, .buttonSubmit {
+  height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  float: left;
+  cursor: pointer;
+}
