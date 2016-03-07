@@ -6,10 +6,29 @@ export default class SideNav extends React.Component {
 
   static propTypes = {
     hide: PropTypes.func.isRequired,
+    add: PropTypes.func.isRequired,
   };
+
+  constructor (props) {
+    super(props)
+
+    this._addField = ::this._addField
+  }
 
   componentDidMount () {
     findDOMNode(this.refs.fieldName).focus()
+  }
+
+  _addField () {
+    this.props.add({
+      fieldName: 'test',
+      typeIdentifier: 'Integer',
+      isList: false,
+      isRequired: false,
+      isUnique: false,
+    })
+
+    this.props.hide()
   }
 
   render () {
@@ -37,7 +56,7 @@ export default class SideNav extends React.Component {
             </label>
           </div>
           <div onClick={this.props.hide} className={classes.buttonCancel}>Cancel</div>
-          <div className={classes.buttonSubmit}>Add</div>
+          <div onClick={this._addField} className={classes.buttonSubmit}>Add</div>
         </div>
       </div>
     )

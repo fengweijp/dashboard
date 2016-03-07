@@ -27,13 +27,12 @@ export class CoreLayout extends React.Component {
   constructor (props) {
     super(props)
 
-    this._selectProject = ::this._selectProject
     this._addProject = ::this._addProject
     this._login = ::this._login
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    if (!this._checkProjects(nextProps.viewer.user.projects, nextProps.params.projectId, this.context.router)) {
+    if (!this._checkProjects(nextProps.viewer.user.projects, nextProps.params.projectId)) {
       return false
     }
 
@@ -42,22 +41,18 @@ export class CoreLayout extends React.Component {
 
   componentWillMount () {
     if (this.props.viewer.user) {
-      this._checkProjects(this.props.viewer.user.projects, this.props.params.projectId, this.context.router)
+      this._checkProjects(this.props.viewer.user.projects, this.props.params.projectId)
     }
   }
 
-  _checkProjects (projects, selectedProjectId, router) {
+  _checkProjects (projects, selectedProjectId) {
     const projectIds = projects.map((project) => project.id)
     if (!projectIds.includes(selectedProjectId)) {
-      router.replace(`/${projectIds[0]}`)
+      this.context.router.replace(`/${projectIds[0]}`)
       return false
     }
 
     return true
-  }
-
-  _selectProject (projectName) {
-    this.context.router.push(`/${projectName}`)
   }
 
   _addProject () {
@@ -98,7 +93,6 @@ export class CoreLayout extends React.Component {
             <ProjectSelection
               projects={projects}
               selectedProject={selectedProject}
-              select={this._selectProject}
               add={this._addProject}
             />
           </div>
