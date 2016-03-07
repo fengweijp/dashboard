@@ -5,6 +5,7 @@ import CoreLayout from 'layouts/CoreLayout/CoreLayout'
 import ModelView from 'views/ModelView/ModelView'
 import SchemaTab from 'views/ModelView/SchemaTab'
 import DataTab from 'views/ModelView/DataTab'
+import PlaygroundView from 'views/PlaygroundView/PlaygroundView'
 
 import UserQuery from 'queries/UserQuery'
 
@@ -25,6 +26,7 @@ export default (
         </Route>
         <IndexRedirect to='default' />
       </Route>
+      <Route path='playground' component={PlaygroundView} />
       <IndexRedirect to='models' />
     </Route>
     <IndexRedirect to='default' />

@@ -35,10 +35,13 @@ export class SideNav extends React.Component {
   render () {
     return (
       <div className={classes.root}>
-        <div className={classes.head}>
+        <Link
+          to={`/${this.props.params.projectId}/models`}
+          className={classes.head}
+          >
           <Icon width={19} height={19} glyph={require('assets/icons/model.svg')} />
-          <span>MODELS</span>
-        </div>
+          <span>Models</span>
+        </Link>
         {this.props.models &&
           this.props.models.map((model) => (
             <Link
@@ -52,6 +55,13 @@ export class SideNav extends React.Component {
           ))
         }
         <div className={classes.add} onClick={this._addSchema}>+ Add model</div>
+        <Link
+          to={`/${this.props.params.projectId}/playground`}
+          className={classes.head}
+          >
+          <Icon width={19} height={19} glyph={require('assets/icons/play.svg')} />
+          <span>Playground</span>
+        </Link>
       </div>
     )
   }

@@ -14,8 +14,12 @@ module.exports = {
       exclude: /node_modules/
     }],
     loaders: [{
+      test: /\.css/,
+      loader: 'style!css'
+    }, {
       test: /\.scss/,
-      loader: 'style!css?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!sass?sourceMap'
+      loader: 'style!css?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!sass?sourceMap',
+      exclude: /node_modules/
     }, {
       test: /\.js$/,
       loader: 'babel',

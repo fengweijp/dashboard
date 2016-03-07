@@ -2,7 +2,7 @@
 
 import { injectNetworkLayer, DefaultNetworkLayer } from 'react-relay'
 
-const api = 'http://localhost:60000/api'
+const api = 'http://api.alpha.graph.cool:60000/api'
 
 export function updateNetworkLayer (): void {
   const token = window.localStorage.getItem('token')
