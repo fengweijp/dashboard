@@ -40,7 +40,9 @@ export class CoreLayout extends React.Component {
   }
 
   componentWillMount () {
-    this._checkProjects(this.props.viewer.user.projects, this.props.params.projectId, this.context.router)
+    if (this.props.viewer.user) {
+      this._checkProjects(this.props.viewer.user.projects, this.props.params.projectId, this.context.router)
+    }
   }
 
   _checkProjects (projects, selectedProjectId, router) {
