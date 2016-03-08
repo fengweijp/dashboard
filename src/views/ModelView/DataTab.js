@@ -51,17 +51,7 @@ export default Relay.createContainer(MappedDataTab, {
     viewer: () => Relay.QL`
       fragment on Viewer {
         user {
-          name
-          projects {
-            id
-            models {
-              name
-              data
-              schema {
-                fieldName
-              }
-            }
-          }
+          id
         }
       }
     `,

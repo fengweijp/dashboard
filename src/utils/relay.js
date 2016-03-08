@@ -9,7 +9,7 @@ const api = process.env.NODE_ENV === 'production'
 export function updateNetworkLayer (): void {
   const token = window.localStorage.getItem('token')
   const headers = token ? { Authorization: `Bearer ${token}` } : null
-  const layer = new DefaultNetworkLayer(api, { headers })
+  const layer = new DefaultNetworkLayer(api, { headers, retryDelays: [] })
 
   injectNetworkLayer(layer)
 }

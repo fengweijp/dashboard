@@ -33,6 +33,7 @@ export default Relay.createContainer(MappedModelRedirectView, {
     projectId: '',
   },
   fragments: {
+    // NOTE name needed because of relay bug
     viewer: () => Relay.QL`
       fragment on Viewer {
         project(id: $projectId) {
