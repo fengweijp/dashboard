@@ -43,7 +43,7 @@ export default class ProjectSelection extends React.Component {
           {this.props.selectedProject.name}
           <div className={`${classes.arrow} ${this.state.expanded ? classes.up : ''}`}>
             <Icon
-              glyph={require('assets/icons/arrow.svg')}
+              src={require('assets/icons/arrow.svg')}
               color='#fff'
               />
           </div>
@@ -61,7 +61,7 @@ export default class ProjectSelection extends React.Component {
                 {project.name}
                 <div title='Duplicate' className={classes.listElementDuplicate}>
                   <Icon
-                    glyph={require('assets/icons/model.svg')}
+                    src={require('assets/icons/model.svg')}
                     color='#fff'
                     />
                 </div>

@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 
 export default function Icon ({
-  glyph,
+  src,
   color = '',
   width = 16,
   height = 16,
@@ -13,14 +13,13 @@ export default function Icon ({
       width={width}
       height={height}
       fill={color}
-      >
-      <use xlinkHref={glyph} />
-    </svg>
+      dangerouslySetInnerHTML={{__html: src}}
+      />
   )
 }
 
 Icon.propTypes = {
-  glyph: PropTypes.string.isRequired,
+  src: PropTypes.string.isRequired,
   color: PropTypes.string,
   width: PropTypes.number,
   height: PropTypes.number,

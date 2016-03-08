@@ -39,7 +39,7 @@ export class SideNav extends React.Component {
           to={`/${this.props.params.projectId}/models`}
           className={classes.head}
           >
-          <Icon width={19} height={19} glyph={require('assets/icons/model.svg')} />
+          <Icon width={19} height={19} src={require('assets/icons/model.svg')} />
           <span>Models</span>
         </Link>
         {this.props.models &&
@@ -59,7 +59,7 @@ export class SideNav extends React.Component {
           to={`/${this.props.params.projectId}/playground`}
           className={classes.head}
           >
-          <Icon width={19} height={19} glyph={require('assets/icons/play.svg')} />
+          <Icon width={19} height={19} src={require('assets/icons/play.svg')} />
           <span>Playground</span>
         </Link>
       </div>
@@ -69,7 +69,7 @@ export class SideNav extends React.Component {
 
 const MappedSideNav = mapProps({
   params: (props) => props.params,
-  models: (props) => props.project.models,
+  models: (props) => props.project.models.edges.map((edge) => edge.node),
 })(SideNav)
 
 export default Relay.createContainer(MappedSideNav, {
@@ -78,8 +78,12 @@ export default Relay.createContainer(MappedSideNav, {
       fragment on Project {
         id
         name
-        models {
-          name
+        models(first: 10) {
+          edges {
+            node {
+              name
+            }
+          }
         }
       }
     `,

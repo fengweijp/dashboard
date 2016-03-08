@@ -100,10 +100,7 @@ export default class SchemaTab extends React.Component {
                   <td>
                     {!field.isSystem &&
                       <span onClick={() => this._removeField(field.name)}>
-                        <Icon
-                          glyph={require('assets/icons/delete.svg')}
-                          color='#000'
-                          />
+                        <Icon src={require('assets/icons/delete.svg')} />
                       </span>
                     }
                   </td>
@@ -120,22 +117,29 @@ export default class SchemaTab extends React.Component {
 const MappedSchemaTab = mapProps({
   params: (props) => props.params,
   models: (props) => (
-    props.viewer.user.projects
+    props.viewer.user.projects.edges
+      .map((edge) => edge.node)
       .find((project) => project.id === props.params.projectId)
-      .models
+      .models.edges
+      .map((edge) => edge.node)
   ),
   model: (props) => (
-    props.viewer.user.projects
+    props.viewer.user.projects.edges
+      .map((edge) => edge.node)
       .find((project) => project.id === props.params.projectId)
-      .models
+      .models.edges
+      .map((edge) => edge.node)
       .find((model) => model.name === props.params.modelId)
   ),
   fields: (props) => (
-    props.viewer.user.projects
+    props.viewer.user.projects.edges
+      .map((edge) => edge.node)
       .find((project) => project.id === props.params.projectId)
-      .models
+      .models.edges
+      .map((edge) => edge.node)
       .find((model) => model.name === props.params.modelId)
-      .schema
+      .fields.edges
+      .map((edge) => edge.node)
   ),
 })(SchemaTab)
 
@@ -145,18 +149,30 @@ export default Relay.createContainer(MappedSchemaTab, {
       fragment on Viewer {
         user {
           name
-          projects {
-            id
-            models {
-              name
-              schema {
-                fieldName
-                typeIdentifier
-                typeData
-                isRequired
-                isList
-                isUnique
-                isSystem
+          projects(first: 10) {
+            edges {
+              node {
+                id
+                models(first: 10) {
+                  edges {
+                    node {
+                      name
+                      fields(first: 10) {
+                        edges {
+                          node {
+                            fieldName
+                            typeIdentifier
+                            typeData
+                            isRequired
+                            isList
+                            isUnique
+                            isSystem
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           }

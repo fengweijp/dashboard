@@ -28,12 +28,7 @@ module.exports = {
       exclude: /node_modules/
     }, {
       test: /\.svg$/,
-      loader: 'svg-sprite!svgo?' + JSON.stringify({
-        plugins: [{
-          removeStyleElement: true,
-          removeAttrs: { attrs: ['fill', 'style'] }
-        }]
-      })
+      loader: 'svg-inline?removeTags=true'
     }]
   },
   plugins: [
@@ -42,15 +37,6 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       template: 'src/index.html'
-    }),
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        unused: true,
-        dead_code: true,
-        warnings: false
-      }
     })
   ],
   postcss: [

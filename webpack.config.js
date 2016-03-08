@@ -27,12 +27,7 @@ module.exports = {
       exclude: /node_modules/
     }, {
       test: /\.svg$/,
-      loader: 'svg-sprite!svgo?' + JSON.stringify({
-        plugins: [{
-          removeStyleElement: true,
-          removeAttrs: { attrs: ['fill', 'style'] }
-        }]
-      })
+      loader: 'svg-inline?removeTags=true'
     }]
   },
   plugins: [

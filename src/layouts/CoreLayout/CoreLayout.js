@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
+import mapProps from 'map-props'
 import LoginForm from 'components/LoginForm/LoginForm'
 import ProjectSelection from 'components/ProjectSelection/ProjectSelection'
 import Header from 'components/Header/Header'
@@ -15,7 +16,9 @@ import '../../styles/core.scss'
 export class CoreLayout extends React.Component {
   static propTypes = {
     children: PropTypes.element.isRequired,
+    isLoggedin: PropTypes.bool.isRequired,
     viewer: PropTypes.object.isRequired,
+    projects: PropTypes.array.isRequired,
     params: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
   };
@@ -32,7 +35,7 @@ export class CoreLayout extends React.Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    if (!this._checkProjects(nextProps.viewer.user.projects, nextProps.params.projectId)) {
+    if (!this._checkProjects(nextProps.projects, nextProps.params.projectId)) {
       return false
     }
 
@@ -40,8 +43,8 @@ export class CoreLayout extends React.Component {
   }
 
   componentWillMount () {
-    if (this.props.viewer.user) {
-      this._checkProjects(this.props.viewer.user.projects, this.props.params.projectId)
+    if (this.props.isLoggedin) {
+      this._checkProjects(this.props.projects, this.props.params.projectId)
     }
   }
 
@@ -72,14 +75,13 @@ export class CoreLayout extends React.Component {
   }
 
   render () {
-    if (!this.props.viewer.user) {
+    if (!this.props.isLoggedin) {
       return (
         <LoginForm login={this._login} />
       )
     }
 
-    const projects = this.props.viewer.user.projects
-    const selectedProject = projects.find((project) => project.id === this.props.params.projectId)
+    const selectedProject = this.props.projects.find((project) => project.id === this.props.params.projectId)
 
     // render nothing since redirect is scheduled
     if (!selectedProject) {
@@ -91,7 +93,7 @@ export class CoreLayout extends React.Component {
         <header className={classes.header}>
           <div className={classes.headerLeft}>
             <ProjectSelection
-              projects={projects}
+              projects={this.props.projects}
               selectedProject={selectedProject}
               add={this._addProject}
             />
@@ -116,17 +118,28 @@ export class CoreLayout extends React.Component {
   }
 }
 
-export default Relay.createContainer(CoreLayout, {
+const MappedCoreLayout = mapProps({
+  params: (props) => props.params,
+  projects: (props) => props.viewer.user.projects.edges.map((edge) => edge.node),
+  viewer: (props) => props.viewer,
+  isLoggedin: (props) => props.viewer.user !== null,
+})(CoreLayout)
+
+export default Relay.createContainer(MappedCoreLayout, {
   fragments: {
     viewer: () => Relay.QL`
       fragment on Viewer {
         id
         user {
           name
-          projects {
-            id
-            name
-            ${SideNav.getFragment('project')}
+          projects(first: 10) {
+            edges {
+              node {
+                id
+                name
+                ${SideNav.getFragment('project')}
+              }
+            }
           }
         }
       }
