@@ -9,6 +9,7 @@ export default class AddFieldMutation extends Relay.Mutation {
   getFatQuery () {
     return Relay.QL`
       fragment on AddFieldPayload {
+        fieldEdge
         model
       }
     `
@@ -16,16 +17,21 @@ export default class AddFieldMutation extends Relay.Mutation {
 
   getConfigs () {
     return [{
-      type: 'FIELDS_CHANGE',
-      fieldIDs: {
-        model: this.props.model.id,
+      type: 'RANGE_ADD',
+      parentName: 'model',
+      parentID: this.props.modelId,
+      connectionName: 'fields',
+      edgeName: 'fieldEdge',
+      rangeBehaviors: {
+        '': 'append',
       },
     }]
   }
 
   getVariables () {
     return {
-      modelName: this.props.model.name,
+      modelId: this.props.modelId,
+      projectId: this.props.projectId, // TODO remove redundancy
       fieldName: this.props.fieldName,
       typeIdentifier: this.props.typeIdentifier,
       isRequired: this.props.isRequired,

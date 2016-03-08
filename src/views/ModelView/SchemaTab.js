@@ -5,6 +5,7 @@ import PureRenderMixin from 'react-addons-pure-render-mixin'
 import Icon from 'components/Icon/Icon'
 import NewFieldOverlay from 'components/NewFieldOverlay/NewFieldOverlay'
 import AddFieldMutation from 'mutations/AddFieldMutation'
+import DeleteFieldMutation from 'mutations/DeleteFieldMutation'
 import classes from './SchemaTab.scss'
 
 export default class SchemaTab extends React.Component {
@@ -39,19 +40,27 @@ export default class SchemaTab extends React.Component {
   _addField (data) {
     Relay.Store.commitUpdate(new AddFieldMutation({
       ...data,
-      model: this.props.model,
+      modelId: this.props.params.modelId,
+      projectId: this.props.params.projectId,
     }))
   }
 
-  _removeField (fieldName) {
-
+  _deleteField (fieldId) {
+    Relay.Store.commitUpdate(new DeleteFieldMutation({
+      fieldId,
+      projectId: this.props.params.projectId,
+      modelId: this.props.params.modelId,
+    }))
   }
 
   render () {
+    const modelNames = this.props.allModels.map((model) => model.name)
+
     return (
       <div className={classes.root}>
         {this.state.overlayVisibile &&
           <NewFieldOverlay
+            modelNames={modelNames}
             hide={this._toggleOverlay}
             add={this._addField}
             />
@@ -81,7 +90,7 @@ export default class SchemaTab extends React.Component {
                   <td>{field.isUnique ? 'unique' : ''}</td>
                   <td>
                     {!field.isSystem &&
-                      <span onClick={() => this._removeField(field.name)}>
+                      <span onClick={() => this._deleteField(field.id)}>
                         <Icon src={require('assets/icons/delete.svg')} />
                       </span>
                     }
@@ -112,10 +121,12 @@ export default Relay.createContainer(MappedSchemaTab, {
     viewer: () => Relay.QL`
       fragment on Viewer {
         model(id: $modelId) {
+          id
           name
-          fields(first: 10) {
+          fields(first: 100) {
             edges {
               node {
+                id
                 fieldName
                 typeIdentifier
                 typeData
@@ -128,7 +139,7 @@ export default Relay.createContainer(MappedSchemaTab, {
           }
         }
         project(id: $projectId) {
-          models(first: 10) {
+          models(first: 100) {
             edges {
               node {
                 id

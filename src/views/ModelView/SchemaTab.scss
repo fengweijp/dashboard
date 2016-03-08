@@ -72,7 +72,10 @@
     &:nth-child(5) {
       width: 15%;
       text-align: right;
-      cursor: pointer;
+
+      span {
+        cursor: pointer;
+      }
 
       svg {
         fill: $blue-grey-dark;
