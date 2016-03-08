@@ -46,7 +46,7 @@ export class SideNav extends React.Component {
           this.props.models.map((model) => (
             <Link
               key={model.name}
-              to={`/${this.props.params.projectId}/models/${model.name}`}
+              to={`/${this.props.params.projectId}/models/${model.id}`}
               className={classes.listElement}
               activeClassName={classes.listElementActive}
               >
@@ -81,6 +81,7 @@ export default Relay.createContainer(MappedSideNav, {
         models(first: 10) {
           edges {
             node {
+              id
               name
             }
           }

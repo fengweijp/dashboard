@@ -12,7 +12,11 @@ export default class SchemaTab extends React.Component {
     params: PropTypes.object.isRequired,
     model: PropTypes.object.isRequired,
     fields: PropTypes.array.isRequired,
-    models: PropTypes.array.isRequired,
+    allModels: PropTypes.array.isRequired,
+  };
+
+  static contextTypes = {
+    router: PropTypes.object.isRequired,
   };
 
   constructor (props) {
@@ -26,28 +30,6 @@ export default class SchemaTab extends React.Component {
     this.state = {
       overlayVisibile: false,
     }
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    if (!this._checkModels(nextProps.models, nextProps.params)) {
-      return false
-    }
-
-    return PureRenderMixin.shouldComponentUpdate(nextProps, nextState)
-  }
-
-  componentWillMount () {
-    this._checkModels(this.props.models, this.props.params)
-  }
-
-  _checkModels (models, params) {
-    const modelIds = models.map((model) => model.name)
-    if (!modelIds.includes(params.modelId)) {
-      this.context.router.replace(`/${params.projectId}/models/${modelIds[0]}`)
-      return false
-    }
-
-    return true
   }
 
   _toggleOverlay () {
@@ -116,63 +98,41 @@ export default class SchemaTab extends React.Component {
 
 const MappedSchemaTab = mapProps({
   params: (props) => props.params,
-  models: (props) => (
-    props.viewer.user.projects.edges
-      .map((edge) => edge.node)
-      .find((project) => project.id === props.params.projectId)
-      .models.edges
-      .map((edge) => edge.node)
-  ),
-  model: (props) => (
-    props.viewer.user.projects.edges
-      .map((edge) => edge.node)
-      .find((project) => project.id === props.params.projectId)
-      .models.edges
-      .map((edge) => edge.node)
-      .find((model) => model.name === props.params.modelId)
-  ),
-  fields: (props) => (
-    props.viewer.user.projects.edges
-      .map((edge) => edge.node)
-      .find((project) => project.id === props.params.projectId)
-      .models.edges
-      .map((edge) => edge.node)
-      .find((model) => model.name === props.params.modelId)
-      .fields.edges
-      .map((edge) => edge.node)
-  ),
+  allModels: (props) => props.viewer.project.models.edges.map((edge) => edge.node),
+  model: (props) => props.viewer.model,
+  fields: (props) => props.viewer.model.fields.edges.map((edge) => edge.node),
 })(SchemaTab)
 
 export default Relay.createContainer(MappedSchemaTab, {
+  initialVariables: {
+    modelId: null, // injected from router
+    projectId: null, // injected from router
+  },
   fragments: {
     viewer: () => Relay.QL`
       fragment on Viewer {
-        user {
+        model(id: $modelId) {
           name
-          projects(first: 10) {
+          fields(first: 10) {
+            edges {
+              node {
+                fieldName
+                typeIdentifier
+                typeData
+                isRequired
+                isList
+                isUnique
+                isSystem
+              }
+            }
+          }
+        }
+        project(id: $projectId) {
+          models(first: 10) {
             edges {
               node {
                 id
-                models(first: 10) {
-                  edges {
-                    node {
-                      name
-                      fields(first: 10) {
-                        edges {
-                          node {
-                            fieldName
-                            typeIdentifier
-                            typeData
-                            isRequired
-                            isList
-                            isUnique
-                            isSystem
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
+                name
               }
             }
           }

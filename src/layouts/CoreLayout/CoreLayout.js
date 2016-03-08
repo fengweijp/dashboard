@@ -18,7 +18,7 @@ export class CoreLayout extends React.Component {
     children: PropTypes.element.isRequired,
     isLoggedin: PropTypes.bool.isRequired,
     viewer: PropTypes.object.isRequired,
-    projects: PropTypes.array.isRequired,
+    projects: PropTypes.array,
     params: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
   };
@@ -120,7 +120,11 @@ export class CoreLayout extends React.Component {
 
 const MappedCoreLayout = mapProps({
   params: (props) => props.params,
-  projects: (props) => props.viewer.user.projects.edges.map((edge) => edge.node),
+  projects: (props) => (
+    props.viewer.user
+     ? props.viewer.user.projects.edges.map((edge) => edge.node)
+     : null
+  ),
   viewer: (props) => props.viewer,
   isLoggedin: (props) => props.viewer.user !== null,
 })(CoreLayout)
