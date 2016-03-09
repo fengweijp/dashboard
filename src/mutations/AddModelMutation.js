@@ -9,28 +9,29 @@ export default class AddModelMutation extends Relay.Mutation {
   getFatQuery () {
     return Relay.QL`
       fragment on AddModelPayload {
-        viewer {
-          user {
-            projects
-          }
-        }
+        modelEdge
+        project
       }
     `
   }
 
   getConfigs () {
     return [{
-      type: 'FIELDS_CHANGE',
-      fieldIDs: {
-        user: this.props.user.id,
+      type: 'RANGE_ADD',
+      parentName: 'project',
+      parentID: this.props.projectId,
+      connectionName: 'models',
+      edgeName: 'modelEdge',
+      rangeBehaviors: {
+        '': 'append',
       },
     }]
   }
 
   getVariables () {
     return {
-      modelName: this.props.modelName,
       projectId: this.props.projectId,
+      modelName: this.props.modelName,
     }
   }
 }

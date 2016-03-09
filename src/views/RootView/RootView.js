@@ -36,7 +36,10 @@ export class RootView extends React.Component {
   _addProject () {
     const projectName = window.prompt('Project name')
     if (projectName) {
-      Relay.Store.commitUpdate(new AddProjectMutation({ projectName, user: this.props.viewer.user }))
+      Relay.Store.commitUpdate(new AddProjectMutation({
+        projectName,
+        userId: this.props.viewer.user.id,
+      }))
     }
   }
 
@@ -113,7 +116,8 @@ export default Relay.createContainer(MappedRootView, {
         }
         user {
           name
-          projects(first: 10) {
+          id
+          projects(first: 100) {
             edges {
               node {
                 id

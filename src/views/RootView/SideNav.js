@@ -27,7 +27,6 @@ export class SideNav extends React.Component {
       Relay.Store.commitUpdate(new AddModelMutation({
         modelName,
         projectId: this.props.params.projectId,
-        // user: this.props.viewer.user,
       }))
     }
   }
@@ -54,7 +53,7 @@ export class SideNav extends React.Component {
             </Link>
           ))
         }
-        <div className={classes.add} onClick={this._addSchema}>+ Add model</div>
+        <div className={classes.add} onClick={this._addModel}>+ Add model</div>
         <Link
           to={`/${this.props.params.projectId}/playground`}
           className={classes.head}
