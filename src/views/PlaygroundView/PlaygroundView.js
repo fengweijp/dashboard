@@ -5,7 +5,7 @@ import classes from './PlaygroundView.scss'
 import 'graphiql/graphiql.css'
 
 const api = process.env.NODE_ENV === 'production'
-  ? 'http://api.alpha.graph.cool:60000/graphql'
+  ? 'https://api.alpha.graph.cool/graphql'
   : 'http://localhost:60000/graphql'
 
 export default class PlaygroundView extends React.Component {

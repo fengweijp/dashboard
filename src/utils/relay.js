@@ -3,7 +3,7 @@
 import { injectNetworkLayer, DefaultNetworkLayer } from 'react-relay'
 
 const api = process.env.NODE_ENV === 'production'
-  ? 'http://api.alpha.graph.cool:60000/api'
+  ? 'https://api.alpha.graph.cool/api'
   : 'http://localhost:60000/api'
 
 export function updateNetworkLayer (): void {
