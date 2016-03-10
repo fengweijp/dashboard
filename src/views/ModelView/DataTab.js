@@ -1,28 +1,73 @@
 import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
 import mapProps from 'map-props'
-import PureRenderMixin from 'react-addons-pure-render-mixin'
-// import classes from './DataTab.scss'
+import classes from './DataTab.scss'
+import { Lokka } from 'lokka'
+import { Transport } from 'lokka-transport-http'
+
+const lokka = new Lokka({
+  transport: new Transport('http://localhost:60000/graphql/cilkohu7e00063mi6s5sjtrqn'),
+})
 
 export class DataTab extends React.Component {
   static propTypes = {
     params: PropTypes.object.isRequired,
-    data: PropTypes.string.isRequired,
+    modelName: PropTypes.string.isRequired,
     fields: PropTypes.array.isRequired,
   };
 
   constructor (props) {
     super(props)
 
-    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this)
+    this.state = {
+      items: [],
+    }
+  }
+
+  componentWillMount () {
+    const fieldNames = this.props.fields.map((field) => field.fieldName).join(',')
+    const query = `
+      {
+        viewer {
+          all${this.props.modelName}s {
+            edges {
+              node {
+                ${fieldNames}
+              }
+            }
+          }
+        }
+      }
+    `
+    debugger
+    lokka.query(query)
+      .then((results) => {
+        const items = results.viewer.allStorys.edges.map((edge) => edge.node)
+        this.setState({ items })
+      })
   }
 
   render () {
     return (
-      <div>
-        <div>
-          {this.props.data}
-        </div>
+      <div className={classes.root}>
+        <table>
+          <thead>
+            <tr>
+              {this.props.fields.map((field) => (
+                <th>{field.fieldName}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {this.state.items.map((item) => (
+              <tr>
+                {this.props.fields.map((field) => {
+                  return <td>{item[field.fieldName]}</td>
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     )
   }
@@ -30,28 +75,27 @@ export class DataTab extends React.Component {
 
 const MappedDataTab = mapProps({
   params: (props) => props.params,
-  data: (props) => (
-    props.viewer.user.projects
-      .find((project) => project.id === props.params.projectId)
-      .models
-      .find((model) => model.name === props.params.modelId)
-      .data
-  ),
-  fields: (props) => (
-    props.viewer.user.projects
-      .find((project) => project.id === props.params.projectId)
-      .models
-      .find((model) => model.name === props.params.modelId)
-      .schema
-  ),
+  fields: (props) => props.viewer.model.fields.edges.map((edge) => edge.node),
+  modelName: (props) => props.viewer.model.name,
 })(DataTab)
 
 export default Relay.createContainer(MappedDataTab, {
+  initialVariables: {
+    modelId: null, // injected from router
+  },
   fragments: {
     viewer: () => Relay.QL`
       fragment on Viewer {
-        user {
-          id
+        model(id: $modelId) {
+          name
+          fields(first: 100) {
+            edges {
+              node {
+                id
+                fieldName
+              }
+            }
+          }
         }
       }
     `,

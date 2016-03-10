@@ -31,7 +31,8 @@ export default (
         <Route path=':modelId' component={ModelView}>
           <Route path='schema' component={SchemaTab} renderFailure={() => <ModelRedirectView />}
             queries={ViewerQuery} renderLoading={loading} />
-          <Route path='data' component={DataTab} queries={ViewerQuery} renderLoading={loading} />
+          <Route path='data' component={DataTab} renderFailure={() => <ModelRedirectView />}
+            queries={ViewerQuery} renderLoading={loading} />
           <IndexRedirect to='schema' />
         </Route>
       </Route>
