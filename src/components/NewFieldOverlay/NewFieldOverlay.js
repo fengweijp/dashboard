@@ -6,7 +6,7 @@ const types = {
   'Int': 'Integer',
   'Float': 'Float',
   'Boolean': 'Boolean',
-  'Text': 'String',
+  'String': 'Text',
   'GraphQLID': 'ID',
 }
 
