@@ -33,7 +33,7 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '"production"'
+      __BACKEND_ADDR__: JSON.stringify(process.env.BACKEND_ADDR || '')
     }),
     new HtmlWebpackPlugin({
       template: 'src/index.html'

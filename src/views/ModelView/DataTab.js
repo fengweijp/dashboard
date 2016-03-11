@@ -1,13 +1,11 @@
 import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
 import mapProps from 'map-props'
-import classes from './DataTab.scss'
 import { Lokka } from 'lokka'
 import { Transport } from 'lokka-transport-http'
-
-const lokka = new Lokka({
-  transport: new Transport('http://localhost:60000/graphql/cilkohu7e00063mi6s5sjtrqn'),
-})
+import { isScalar } from 'utils/graphql'
+import Icon from 'components/Icon/Icon'
+import classes from './DataTab.scss'
 
 export class DataTab extends React.Component {
   static propTypes = {
@@ -25,7 +23,11 @@ export class DataTab extends React.Component {
   }
 
   componentWillMount () {
-    const fieldNames = this.props.fields.map((field) => field.fieldName).join(',')
+    const clientEndpoint = `${__BACKEND_ADDR__}/graphql/${this.props.params.projectId}`
+    const lokka = new Lokka({ transport: new Transport(clientEndpoint) })
+    const fieldNames = this.props.fields
+      .map((field) => field.fieldName)
+      .join(',')
     const query = `
       {
         viewer {
@@ -41,7 +43,7 @@ export class DataTab extends React.Component {
     `
     lokka.query(query)
       .then((results) => {
-        const items = results.viewer.allStorys.edges.map((edge) => edge.node)
+        const items = results.viewer[`all${this.props.modelName}s`].edges.map((edge) => edge.node)
         this.setState({ items })
       })
   }
@@ -49,20 +51,34 @@ export class DataTab extends React.Component {
   render () {
     return (
       <div className={classes.root}>
-        <table>
+        <div onClick={this._toggleOverlay} className={classes.add}>+ Add {this.props.modelName}</div>
+        <table className={classes.table}>
           <thead>
             <tr>
               {this.props.fields.map((field) => (
-                <th>{field.fieldName}</th>
+                <th key={field.id}>{field.fieldName}</th>
               ))}
+              <th></th>
             </tr>
           </thead>
           <tbody>
             {this.state.items.map((item) => (
-              <tr>
+              <tr key={item.id}>
                 {this.props.fields.map((field) => {
-                  return <td>{item[field.fieldName]}</td>
+                  let str = 'null'
+                  if (item[field.fieldName] !== null) {
+                    str = item[field.fieldName].toString()
+                    if (str.length > 50) {
+                      str = str.substr(0, 47) + '...'
+                    }
+                  }
+                  return <td key={field.id}>{str}</td>
                 })}
+                <td>
+                  <span onClick={() => this._deleteItem(item.id)}>
+                    <Icon src={require('assets/icons/delete.svg')} />
+                  </span>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -74,7 +90,11 @@ export class DataTab extends React.Component {
 
 const MappedDataTab = mapProps({
   params: (props) => props.params,
-  fields: (props) => props.viewer.model.fields.edges.map((edge) => edge.node),
+  fields: (props) => (
+    props.viewer.model.fields.edges
+      .map((edge) => edge.node)
+      .filter((field) => isScalar(field.typeIdentifier))
+  ),
   modelName: (props) => props.viewer.model.name,
 })(DataTab)
 
@@ -92,6 +112,7 @@ export default Relay.createContainer(MappedDataTab, {
               node {
                 id
                 fieldName
+                typeIdentifier
               }
             }
           }

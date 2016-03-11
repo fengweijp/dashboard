@@ -32,7 +32,7 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '"development"'
+      __BACKEND_ADDR__: '"http://localhost:60000"'
     }),
     new HtmlWebpackPlugin({
       template: 'src/index.html'

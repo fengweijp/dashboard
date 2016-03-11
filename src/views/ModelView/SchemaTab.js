@@ -45,12 +45,14 @@ export default class SchemaTab extends React.Component {
     }))
   }
 
-  _deleteField (fieldId) {
-    Relay.Store.commitUpdate(new DeleteFieldMutation({
-      fieldId,
-      projectId: this.props.params.projectId,
-      modelId: this.props.params.modelId,
-    }))
+  _deleteField (field) {
+    if (window.confirm(`Do you really want to delete "${field.fieldName}"?`)) {
+      Relay.Store.commitUpdate(new DeleteFieldMutation({
+        fieldId: field.id,
+        projectId: this.props.params.projectId,
+        modelId: this.props.params.modelId,
+      }))
+    }
   }
 
   render () {
@@ -90,7 +92,7 @@ export default class SchemaTab extends React.Component {
                   <td>{field.isUnique ? 'unique' : ''}</td>
                   <td>
                     {!field.isSystem &&
-                      <span onClick={() => this._deleteField(field.id)}>
+                      <span onClick={() => this._deleteField(field)}>
                         <Icon src={require('assets/icons/delete.svg')} />
                       </span>
                     }

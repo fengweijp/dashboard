@@ -1,19 +1,14 @@
-/* @flow */
-
 import { injectNetworkLayer, DefaultNetworkLayer } from 'react-relay'
 
-const api = process.env.NODE_ENV === 'production'
-  ? 'https://api.alpha.graph.cool/api'
-  : 'http://localhost:60000/api'
-
-export function updateNetworkLayer (): void {
+export function updateNetworkLayer () {
   const token = window.localStorage.getItem('token')
   const headers = token ? { Authorization: `Bearer ${token}` } : null
+  const api = `${__BACKEND_ADDR__}/api`
   const layer = new DefaultNetworkLayer(api, { headers, retryDelays: [] })
 
   injectNetworkLayer(layer)
 }
 
-export function saveToken (token: string): void {
+export function saveToken (token) {
   window.localStorage.setItem('token', token)
 }

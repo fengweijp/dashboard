@@ -36,6 +36,7 @@
   width: 100%;
   top: 66px;
   background: $accent;
+  overflow: scroll;
 
   .listElement {
     width: 100%;
@@ -75,7 +76,7 @@
     border-radius: 4px;
     font-weight: 500;
     font-size: 14px;
-    margin: 40px auto 15px;
+    margin: 40px auto;
     cursor: pointer;
 
     &:hover {
