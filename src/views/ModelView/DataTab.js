@@ -39,7 +39,6 @@ export class DataTab extends React.Component {
         }
       }
     `
-    debugger
     lokka.query(query)
       .then((results) => {
         const items = results.viewer.allStorys.edges.map((edge) => edge.node)
