@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { findDOMNode } from 'react-dom'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 
 export default class SideNav extends React.Component {
@@ -11,18 +12,20 @@ export default class SideNav extends React.Component {
 
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this)
 
-    this._login = this._login.bind(this)
+    this._login = ::this._login
   }
 
   _login () {
-    this.props.login('email', 'password')
+    const email = findDOMNode(this.refs.email).value
+    const password = findDOMNode(this.refs.password).value
+    this.props.login(email, password)
   }
 
   render () {
     return (
       <div>
-        <input type='text' placeholder='Email' />
-        <input type='password' placeholder='Password' />
+        <input ref='email' type='text' placeholder='Email' />
+        <input ref='password' type='password' placeholder='Password' />
         <button onClick={this._login}>Login</button>
       </div>
     )
