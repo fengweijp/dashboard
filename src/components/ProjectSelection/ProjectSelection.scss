@@ -17,12 +17,20 @@
   justify-content: center;
   cursor: pointer;
 
+  .gear {
+    display: block;
+    position: absolute;
+    left: 16px;
+    height: 16px;
+    top: calc(50% - 8px);
+  }
+
   .arrow {
     display: block;
     position: absolute;
     right: 20px;
-    height: 16px;
-    top: calc(50% - 8px);
+    height: 20px;
+    top: calc(50% - 10px);
 
     &.up {
       transform: rotate(180deg);

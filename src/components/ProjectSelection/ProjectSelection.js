@@ -3,8 +3,10 @@ import { Link } from 'react-router'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import Icon from 'components/Icon/Icon'
 import classes from './ProjectSelection.scss'
+import ProjectSettingsOverlay from 'components/ProjectSettingsOverlay/ProjectSettingsOverlay'
 
 const ProjectPropType = React.PropTypes.shape({
+  webhookUrl: React.PropTypes.string,
   name: React.PropTypes.string.isRequired,
   id: React.PropTypes.string.isRequired,
 })
@@ -25,6 +27,7 @@ export default class ProjectSelection extends React.Component {
 
     this.state = {
       expanded: false,
+      projectSettingsVisible: false,
     }
   }
 
@@ -36,10 +39,26 @@ export default class ProjectSelection extends React.Component {
     this.props.add()
   }
 
+  _toggleProjectSettings () {
+    this.setState({ projectSettingsVisible: !this.state.projectSettingsVisible })
+  }
+
   render () {
     return (
       <div className={classes.root}>
+        {this.state.projectSettingsVisible && <ProjectSettingsOverlay
+          project={this.props.selectedProject}
+          hide={() => this._toggleProjectSettings()}
+          />}
+
         <div className={classes.head} onClick={this._toggle}>
+          <div onClick={(e) => { e.stopPropagation(); this._toggleProjectSettings() }} className={classes.gear}>
+            <Icon
+              width={20} height={20}
+              src={require('assets/icons/gear.svg')}
+              color='#fff'
+              />
+          </div>
           {this.props.selectedProject.name}
           <div className={`${classes.arrow} ${this.state.expanded ? classes.up : ''}`}>
             <Icon
