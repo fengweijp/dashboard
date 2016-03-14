@@ -10,7 +10,7 @@ const types = {
   'GraphQLID': 'ID',
 }
 
-export default class SideNav extends React.Component {
+export default class NewFieldOverlay extends React.Component {
 
   static propTypes = {
     modelNames: PropTypes.array.isRequired,

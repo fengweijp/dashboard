@@ -10,7 +10,7 @@ export default class AddPermissionMutation extends Relay.Mutation {
     return Relay.QL`
       fragment on AddPermissionPayload {
         permissionEdge
-        model
+        field
       }
     `
   }
@@ -18,8 +18,8 @@ export default class AddPermissionMutation extends Relay.Mutation {
   getConfigs () {
     return [{
       type: 'RANGE_ADD',
-      parentName: 'model',
-      parentID: this.props.modelId,
+      parentName: 'field',
+      parentID: this.props.fieldId,
       connectionName: 'permissions',
       edgeName: 'permissionEdge',
       rangeBehaviors: {
@@ -30,13 +30,13 @@ export default class AddPermissionMutation extends Relay.Mutation {
 
   getVariables () {
     return {
-      modelId: this.props.modelId,
-      projectId: this.props.projectId, // TODO remove redundancy
-      permissionName: this.props.permissionName,
-      typeIdentifier: this.props.typeIdentifier,
-      isRequired: this.props.isRequired,
-      isList: this.props.isList,
-      isUnique: this.props.isUnique,
+      fieldId: this.props.fieldId,
+      userType: this.props.userType,
+      userPath: this.props.userPath,
+      allowRead: this.props.allowRead,
+      allowCreate: this.props.allowCreate,
+      allowUpdate: this.props.allowUpdate,
+      allowDelete: this.props.allowDelete,
     }
   }
 }

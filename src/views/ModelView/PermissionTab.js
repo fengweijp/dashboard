@@ -2,20 +2,20 @@ import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
 import mapProps from 'map-props'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
+import NewPermissionOverlay from 'components/NewPermissionOverlay/NewPermissionOverlay'
+import AddPermissionMutation from 'mutations/AddPermissionMutation'
 import Icon from 'components/Icon/Icon'
 import classes from './PermissionTab.scss'
 
 const userTypes = {
-  NOBODY: 'Nobody',
   GUEST: 'Guest',
   ADMIN: 'Admin',
-  USER: 'Logged-In User',
+  LOOGGED_IN: 'Logged-In User',
 }
 
 export default class PermissionTab extends React.Component {
   static propTypes = {
     params: PropTypes.object.isRequired,
-    model: PropTypes.object.isRequired,
     fields: PropTypes.array.isRequired,
   };
 
@@ -24,38 +24,39 @@ export default class PermissionTab extends React.Component {
 
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this)
 
+    this._toggleOverlay = ::this._toggleOverlay
+    this._addPermission = ::this._addPermission
+
     this.state = {
+      overlayVisibile: false,
     }
   }
 
+  _toggleOverlay () {
+    this.setState({ overlayVisibile: !this.state.overlayVisibile })
+  }
+
+  _addPermission (data) {
+    Relay.Store.commitUpdate(new AddPermissionMutation({
+      ...data,
+    }))
+  }
+
   render () {
-    const permissions = [{
-      id: '2359873',
-      userType: 'USER',
-      userPath: 'id.model.field',
-      allowRead: true,
-      allowCreate: true,
-      allowUpdate: true,
-      allowDelete: true,
-    }, {
-      id: '2359874',
-      userType: 'GUEST',
-      userPath: null,
-      allowRead: true,
-      allowCreate: false,
-      allowUpdate: false,
-      allowDelete: false,
-    }]
-    const fields = this.props.fields.map((field) => (
-      Object.assign({ permissions }, field)
-    ))
     return (
       <div className={classes.root}>
-        {fields.map((field) => (
+        {this.props.fields.map((field) => (
           <div key={field.id} className={classes.field}>
+            {this.state.overlayVisibile &&
+              <NewPermissionOverlay
+                fieldId={field.id}
+                hide={this._toggleOverlay}
+                add={this._addPermission}
+                />
+            }
             <span>{field.fieldName}</span>
-            <span className={classes.add}>+ Add permission</span>
-            {field.permissions.map((permission) => (
+            <span className={classes.add} onClick={this._toggleOverlay}>+ Add permission</span>
+            {field.permissions.edges.map(({ node: permission }) => (
               <div key={permission.id} className={classes.permission}>
                 <select value={userTypes[permission.userType]}>
                   {Object.keys(userTypes).map((userType) => (
@@ -112,6 +113,19 @@ export default Relay.createContainer(MappedPermissionTab, {
               node {
                 id
                 fieldName
+                permissions(first: 100) {
+                  edges {
+                    node {
+                      id
+                      userType
+                      userPath
+                      allowRead
+                      allowCreate
+                      allowUpdate
+                      allowDelete
+                    }
+                  }
+                }
               }
             }
           }
