@@ -1,0 +1,38 @@
+@import '~styles/variables';
+
+.root {
+  width: 100%;
+  padding: 50px;
+}
+
+.field {
+  width: 100%;
+  margin: 15px 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.permission {
+  width: 100%;
+  font-size: 14px;
+  font-weight: normal;
+  margin: 2px 0;
+}
+
+.allow {
+  text-align: right;
+
+  label {
+    margin: 0 10px;
+
+    input {
+      margin-right: 5px;
+    }
+  }
+}
+
+.add {
+  font-size: 14px;
+  margin-left: 10px;
+  cursor: pointer;
+}

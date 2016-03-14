@@ -11,13 +11,8 @@ import classes from './SchemaTab.scss'
 export default class SchemaTab extends React.Component {
   static propTypes = {
     params: PropTypes.object.isRequired,
-    model: PropTypes.object.isRequired,
     fields: PropTypes.array.isRequired,
     allModels: PropTypes.array.isRequired,
-  };
-
-  static contextTypes = {
-    router: PropTypes.object.isRequired,
   };
 
   constructor (props) {
@@ -110,7 +105,6 @@ export default class SchemaTab extends React.Component {
 const MappedSchemaTab = mapProps({
   params: (props) => props.params,
   allModels: (props) => props.viewer.project.models.edges.map((edge) => edge.node),
-  model: (props) => props.viewer.model,
   fields: (props) => props.viewer.model.fields.edges.map((edge) => edge.node),
 })(SchemaTab)
 
