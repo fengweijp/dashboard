@@ -49,7 +49,7 @@ export default class NewPermissionOverlay extends React.Component {
           <div className={classes.head}>Add permission</div>
           <select ref='userType' className={classes.typeSelect}>
             {Object.keys(userTypes).map((userType) => (
-              <option key={userType}>{userTypes[userType]}</option>
+              <option key={userType} value={userType}>{userTypes[userType]}</option>
             ))}
           </select>
           <div className={classes.check}>

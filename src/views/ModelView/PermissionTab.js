@@ -4,6 +4,7 @@ import mapProps from 'map-props'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import NewPermissionOverlay from 'components/NewPermissionOverlay/NewPermissionOverlay'
 import AddPermissionMutation from 'mutations/AddPermissionMutation'
+import DeletePermissionMutation from 'mutations/DeletePermissionMutation'
 import Icon from 'components/Icon/Icon'
 import classes from './PermissionTab.scss'
 
@@ -13,10 +14,9 @@ const userTypes = {
   LOOGGED_IN: 'Logged-In User',
 }
 
-export default class PermissionTab extends React.Component {
+class PermissionRow extends React.Component {
   static propTypes = {
-    params: PropTypes.object.isRequired,
-    fields: PropTypes.array.isRequired,
+    field: PropTypes.array.isRequired,
   };
 
   constructor (props) {
@@ -26,6 +26,7 @@ export default class PermissionTab extends React.Component {
 
     this._toggleOverlay = ::this._toggleOverlay
     this._addPermission = ::this._addPermission
+    this._deletePermission = ::this._deletePermission
 
     this.state = {
       overlayVisibile: false,
@@ -42,51 +43,80 @@ export default class PermissionTab extends React.Component {
     }))
   }
 
+  _deletePermission (permission) {
+    if (window.confirm('Do you really want to delete this permission')) {
+      Relay.Store.commitUpdate(new DeletePermissionMutation({
+        fieldId: this.props.field.id,
+        permissionId: permission.id,
+      }))
+    }
+  }
+
+  render () {
+    const field = this.props.field
+    return (
+      <div className={classes.field}>
+        {this.state.overlayVisibile &&
+          <NewPermissionOverlay
+            fieldId={field.id}
+            hide={this._toggleOverlay}
+            add={this._addPermission}
+            />
+        }
+        <span>{field.fieldName}</span>
+        <span className={classes.add} onClick={this._toggleOverlay}>+ Add permission</span>
+        {field.permissions.edges.map(({ node: permission }) => (
+          <div key={permission.id} className={classes.permission}>
+            <select value={userTypes}>
+              {Object.keys(userTypes).map((userType) => (
+                <option key={userType} value={userType}>{userTypes[userType]}</option>
+              ))}
+            </select>
+            <span className={classes.allow}>
+              <label>
+                <input type='checkbox' checked={permission.allowRead} />
+                Read
+              </label>
+              <label>
+                <input type='checkbox' checked={permission.allowCreate} />
+                Create
+              </label>
+              <label>
+                <input type='checkbox' checked={permission.allowUpdate} />
+                Update
+              </label>
+              <label>
+                <input type='checkbox' checked={permission.allowDelete} />
+                Delete
+              </label>
+            </span>
+            <span onClick={() => this._deletePermission(permission)}>
+              <Icon src={require('assets/icons/delete.svg')} />
+            </span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+}
+
+export default class PermissionTab extends React.Component {
+  static propTypes = {
+    params: PropTypes.object.isRequired,
+    fields: PropTypes.array.isRequired,
+  };
+
+  constructor (props) {
+    super(props)
+
+    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this)
+  }
+
   render () {
     return (
       <div className={classes.root}>
         {this.props.fields.map((field) => (
-          <div key={field.id} className={classes.field}>
-            {this.state.overlayVisibile &&
-              <NewPermissionOverlay
-                fieldId={field.id}
-                hide={this._toggleOverlay}
-                add={this._addPermission}
-                />
-            }
-            <span>{field.fieldName}</span>
-            <span className={classes.add} onClick={this._toggleOverlay}>+ Add permission</span>
-            {field.permissions.edges.map(({ node: permission }) => (
-              <div key={permission.id} className={classes.permission}>
-                <select value={userTypes[permission.userType]}>
-                  {Object.keys(userTypes).map((userType) => (
-                    <option key={userType}>{userTypes[userType]}</option>
-                  ))}
-                </select>
-                <span className={classes.allow}>
-                  <label>
-                    <input type='checkbox' checked={permission.allowRead} />
-                    Read
-                  </label>
-                  <label>
-                    <input type='checkbox' checked={permission.allowCreate} />
-                    Create
-                  </label>
-                  <label>
-                    <input type='checkbox' checked={permission.allowUpdate} />
-                    Update
-                  </label>
-                  <label>
-                    <input type='checkbox' checked={permission.allowDelete} />
-                    Delete
-                  </label>
-                </span>
-                <span onClick={() => this._deletePermission(permission)}>
-                  <Icon src={require('assets/icons/delete.svg')} />
-                </span>
-              </div>
-            ))}
-          </div>
+          <PermissionRow key={field.id} field={field} />
         ))}
       </div>
     )
