@@ -11,7 +11,6 @@ const userTypes = {
 export default class NewPermissionOverlay extends React.Component {
 
   static propTypes = {
-    fieldId: PropTypes.string.isRequired,
     hide: PropTypes.func.isRequired,
     add: PropTypes.func.isRequired,
   };
@@ -23,7 +22,6 @@ export default class NewPermissionOverlay extends React.Component {
   }
 
   _addPermission () {
-    const fieldId = this.props.fieldId
     const userType = findDOMNode(this.refs.userType).value
     const allowRead = findDOMNode(this.refs.allowRead).checked
     const allowCreate = findDOMNode(this.refs.allowCreate).checked
@@ -31,7 +29,6 @@ export default class NewPermissionOverlay extends React.Component {
     const allowDelete = findDOMNode(this.refs.allowDelete).checked
 
     this.props.add({
-      fieldId,
       userType,
       allowRead,
       allowCreate,

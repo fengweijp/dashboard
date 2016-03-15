@@ -16,7 +16,7 @@ const userTypes = {
 
 class PermissionRow extends React.Component {
   static propTypes = {
-    field: PropTypes.array.isRequired,
+    field: PropTypes.object.isRequired,
   };
 
   constructor (props) {
@@ -39,6 +39,7 @@ class PermissionRow extends React.Component {
 
   _addPermission (data) {
     Relay.Store.commitUpdate(new AddPermissionMutation({
+      fieldId: this.props.field.id,
       ...data,
     }))
   }

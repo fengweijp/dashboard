@@ -21,13 +21,12 @@ export default class DeletePermissionMutation extends Relay.Mutation {
       parentName: 'field',
       parentID: this.props.fieldId,
       connectionName: 'permissions',
-      deletedIDPermissionName: 'deletedId',
+      deletedIDFieldName: 'deletedId',
     }]
   }
 
   getVariables () {
     return {
-      fieldId: this.props.fieldId,
       permissionId: this.props.permissionId,
     }
   }
