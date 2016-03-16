@@ -13,6 +13,7 @@ export default class NewPermissionOverlay extends React.Component {
   static propTypes = {
     hide: PropTypes.func.isRequired,
     add: PropTypes.func.isRequired,
+    availableUserRoles: PropTypes.array.isRequired,
   };
 
   constructor (props) {
@@ -23,6 +24,7 @@ export default class NewPermissionOverlay extends React.Component {
 
     this.state = {
       userType: 'GUEST',
+      userRole: props.availableUserRoles[0],
     }
   }
 
@@ -52,6 +54,10 @@ export default class NewPermissionOverlay extends React.Component {
     this.setState({ userType: e.target.value })
   }
 
+  _onSelectUserRole (e) {
+    this.setState({ userRole: e.target.value })
+  }
+
   render () {
     return (
       <div className={classes.background}>
@@ -63,7 +69,11 @@ export default class NewPermissionOverlay extends React.Component {
             ))}
           </select>
           {this.state.userType === 'AUTHENTICATED' &&
-            <h2>auth</h2>
+            <select onChange={this._onSelectUserRole} ref='userRole' className={classes.typeSelect}>
+              {this.props.availableUserRoles.map((userRole) => (
+                <option key={userRole} value={userRole}>{userRole}</option>
+              ))}
+            </select>
           }
           {this.state.userType === 'RELATED' &&
             <input

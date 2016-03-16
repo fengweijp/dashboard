@@ -17,6 +17,7 @@ const userTypes = {
 class PermissionRow extends React.Component {
   static propTypes = {
     field: PropTypes.object.isRequired,
+    availableUserRoles: PropTypes.array.isRequired,
   };
 
   constructor (props) {
@@ -62,6 +63,7 @@ class PermissionRow extends React.Component {
             fieldId={field.id}
             hide={this._toggleOverlay}
             add={this._addPermission}
+            availableUserRoles={this.props.availableUserRoles}
             />
         }
         <span>{field.fieldName}</span>
@@ -111,6 +113,7 @@ export default class PermissionTab extends React.Component {
   static propTypes = {
     params: PropTypes.object.isRequired,
     fields: PropTypes.array.isRequired,
+    availableUserRoles: PropTypes.array.isRequired,
   };
 
   constructor (props) {
@@ -123,7 +126,11 @@ export default class PermissionTab extends React.Component {
     return (
       <div className={classes.root}>
         {this.props.fields.map((field) => (
-          <PermissionRow key={field.id} field={field} />
+          <PermissionRow
+            availableUserRoles={this.props.availableUserRoles}
+            key={field.id}
+            field={field}
+            />
         ))}
       </div>
     )
@@ -133,11 +140,13 @@ export default class PermissionTab extends React.Component {
 const MappedPermissionTab = mapProps({
   params: (props) => props.params,
   fields: (props) => props.viewer.model.fields.edges.map((edge) => edge.node),
+  availableUserRoles: (props) => props.viewer.project.availableUserRoles,
 })(PermissionTab)
 
 export default Relay.createContainer(MappedPermissionTab, {
   initialVariables: {
     modelId: null, // injected from router
+    projectId: null, // injected from router
   },
   fragments: {
     viewer: () => Relay.QL`
@@ -166,6 +175,9 @@ export default Relay.createContainer(MappedPermissionTab, {
               }
             }
           }
+        }
+        project(id: $projectId) {
+          availableUserRoles
         }
       }
     `,
