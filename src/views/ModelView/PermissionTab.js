@@ -10,8 +10,8 @@ import classes from './PermissionTab.scss'
 
 const userTypes = {
   GUEST: 'Guest',
-  ADMIN: 'Admin',
-  LOOGGED_IN: 'Logged-In User',
+  AUTHENTICATED: 'Authenticated User',
+  RELATED: 'Related',
 }
 
 class PermissionRow extends React.Component {
@@ -68,11 +68,17 @@ class PermissionRow extends React.Component {
         <span className={classes.add} onClick={this._toggleOverlay}>+ Add permission</span>
         {field.permissions.edges.map(({ node: permission }) => (
           <div key={permission.id} className={classes.permission}>
-            <select value={userTypes}>
+            <select value={permission.userType}>
               {Object.keys(userTypes).map((userType) => (
                 <option key={userType} value={userType}>{userTypes[userType]}</option>
               ))}
             </select>
+            <span>
+              {permission.userPath}
+            </span>
+            <span>
+              {permission.userRole}
+            </span>
             <span className={classes.allow}>
               <label>
                 <input type='checkbox' checked={permission.allowRead} />

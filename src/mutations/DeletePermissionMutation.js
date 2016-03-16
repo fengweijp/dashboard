@@ -30,4 +30,10 @@ export default class DeletePermissionMutation extends Relay.Mutation {
       permissionId: this.props.permissionId,
     }
   }
+
+  getOptimisticResponse () {
+    return {
+      deletedId: this.props.permissionId,
+    }
+  }
 }

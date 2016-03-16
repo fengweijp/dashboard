@@ -4,8 +4,8 @@ import classes from './NewPermissionOverlay.scss'
 
 const userTypes = {
   GUEST: 'Guest',
-  ADMIN: 'Admin',
-  USER: 'Logged-In User',
+  AUTHENTICATED: 'Authenticated User',
+  RELATED: 'Related',
 }
 
 export default class NewPermissionOverlay extends React.Component {
@@ -19,10 +19,17 @@ export default class NewPermissionOverlay extends React.Component {
     super(props)
 
     this._addPermission = ::this._addPermission
+    this._onSelectUserType = ::this._onSelectUserType
+
+    this.state = {
+      userType: 'GUEST',
+    }
   }
 
   _addPermission () {
     const userType = findDOMNode(this.refs.userType).value
+    const userPath = (findDOMNode(this.refs.userPath) || {}).value
+    const userRole = (findDOMNode(this.refs.userRole) || {}).value
     const allowRead = findDOMNode(this.refs.allowRead).checked
     const allowCreate = findDOMNode(this.refs.allowCreate).checked
     const allowUpdate = findDOMNode(this.refs.allowUpdate).checked
@@ -30,6 +37,8 @@ export default class NewPermissionOverlay extends React.Component {
 
     this.props.add({
       userType,
+      userPath,
+      userRole,
       allowRead,
       allowCreate,
       allowUpdate,
@@ -39,16 +48,31 @@ export default class NewPermissionOverlay extends React.Component {
     this.props.hide()
   }
 
+  _onSelectUserType (e) {
+    this.setState({ userType: e.target.value })
+  }
+
   render () {
     return (
       <div className={classes.background}>
         <div className={classes.container}>
           <div className={classes.head}>Add permission</div>
-          <select ref='userType' className={classes.typeSelect}>
+          <select onChange={this._onSelectUserType} ref='userType' className={classes.typeSelect}>
             {Object.keys(userTypes).map((userType) => (
               <option key={userType} value={userType}>{userTypes[userType]}</option>
             ))}
           </select>
+          {this.state.userType === 'AUTHENTICATED' &&
+            <h2>auth</h2>
+          }
+          {this.state.userType === 'RELATED' &&
+            <input
+              ref='userPath'
+              className={classes.input}
+              placeholder='some.model.path'
+              type='text'
+              />
+          }
           <div className={classes.check}>
             <label>
               <input ref='allowRead' type='checkbox' />

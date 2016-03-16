@@ -6,9 +6,9 @@ import Icon from 'components/Icon/Icon'
 import NewFieldOverlay from 'components/NewFieldOverlay/NewFieldOverlay'
 import AddFieldMutation from 'mutations/AddFieldMutation'
 import DeleteFieldMutation from 'mutations/DeleteFieldMutation'
-import classes from './SchemaTab.scss'
+import classes from './FieldsTab.scss'
 
-export default class SchemaTab extends React.Component {
+export default class FieldsTab extends React.Component {
   static propTypes = {
     params: PropTypes.object.isRequired,
     fields: PropTypes.array.isRequired,
@@ -102,13 +102,13 @@ export default class SchemaTab extends React.Component {
   }
 }
 
-const MappedSchemaTab = mapProps({
+const MappedFieldsTab = mapProps({
   params: (props) => props.params,
   allModels: (props) => props.viewer.project.models.edges.map((edge) => edge.node),
   fields: (props) => props.viewer.model.fields.edges.map((edge) => edge.node),
-})(SchemaTab)
+})(FieldsTab)
 
-export default Relay.createContainer(MappedSchemaTab, {
+export default Relay.createContainer(MappedFieldsTab, {
   initialVariables: {
     modelId: null, // injected from router
     projectId: null, // injected from router

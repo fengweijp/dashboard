@@ -13,11 +13,11 @@ export default class ModelView extends React.Component {
       <div className={classes.root}>
         <div className={classes.head}>
           <Link
-            to={`/${this.props.params.projectId}/models/${this.props.params.modelId}/schema`}
+            to={`/${this.props.params.projectId}/models/${this.props.params.modelId}/fields`}
             className={classes.tab}
             activeClassName={classes.tabActive}
             >
-            Schema
+            Fields
           </Link>
           <Link
             to={`/${this.props.params.projectId}/models/${this.props.params.modelId}/permission`}
