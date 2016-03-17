@@ -36,7 +36,7 @@ export default (
             queries={ViewerQuery} renderLoading={loading} />
           <Route path='data' component={DataTab} renderFailure={() => <ModelRedirectView />}
             queries={ViewerQuery} renderLoading={loading} />
-          <IndexRedirect to='schema' />
+          <IndexRedirect to='fields' />
         </Route>
       </Route>
       <Route path='playground' component={PlaygroundView} />

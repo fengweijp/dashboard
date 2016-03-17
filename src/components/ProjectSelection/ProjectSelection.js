@@ -13,6 +13,7 @@ const ProjectPropType = React.PropTypes.shape({
 
 export default class ProjectSelection extends React.Component {
   static propTypes = {
+    params: PropTypes.object.isRequired,
     add: PropTypes.func.isRequired,
     selectedProject: ProjectPropType.isRequired,
     projects: PropTypes.arrayOf(ProjectPropType).isRequired,
@@ -23,6 +24,7 @@ export default class ProjectSelection extends React.Component {
 
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this)
     this._toggle = ::this._toggle
+    this._toggleProjectSettings = ::this._toggleProjectSettings
     this._onAdd = ::this._onAdd
 
     this.state = {
@@ -46,11 +48,13 @@ export default class ProjectSelection extends React.Component {
   render () {
     return (
       <div className={classes.root}>
-        {this.state.projectSettingsVisible && <ProjectSettingsOverlay
-          project={this.props.selectedProject}
-          hide={() => this._toggleProjectSettings()}
-          />}
-
+        {this.state.projectSettingsVisible &&
+          <ProjectSettingsOverlay
+            project={this.props.selectedProject}
+            hide={this._toggleProjectSettings}
+            params={this.props.params}
+          />
+        }
         <div className={classes.head} onClick={this._toggle}>
           <div onClick={(e) => { e.stopPropagation(); this._toggleProjectSettings() }} className={classes.gear}>
             <Icon

@@ -64,6 +64,7 @@ export class RootView extends React.Component {
         <header className={classes.header}>
           <div className={classes.headerLeft}>
             <ProjectSelection
+              params={this.props.params}
               projects={this.props.allProjects}
               selectedProject={this.props.project}
               add={this._addProject}

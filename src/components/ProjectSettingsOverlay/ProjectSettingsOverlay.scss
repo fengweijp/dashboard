@@ -30,7 +30,7 @@
   padding-left: 34px;
 }
 
-.fieldNameInput {
+.input {
   display: block;
   width: 100%;
   border: 0;
@@ -41,6 +41,21 @@
   &:focus {
     outline: none;
   }
+}
+
+.section {
+  padding: 15px 0;
+}
+
+.reset, .delete {
+  width: 100%;
+  padding: 20px 34px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.delete {
+  color: red;
 }
 
 .buttonCancel {

@@ -11,6 +11,7 @@
   background: $blue-grey;
   display: flex;
   justify-content: flex-start;
+  position: relative;
 }
 
 .tab {
@@ -26,4 +27,12 @@
 
 .tabActive {
   background: #fff;
+}
+
+.delete {
+  cursor: pointer;
+  position: absolute;
+  display: block;
+  right: 22px;
+  top: 26px;
 }
