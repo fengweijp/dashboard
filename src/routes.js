@@ -19,7 +19,7 @@ const loading = () => (
 )
 
 const redirectToRoot = () => {
-  //window.location.pathname = '/'
+  window.location.pathname = '/'
 }
 
 export default (

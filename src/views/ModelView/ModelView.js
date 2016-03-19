@@ -26,11 +26,9 @@ export default class ModelView extends React.Component {
       Relay.Store.commitUpdate(new DeleteModelMutation({
         projectId: this.props.params.projectId,
         modelId: this.props.params.modelId,
-      }), {
-        onSuccess: () => {
-          this.context.router.replace(`/${this.props.params.projectId}/models`)
-        },
-      })
+      }))
+
+      this.context.router.replace(`/${this.props.params.projectId}/models`)
     }
   }
 

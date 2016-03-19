@@ -4,6 +4,7 @@ import { findDOMNode } from 'react-dom'
 import classes from './ProjectSettingsOverlay.scss'
 import UpdateProjectMutation from 'mutations/UpdateProjectMutation'
 import DeleteProjectMutation from 'mutations/DeleteProjectMutation'
+import ResetProjectMutation from 'mutations/ResetProjectMutation'
 
 export default class ProjectSettingsOverlay extends React.Component {
 
@@ -11,6 +12,10 @@ export default class ProjectSettingsOverlay extends React.Component {
     project: PropTypes.object.isRequired,
     hide: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
+  };
+
+  static contextTypes = {
+    router: PropTypes.object.isRequired,
   };
 
   constructor (props) {
@@ -35,6 +40,8 @@ export default class ProjectSettingsOverlay extends React.Component {
         projectId: this.props.params.projectId,
         viewerId: 'cryptic',
       }))
+
+      this.context.router.replace('/')
     }
   }
 
@@ -46,7 +53,7 @@ export default class ProjectSettingsOverlay extends React.Component {
     }), {
       onSuccess: () => {
         this.props.hide()
-      }
+      },
     })
   }
 
@@ -61,7 +68,7 @@ export default class ProjectSettingsOverlay extends React.Component {
             placeholder='Webhook url' defaultValue={this.props.project.webhookUrl} />
 
           <div className={classes.section}>
-            <div className={classes.reset} onClick={this._onClickDelete}>Reset Data</div>
+            <div className={classes.reset} onClick={this._onClickReset}>Reset Data</div>
             <div className={classes.delete} onClick={this._onClickDelete}>Delete Project</div>
           </div>
           <div onClick={::this.props.hide} className={classes.buttonCancel}>Cancel</div>

@@ -63,9 +63,13 @@
   }
 }
 
-.check {
+.section {
+  padding: 10px 0 15px;
   border-top: 1px solid #D3D4D5;
-  padding: 34px;
+}
+
+.check {
+  padding: 20px 34px;
 
   input {
     margin-right: 10px;

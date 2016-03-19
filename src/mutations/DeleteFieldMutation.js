@@ -32,4 +32,10 @@ export default class DeleteFieldMutation extends Relay.Mutation {
       modelId: this.props.modelId, // TODO remove redundancy
     }
   }
+
+  getOptimisticResponse () {
+    return {
+      deletedId: this.props.fieldId,
+    }
+  }
 }

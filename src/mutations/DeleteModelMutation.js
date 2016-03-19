@@ -28,6 +28,7 @@ export default class DeleteModelMutation extends Relay.Mutation {
   getVariables () {
     return {
       modelId: this.props.modelId,
+      projectId: this.props.projectId,
     }
   }
 
