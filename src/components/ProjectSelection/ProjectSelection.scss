@@ -36,6 +36,14 @@
       transform: rotate(180deg);
     }
   }
+
+  .title {
+    text-align: center;
+    width: calc(100% - 100px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
 .overlay {

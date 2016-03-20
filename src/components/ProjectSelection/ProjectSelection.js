@@ -63,7 +63,9 @@ export default class ProjectSelection extends React.Component {
               color='#fff'
               />
           </div>
-          {this.props.selectedProject.name}
+          <span className={classes.title}>
+            {this.props.selectedProject.name}
+          </span>
           <div className={`${classes.arrow} ${this.state.expanded ? classes.up : ''}`}>
             <Icon
               src={require('assets/icons/arrow.svg')}
