@@ -24,7 +24,10 @@ export class DataTab extends React.Component {
 
   componentWillMount () {
     const clientEndpoint = `${__BACKEND_ADDR__}/graphql/${this.props.params.projectId}`
-    const lokka = new Lokka({ transport: new Transport(clientEndpoint) })
+    const token = window.localStorage.getItem('token')
+    const headers = { Authorization: `Bearer ${token}` }
+    const transport = new Transport(clientEndpoint, { headers })
+    const lokka = new Lokka({ transport })
     const fieldNames = this.props.fields
       .map((field) => field.fieldName)
       .join(',')
