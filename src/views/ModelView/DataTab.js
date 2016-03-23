@@ -17,17 +17,19 @@ export class DataTab extends React.Component {
   constructor (props) {
     super(props)
 
+    const clientEndpoint = `${__BACKEND_ADDR__}/graphql/${this.props.params.projectId}`
+    const token = window.localStorage.getItem('token')
+    const headers = { Authorization: `Bearer ${token}` }
+    const transport = new Transport(clientEndpoint, { headers })
+
+    this._lokka = new Lokka({ transport })
+
     this.state = {
       items: [],
     }
   }
 
   componentWillMount () {
-    const clientEndpoint = `${__BACKEND_ADDR__}/graphql/${this.props.params.projectId}`
-    const token = window.localStorage.getItem('token')
-    const headers = { Authorization: `Bearer ${token}` }
-    const transport = new Transport(clientEndpoint, { headers })
-    const lokka = new Lokka({ transport })
     const fieldNames = this.props.fields
       .map((field) => field.fieldName)
       .join(',')
@@ -44,9 +46,27 @@ export class DataTab extends React.Component {
         }
       }
     `
-    lokka.query(query)
+    this._lokka.query(query)
       .then((results) => {
         const items = results.viewer[`all${this.props.modelName}s`].edges.map((edge) => edge.node)
+        this.setState({ items })
+      })
+  }
+
+  _deleteItem (item) {
+    const mutation = `
+      {
+        delete${this.props.modelName}(input: {
+          id: "${item.id}",
+          clientMutationId: "lokka-${Math.random().toString(36).substring(7)}"
+        }) {
+          clientMutationId
+        }
+      }
+    `
+    this._lokka.mutate(mutation)
+      .then(() => {
+        const items = this.state.items.filter((i) => i.id !== item.id)
         this.setState({ items })
       })
   }
@@ -78,7 +98,7 @@ export class DataTab extends React.Component {
                   return <td key={field.id}>{str}</td>
                 })}
                 <td>
-                  <span onClick={() => this._deleteItem(item.id)}>
+                  <span onClick={() => this._deleteItem(item)}>
                     <Icon src={require('assets/icons/delete.svg')} />
                   </span>
                 </td>
