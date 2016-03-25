@@ -1,10 +1,12 @@
 import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
+import { findDOMNode } from 'react-dom'
 import mapProps from 'map-props'
 import { Lokka } from 'lokka'
 import { Transport } from 'lokka-transport-http'
 import { isScalar } from 'utils/graphql'
 import Icon from 'components/Icon/Icon'
+import Loading from 'react-loading'
 import classes from './DataTab.scss'
 
 export class DataTab extends React.Component {
@@ -26,10 +28,16 @@ export class DataTab extends React.Component {
 
     this.state = {
       items: [],
+      loading: true,
     }
   }
 
   componentWillMount () {
+    this._reloadData()
+  }
+
+  _reloadData () {
+    this.setState({ loading: true })
     const fieldNames = this.props.fields
       .map((field) => field.fieldName)
       .join(',')
@@ -49,11 +57,12 @@ export class DataTab extends React.Component {
     this._lokka.query(query)
       .then((results) => {
         const items = results.viewer[`all${this.props.modelName}s`].edges.map((edge) => edge.node)
-        this.setState({ items })
+        this.setState({ items, loading: false })
       })
   }
 
   _deleteItem (item) {
+    this.setState({ loading: true })
     const mutation = `
       {
         delete${this.props.modelName}(input: {
@@ -71,10 +80,42 @@ export class DataTab extends React.Component {
       })
   }
 
+  _add () {
+    this.setState({ loading: true })
+    const inputString = this.props.fields
+      .filter((field) => field.fieldName !== 'id')
+      .map((field) => `${field.fieldName}: "${findDOMNode(this.refs[field.id]).value}"`)
+      .join(',')
+    const mutation = `
+      {
+        create${this.props.modelName}(input: {
+          ${inputString},
+          clientMutationId: "lokka-${Math.random().toString(36).substring(7)}"
+        }) {
+          clientMutationId
+        }
+      }
+    `
+    this._lokka.mutate(mutation).then(::this._reloadData)
+  }
+
+  _listenForEnter (e) {
+    if (e.keyCode === 13) {
+      this._add()
+    }
+  }
+
   render () {
+    if (this.state.loading) {
+      return (
+        <div style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+          <Loading type='bubbles' delay={0} color='#8989B1' />
+        </div>
+      )
+    }
+
     return (
       <div className={classes.root}>
-        <div onClick={this._toggleOverlay} className={classes.add}>+ Add {this.props.modelName}</div>
         <table className={classes.table}>
           <thead>
             <tr>
@@ -85,6 +126,22 @@ export class DataTab extends React.Component {
             </tr>
           </thead>
           <tbody>
+            <tr className={classes.addRow}>
+              <td>ID</td>
+              {this.props.fields.filter((f) => f.fieldName !== 'id').map((field) => (
+                <td key={field.id}>
+                  <input
+                    onKeyUp={::this._listenForEnter}
+                    ref={field.id}
+                    placeholder={field.fieldName}
+                    type='text'
+                    />
+                </td>
+              ))}
+              <td className={classes.addButton}>
+                <span onClick={::this._add}>+</span>
+              </td>
+            </tr>
             {this.state.items.map((item) => (
               <tr key={item.id}>
                 {this.props.fields.map((field) => {
