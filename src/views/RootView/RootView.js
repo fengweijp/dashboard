@@ -1,13 +1,11 @@
 import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
 import mapProps from 'map-props'
-import LoginForm from 'components/LoginForm/LoginForm'
 import ProjectSelection from 'components/ProjectSelection/ProjectSelection'
 import Header from 'components/Header/Header'
 import SideNav from 'views/RootView/SideNav'
-import LoginMutation from 'mutations/LoginMutation'
+import LoginView from 'views/LoginView/LoginView'
 import AddProjectMutation from 'mutations/AddProjectMutation'
-import { saveToken, updateNetworkLayer } from 'utils/relay'
 import classes from './RootView.scss'
 
 import '../../styles/core.scss'
@@ -26,13 +24,6 @@ export class RootView extends React.Component {
     router: PropTypes.object.isRequired,
   };
 
-  constructor (props) {
-    super(props)
-
-    this._addProject = ::this._addProject
-    this._login = ::this._login
-  }
-
   _addProject () {
     const projectName = window.prompt('Project name')
     if (projectName) {
@@ -43,19 +34,10 @@ export class RootView extends React.Component {
     }
   }
 
-  _login (email, password) {
-    const payload = { email, password, viewer: this.props.viewer }
-    const onSuccess = (response) => {
-      saveToken(response.signinUser.token)
-      updateNetworkLayer()
-    }
-    Relay.Store.commitUpdate(new LoginMutation(payload), { onSuccess })
-  }
-
   render () {
     if (!this.props.isLoggedin) {
       return (
-        <LoginForm login={this._login} />
+        <LoginView viewer={this.props.viewer} />
       )
     }
 
@@ -67,7 +49,7 @@ export class RootView extends React.Component {
               params={this.props.params}
               projects={this.props.allProjects}
               selectedProject={this.props.project}
-              add={this._addProject}
+              add={::this._addProject}
             />
           </div>
           <div className={classes.headerRight}>
@@ -110,6 +92,7 @@ export default Relay.createContainer(MappedRootView, {
     viewer: () => Relay.QL`
       fragment on Viewer {
         id
+        ${LoginView.getFragment('viewer')}
         project(id: $projectId) {
           id
           name

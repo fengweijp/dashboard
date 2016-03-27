@@ -1,9 +1,7 @@
 import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
 import mapProps from 'map-props'
-import LoginForm from 'components/LoginForm/LoginForm'
-import LoginMutation from 'mutations/LoginMutation'
-import { saveToken, updateNetworkLayer } from 'utils/relay'
+import LoginView from 'views/LoginView/LoginView'
 
 export class RootRedirectView extends React.Component {
   static propTypes = {
@@ -15,12 +13,6 @@ export class RootRedirectView extends React.Component {
   static contextTypes = {
     router: PropTypes.object.isRequired,
   };
-
-  constructor (props) {
-    super(props)
-
-    this._login = ::this._login
-  }
 
   componentWillMount () {
     if (this.props.isLoggedin) {
@@ -37,19 +29,10 @@ export class RootRedirectView extends React.Component {
     return true
   }
 
-  _login (email, password) {
-    const payload = { email, password, viewer: this.props.viewer }
-    const onSuccess = (response) => {
-      saveToken(response.signinUser.token)
-      updateNetworkLayer()
-    }
-    Relay.Store.commitUpdate(new LoginMutation(payload), { onSuccess })
-  }
-
   render () {
     if (!this.props.isLoggedin) {
       return (
-        <LoginForm login={this._login} />
+        <LoginView viewer={this.props.viewer} />
       )
     }
 
@@ -75,6 +58,7 @@ export default Relay.createContainer(MappedRootRedirectView, {
     viewer: () => Relay.QL`
       fragment on Viewer {
         id
+        ${LoginView.getFragment('viewer')}
         user {
           projects(first: 1) {
             edges {
