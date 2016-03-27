@@ -6,6 +6,7 @@
   height: 100%;
   color: #fff;
   position: relative;
+  z-index: 100;
 }
 
 .head {
@@ -17,12 +18,12 @@
   justify-content: center;
   cursor: pointer;
 
-  .gear {
+  .logo {
     display: block;
     position: absolute;
-    left: 16px;
-    height: 16px;
-    top: calc(50% - 8px);
+    left: 20px;
+    height: 35px;
+    top: calc(50% - 17.5px);
   }
 
   .arrow {

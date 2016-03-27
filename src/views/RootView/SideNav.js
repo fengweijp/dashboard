@@ -4,12 +4,14 @@ import { Link } from 'react-router'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import mapProps from 'map-props'
 import Icon from 'components/Icon/Icon'
+import ProjectSettingsOverlay from 'components/ProjectSettingsOverlay/ProjectSettingsOverlay'
 import AddModelMutation from 'mutations/AddModelMutation'
 import classes from './SideNav.scss'
 
 export class SideNav extends React.Component {
   static propTypes = {
     params: PropTypes.object.isRequired,
+    project: PropTypes.object.isRequired,
     models: PropTypes.array,
   };
 
@@ -18,7 +20,9 @@ export class SideNav extends React.Component {
 
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this)
 
-    this._addModel = ::this._addModel
+    this.state = {
+      projectSettingsVisible: false,
+    }
   }
 
   _addModel () {
@@ -29,6 +33,10 @@ export class SideNav extends React.Component {
         projectId: this.props.params.projectId,
       }))
     }
+  }
+
+  _toggleProjectSettings () {
+    this.setState({ projectSettingsVisible: !this.state.projectSettingsVisible })
   }
 
   render () {
@@ -53,7 +61,7 @@ export class SideNav extends React.Component {
             </Link>
           ))
         }
-        <div className={classes.add} onClick={this._addModel}>+ Add model</div>
+        <div className={classes.add} onClick={::this._addModel}>+ Add model</div>
         <Link
           to={`/${this.props.params.projectId}/playground`}
           className={classes.head}
@@ -61,6 +69,21 @@ export class SideNav extends React.Component {
           <Icon width={19} height={19} src={require('assets/icons/play.svg')} />
           <span>Playground</span>
         </Link>
+        {this.state.projectSettingsVisible &&
+          <ProjectSettingsOverlay
+            project={this.props.project}
+            hide={::this._toggleProjectSettings}
+            params={this.props.params}
+          />
+        }
+        <div className={classes.foot} onClick={::this._toggleProjectSettings}>
+          <Icon
+            width={20} height={20}
+            src={require('assets/icons/gear.svg')}
+            color='#9292B2'
+            />
+          <span>Settings</span>
+        </div>
       </div>
     )
   }
@@ -68,6 +91,7 @@ export class SideNav extends React.Component {
 
 const MappedSideNav = mapProps({
   params: (props) => props.params,
+  project: (props) => props.project,
   models: (props) => props.project.models.edges.map((edge) => edge.node),
 })(SideNav)
 
@@ -77,6 +101,7 @@ export default Relay.createContainer(MappedSideNav, {
       fragment on Project {
         id
         name
+        webhookUrl
         models(first: 10) {
           edges {
             node {

@@ -3,7 +3,6 @@ import { Link } from 'react-router'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import Icon from 'components/Icon/Icon'
 import classes from './ProjectSelection.scss'
-import ProjectSettingsOverlay from 'components/ProjectSettingsOverlay/ProjectSettingsOverlay'
 
 const ProjectPropType = React.PropTypes.shape({
   webhookUrl: React.PropTypes.string,
@@ -23,13 +22,9 @@ export default class ProjectSelection extends React.Component {
     super(props)
 
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this)
-    this._toggle = ::this._toggle
-    this._toggleProjectSettings = ::this._toggleProjectSettings
-    this._onAdd = ::this._onAdd
 
     this.state = {
       expanded: false,
-      projectSettingsVisible: false,
     }
   }
 
@@ -41,25 +36,14 @@ export default class ProjectSelection extends React.Component {
     this.props.add()
   }
 
-  _toggleProjectSettings () {
-    this.setState({ projectSettingsVisible: !this.state.projectSettingsVisible })
-  }
-
   render () {
     return (
       <div className={classes.root}>
-        {this.state.projectSettingsVisible &&
-          <ProjectSettingsOverlay
-            project={this.props.selectedProject}
-            hide={this._toggleProjectSettings}
-            params={this.props.params}
-          />
-        }
-        <div className={classes.head} onClick={this._toggle}>
-          <div onClick={(e) => { e.stopPropagation(); this._toggleProjectSettings() }} className={classes.gear}>
+        <div className={classes.head} onClick={::this._toggle}>
+          <div className={classes.logo}>
             <Icon
-              width={20} height={20}
-              src={require('assets/icons/gear.svg')}
+              width={30} height={35}
+              src={require('assets/icons/logo.svg')}
               color='#fff'
               />
           </div>
@@ -79,7 +63,7 @@ export default class ProjectSelection extends React.Component {
               <Link
                 key={project.name}
                 className={classes.listElement}
-                onClick={this._toggle}
+                onClick={::this._toggle}
                 to={`/${project.id}`}
                 activeClassName={classes.listElementActive}
                 >
@@ -92,7 +76,7 @@ export default class ProjectSelection extends React.Component {
                 </div>
               </Link>
             ))}
-            <div className={classes.add} onClick={this._onAdd}>+ New Project</div>
+            <div className={classes.add} onClick={::this._onAdd}>+ New Project</div>
           </div>
         }
       </div>

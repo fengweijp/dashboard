@@ -113,7 +113,11 @@ export default class PlaygroundView extends React.Component {
                   />
               </div>
             }
-            <Icon src={require(`assets/icons/${this.state.historyVisible ? 'close' : 'history'}.svg`)} width={20} height={20} />
+            <Icon
+              src={require(`assets/icons/${this.state.historyVisible ? 'close' : 'history'}.svg`)}
+              width={20}
+              height={20}
+              />
             <span>{this.state.historyVisible ? 'Close' : 'History'}</span>
 
           </div>

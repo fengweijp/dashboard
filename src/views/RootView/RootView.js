@@ -113,7 +113,6 @@ export default Relay.createContainer(MappedRootView, {
         project(id: $projectId) {
           id
           name
-          webhookUrl
           ${SideNav.getFragment('project')}
         }
         user {
