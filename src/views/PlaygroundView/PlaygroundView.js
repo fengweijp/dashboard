@@ -15,6 +15,19 @@ const DASHBOARD_ADMIN = {
   roles: null,
 }
 
+const DEFAULT_QUERY = `{
+  viewer {
+    allUsers {
+      edges {
+        node {
+          id
+          email
+        }
+      }
+    }
+  }
+}`
+
 export default class PlaygroundView extends React.Component {
   static propTypes = {
     params: PropTypes.object.isRequired,
@@ -136,7 +149,7 @@ export default class PlaygroundView extends React.Component {
         </div>
         <GraphiQL
           fetcher={fetcher}
-          query={this.state.query}
+          query={this.state.query || DEFAULT_QUERY}
           variables={this.state.variables}
           />
       </div>
