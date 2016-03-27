@@ -15,6 +15,7 @@ export class RootView extends React.Component {
     children: PropTypes.element.isRequired,
     isLoggedin: PropTypes.bool.isRequired,
     viewer: PropTypes.object.isRequired,
+    user: PropTypes.object.isRequired,
     project: PropTypes.object,
     allProjects: PropTypes.array,
     params: PropTypes.object.isRequired,
@@ -53,7 +54,7 @@ export class RootView extends React.Component {
             />
           </div>
           <div className={classes.headerRight}>
-            <Header />
+            <Header user={this.props.user} />
           </div>
         </header>
         <div className={classes.main}>
@@ -81,6 +82,7 @@ const MappedRootView = mapProps({
      : null
   ),
   viewer: (props) => props.viewer,
+  user: (props) => props.viewer.user,
   isLoggedin: (props) => props.viewer.user !== null,
 })(RootView)
 
@@ -99,7 +101,6 @@ export default Relay.createContainer(MappedRootView, {
           ${SideNav.getFragment('project')}
         }
         user {
-          name
           id
           projects(first: 100) {
             edges {
@@ -109,6 +110,7 @@ export default Relay.createContainer(MappedRootView, {
               }
             }
           }
+          ${Header.getFragment('user')}
         }
       }
     `,
