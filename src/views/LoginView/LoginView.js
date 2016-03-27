@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
+import Loading from 'react-loading'
 import { findDOMNode } from 'react-dom'
 import { saveToken, updateNetworkLayer } from 'utils/relay'
 import mapProps from 'map-props'
@@ -13,7 +14,17 @@ class LoginView extends React.Component {
     viewer: PropTypes.object.isRequired,
   };
 
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      loading: false,
+    }
+  }
+
   _login () {
+    this.setState({ loading: true })
+
     const email = findDOMNode(this.refs.email).value
     const password = findDOMNode(this.refs.password).value
 
@@ -21,8 +32,12 @@ class LoginView extends React.Component {
     const onSuccess = (response) => {
       saveToken(response.signinUser.token)
       updateNetworkLayer()
+      this.setState({ loading: false })
     }
-    Relay.Store.commitUpdate(new LoginMutation(payload), { onSuccess })
+    const onFailure = () => {
+      this.setState({ loading: false })
+    }
+    Relay.Store.commitUpdate(new LoginMutation(payload), { onSuccess, onFailure })
   }
 
   _listenForEnter (e) {
@@ -32,6 +47,16 @@ class LoginView extends React.Component {
   }
 
   render () {
+    if (this.state.loading) {
+      return (
+        <div className={classes.root}>
+          <div style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+            <Loading type='bubbles' delay={0} color='#fff' />
+          </div>
+        </div>
+      )
+    }
+
     return (
       <div className={classes.root}>
         <div className={classes.box}>
