@@ -3,14 +3,34 @@
   height: 100%;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   position: relative;
 }
 
-.right {
+.left {
+  width: 80%;
   color: #70738C;
   display: flex;
   align-items: center;
+
+  .endpoint {
+    font-size: 11px;
+    background: #e6e6f6;
+    padding: 7px 12px;
+    font-family: Consolas, Inconsolata, 'Droid Sans Mono', Monaco, monospace;
+    cursor: pointer;
+  }
+
+  svg {
+    margin: 0 8px 0 22px;
+  }
+}
+
+.right {
+  width: 20%;
+  color: #70738C;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
   cursor: pointer;
   font-size: 16px;
 
