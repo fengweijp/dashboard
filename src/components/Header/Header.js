@@ -47,7 +47,7 @@ export default class Header extends React.Component {
             height={20}
             />
           <span className={classes.endpoint} ref='endpoint'>
-            https://api.alpha.graph.cool/graphql/{this.props.projectId}
+            https://api.graph.cool/graphql/{this.props.projectId}
           </span>
         </div>
         {this.state.rightOverlayVisible &&
