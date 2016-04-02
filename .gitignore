@@ -1,9 +1,4 @@
 .DS_STORE
 *.log
-schema.json
-.tmp
-
 node_modules
-
 dist
-coverage

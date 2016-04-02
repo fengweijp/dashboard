@@ -7,7 +7,6 @@ machine:
 dependencies:
   override:
     - npm install
-    - mkdir .tmp && curl $SCHEMA_ENDPOINT > ./.tmp/schema.json
     - npm run build
 
 test:

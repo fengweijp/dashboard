@@ -3,12 +3,12 @@ import Relay from 'react-relay'
 export default class ResetProjectMutation extends Relay.Mutation {
 
   getMutation () {
-    return Relay.QL`mutation{resetProject}`
+    return Relay.QL`mutation{resetProjectSchema}`
   }
 
   getFatQuery () {
     return Relay.QL`
-      fragment on ResetProjectPayload {
+      fragment on ResetProjectSchemaPayload {
         viewer
       }
     `

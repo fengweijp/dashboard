@@ -6,7 +6,7 @@
 // within webpack helps prevent unexpected errors.
 {
   "presets": ["es2015", "react", "stage-0"],
-  "plugins": ["transform-runtime", "babel-relay-plugin-loader"],
+  "plugins": ["transform-runtime", "react-relay"],
   "env": {
     "development": {
       "presets": ["react-hmre"]
