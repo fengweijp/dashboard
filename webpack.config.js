@@ -26,8 +26,11 @@ module.exports = {
       loader: 'babel',
       exclude: /node_modules/
     }, {
-      test: /\.svg$/,
+      test: /icons\/.*\.svg$/,
       loader: 'svg-inline?removeTags=true'
+    }, {
+      test: /graphics\/.*\.svg$/,
+      loader: 'file'
     }]
   },
   plugins: [

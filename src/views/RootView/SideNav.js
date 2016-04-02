@@ -43,6 +43,13 @@ export class SideNav extends React.Component {
     return (
       <div className={classes.root}>
         <Link
+          to={`/${this.props.params.projectId}/getting-started`}
+          className={classes.head}
+          >
+          <Icon width={19} height={19} src={require('assets/icons/cake.svg')} />
+          <span>Getting Started</span>
+        </Link>
+        <Link
           to={`/${this.props.params.projectId}/models`}
           className={classes.head}
           >

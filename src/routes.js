@@ -9,6 +9,7 @@ import FieldsTab from 'views/ModelView/FieldsTab'
 import PermissionTab from 'views/ModelView/PermissionTab'
 import DataTab from 'views/ModelView/DataTab'
 import PlaygroundView from 'views/PlaygroundView/PlaygroundView'
+import GettingStartedView from 'views/GettingStartedView/GettingStartedView'
 
 import ViewerQuery from 'queries/ViewerQuery'
 
@@ -40,6 +41,8 @@ export default (
         </Route>
       </Route>
       <Route path='playground' component={PlaygroundView} />
+      <Route path='getting-started' component={GettingStartedView}
+        queries={ViewerQuery} renderLoading={loading} />
       <IndexRedirect to='models' />
     </Route>
   </Route>
