@@ -8,7 +8,7 @@ export default class Header extends React.Component {
 
   static propTypes = {
     user: PropTypes.object.isRequired,
-    projectId: PropTypes.object.isRequired,
+    projectId: PropTypes.string.isRequired,
   }
 
   constructor (props) {

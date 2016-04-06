@@ -84,8 +84,17 @@ export class DataTab extends React.Component {
     this.setState({ loading: true })
     const inputString = this.props.fields
       .filter((field) => field.fieldName !== 'id')
-      .map((field) => `${field.fieldName}: "${findDOMNode(this.refs[field.id]).value}"`)
-      .join(',')
+      .map((field) => {
+        const key = field.fieldName
+        const rawValue = findDOMNode(this.refs[field.id]).value
+        switch (field.typeIdentifier) {
+          case 'String': return `${key}: "${rawValue}"`
+          case 'Int': return `${key}: ${parseInt(rawValue, 10)}`
+          case 'Float': return `${key}: ${parseFloat(rawValue)}`
+          case 'Boolean': return `${key}: ${rawValue === 'true'}`
+          default: throw Error(`Unsupported typeIdentifier: ${field.typeIdentifier}`)
+        }
+      })
     const mutation = `
       {
         create${this.props.modelName}(input: {
@@ -127,17 +136,42 @@ export class DataTab extends React.Component {
           </thead>
           <tbody>
             <tr className={classes.addRow}>
-              <td>ID</td>
-              {this.props.fields.filter((f) => f.fieldName !== 'id').map((field) => (
-                <td key={field.id}>
-                  <input
-                    onKeyUp={::this._listenForEnter}
-                    ref={field.id}
-                    placeholder={field.fieldName}
-                    type='text'
-                    />
-                </td>
-              ))}
+              <td>ID (generated)</td>
+              {this.props.fields.filter((f) => f.fieldName !== 'id').map((field) => {
+                let element
+                switch (field.typeIdentifier) {
+                  case 'Int':
+                    element = (
+                      <input
+                        onKeyUp={::this._listenForEnter}
+                        ref={field.id}
+                        placeholder={field.fieldName}
+                        type='number'
+                      />
+                    )
+                    break
+                  case 'Boolean':
+                    element = (
+                      <select ref={field.id}>
+                        <option>true</option>
+                        <option>false</option>
+                      </select>
+                    )
+                    break
+                  default:
+                    element = (
+                      <input
+                        onKeyUp={::this._listenForEnter}
+                        ref={field.id}
+                        placeholder={field.fieldName}
+                        type='text'
+                      />
+                    )
+                }
+                return (
+                  <td key={field.id}>{element}</td>
+                )
+              })}
               <td className={classes.addButton}>
                 <span onClick={::this._add}>+</span>
               </td>
