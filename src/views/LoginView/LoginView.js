@@ -33,6 +33,7 @@ class LoginView extends React.Component {
       saveToken(response.signinUser.token)
       updateNetworkLayer()
       this.setState({ loading: false })
+      location.reload()
     }
     const onFailure = () => {
       this.setState({ loading: false })
