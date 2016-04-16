@@ -37,7 +37,8 @@ export default class AddFieldMutation extends Relay.Mutation {
       enumValues: this.props.enumValues,
       isRequired: this.props.isRequired,
       isList: this.props.isList,
-      isUnique: this.props.isUnique,
+      isUnique: false,
+      defaultValue: this.props.defaultValue,
     }
   }
 }

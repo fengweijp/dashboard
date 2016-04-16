@@ -44,13 +44,6 @@ export default class ModelView extends React.Component {
             Fields
           </Link>
           <Link
-            to={`/${this.props.params.projectId}/models/${this.props.params.modelId}/permission`}
-            className={classes.tab}
-            activeClassName={classes.tabActive}
-            >
-            Permission
-          </Link>
-          <Link
             to={`/${this.props.params.projectId}/models/${this.props.params.modelId}/data`}
             className={classes.tab}
             activeClassName={classes.tabActive}

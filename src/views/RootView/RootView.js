@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
+import Tooltip from 'react-tooltip'
 import mapProps from 'map-props'
 import ProjectSelection from 'components/ProjectSelection/ProjectSelection'
 import Header from 'components/Header/Header'
@@ -44,6 +45,10 @@ export class RootView extends React.Component {
 
     return (
       <div className={classes.root}>
+        <Tooltip
+          place='bottom'
+          effect='solid'
+        />
         <header className={classes.header}>
           <div className={classes.headerLeft}>
             <ProjectSelection

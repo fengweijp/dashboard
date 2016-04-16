@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 
 export default function Icon ({
+  ...props,
   src,
   color = '',
   width = 16,
@@ -9,6 +10,7 @@ export default function Icon ({
 }) {
   return (
     <svg
+      {...props}
       className={className}
       width={width}
       height={height}

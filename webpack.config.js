@@ -38,6 +38,7 @@ module.exports = {
       __BACKEND_ADDR__: '"http://localhost:60000"'
     }),
     new HtmlWebpackPlugin({
+      favicon: 'static/favicon.png',
       template: 'src/index.html'
     })
   ],

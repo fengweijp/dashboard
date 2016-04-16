@@ -39,6 +39,7 @@ module.exports = {
       __BACKEND_ADDR__: JSON.stringify(process.env.BACKEND_ADDR || '')
     }),
     new HtmlWebpackPlugin({
+      favicon: 'static/favicon.png',
       template: 'src/index.html'
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),

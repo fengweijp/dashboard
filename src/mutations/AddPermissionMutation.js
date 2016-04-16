@@ -33,6 +33,7 @@ export default class AddPermissionMutation extends Relay.Mutation {
       fieldId: this.props.fieldId,
       userType: this.props.userType,
       userPath: this.props.userPath,
+      comment: this.props.comment,
       allowRead: this.props.allowRead,
       allowCreate: this.props.allowCreate,
       allowUpdate: this.props.allowUpdate,

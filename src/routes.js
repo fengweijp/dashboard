@@ -6,7 +6,6 @@ import RootRedirectView from 'views/RootView/RootRedirectView'
 import ModelView from 'views/ModelView/ModelView'
 import ModelRedirectView from 'views/ModelView/ModelRedirectView'
 import FieldsTab from 'views/ModelView/FieldsTab'
-import PermissionTab from 'views/ModelView/PermissionTab'
 import DataTab from 'views/ModelView/DataTab'
 import PlaygroundView from 'views/PlaygroundView/PlaygroundView'
 import GettingStartedView from 'views/GettingStartedView/GettingStartedView'
@@ -32,8 +31,6 @@ export default (
         <IndexRoute component={ModelRedirectView} queries={ViewerQuery} renderLoading={loading} />
         <Route path=':modelId' component={ModelView}>
           <Route path='fields' component={FieldsTab} renderFailure={() => <ModelRedirectView />}
-            queries={ViewerQuery} renderLoading={loading} />
-          <Route path='permission' component={PermissionTab} renderFailure={() => <ModelRedirectView />}
             queries={ViewerQuery} renderLoading={loading} />
           <Route path='data' component={DataTab} renderFailure={() => <ModelRedirectView />}
             queries={ViewerQuery} renderLoading={loading} />
