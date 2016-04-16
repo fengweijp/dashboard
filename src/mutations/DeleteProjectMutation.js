@@ -9,7 +9,7 @@ export default class DeleteProjectMutation extends Relay.Mutation {
   getFatQuery () {
     return Relay.QL`
       fragment on DeleteProjectPayload {
-        viewer
+        user { projects }
         deletedId
       }
     `
@@ -18,8 +18,8 @@ export default class DeleteProjectMutation extends Relay.Mutation {
   getConfigs () {
     return [{
       type: 'NODE_DELETE',
-      parentName: 'viewer',
-      parentID: this.props.viewerId,
+      parentName: 'user',
+      parentID: this.props.userId,
       connectionName: 'projects',
       deletedIDFieldName: 'deletedId',
     }]

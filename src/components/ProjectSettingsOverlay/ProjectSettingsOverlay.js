@@ -9,6 +9,7 @@ import ResetProjectMutation from 'mutations/ResetProjectMutation'
 export default class ProjectSettingsOverlay extends React.Component {
 
   static propTypes = {
+    viewer: PropTypes.object.isRequired,
     project: PropTypes.object.isRequired,
     hide: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
@@ -38,7 +39,7 @@ export default class ProjectSettingsOverlay extends React.Component {
     if (window.confirm('Do you really want to delete this project?')) {
       Relay.Store.commitUpdate(new DeleteProjectMutation({
         projectId: this.props.params.projectId,
-        viewerId: 'cryptic',
+        userId: this.props.viewer.user.id,
       }))
 
       this.context.router.replace('/')

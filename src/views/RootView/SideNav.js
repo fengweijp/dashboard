@@ -12,6 +12,7 @@ export class SideNav extends React.Component {
   static propTypes = {
     params: PropTypes.object.isRequired,
     project: PropTypes.object.isRequired,
+    viewer: PropTypes.object.isRequired,
     models: PropTypes.array,
   };
 
@@ -78,6 +79,7 @@ export class SideNav extends React.Component {
         </Link>
         {this.state.projectSettingsVisible &&
           <ProjectSettingsOverlay
+            viewer={this.props.viewer}
             project={this.props.project}
             hide={::this._toggleProjectSettings}
             params={this.props.params}
@@ -104,6 +106,13 @@ const MappedSideNav = mapProps({
 
 export default Relay.createContainer(MappedSideNav, {
   fragments: {
+    viewer: () => Relay.QL`
+      fragment on Viewer {
+        user {
+          id
+        }
+      }
+    `,
     project: () => Relay.QL`
       fragment on Project {
         id
