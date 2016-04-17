@@ -22,6 +22,7 @@ export default class NewFieldLine extends React.Component {
   static propTypes = {
     modelNames: PropTypes.array.isRequired,
     params: PropTypes.object.isRequired,
+    callback: PropTypes.func.isRequired,
   };
 
   constructor (props) {
@@ -56,8 +57,11 @@ export default class NewFieldLine extends React.Component {
       isRequired,
       defaultValue,
     }), {
-      onSuccess: ::this._reset,
-      onFailure (transaction) {
+      onSuccess: (response) => {
+        this.props.callback(response.addField.fieldEdge.node)
+        this._reset()
+      },
+      onFailure: (transaction) => {
         alert(transaction.getError())
       },
     })

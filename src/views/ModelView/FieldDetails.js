@@ -40,6 +40,7 @@ class FieldDetails extends React.Component {
     if (!el.contains(e.target)) {
       if (this._changesMade() && !window.confirm('You have unsaved changed. Do you really want to continue?')) {
         e.preventDefault()
+        e.stopPropagation()
       } else {
         this.props.close()
       }
@@ -47,6 +48,11 @@ class FieldDetails extends React.Component {
   };
 
   save () {
+    if (!this._changesMade()) {
+      this.props.close()
+      return
+    }
+
     const isUnique = findDOMNode(this.refs.unique).checked
     const defaultValue = findDOMNode(this.refs.defaultValue).value
     const description = findDOMNode(this.refs.description).value

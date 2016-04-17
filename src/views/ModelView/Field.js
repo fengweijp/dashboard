@@ -8,20 +8,18 @@ import classes from './Field.scss'
 class Field extends React.Component {
 
   static propTypes = {
+    showDetails: PropTypes.bool.isRequired,
+    toggleShowDetails: PropTypes.func.isRequired,
     field: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
   };
 
   constructor (props) {
     super(props)
-
-    this.state = {
-      showDetails: false,
-    }
   }
 
   _toggleDetails () {
-    this.setState({ showDetails: !this.state.showDetails })
+    this.props.toggleShowDetails()
   }
 
   _save () {
@@ -43,7 +41,7 @@ class Field extends React.Component {
 
     return (
       <tbody
-        className={`${this.state.showDetails ? classes.detailsVisible : ''} ${classes.root}`}
+        className={`${this.props.showDetails ? classes.detailsVisible : ''} ${classes.root}`}
       >
         <tr
           key={field.fieldName}
@@ -62,6 +60,7 @@ class Field extends React.Component {
             <div className={classes.permissions}>
               {field.permissions.edges.map(({ node }) => (
                 <span
+                  key={node.id}
                   data-tip={`${node.userType} ${node.comment ? `(${node.comment})` : ''}`}
                 >
                   {node.userType.substr(0, 1)}
@@ -70,7 +69,7 @@ class Field extends React.Component {
             </div>
           </td>
           <td className={classes.toggle}>
-            {this.state.showDetails &&
+            {this.props.showDetails &&
               <div className={classes.toggleContainer}>
                 <div className={classes.grey} onClick={::this._toggleDetails}>
                   <Icon
@@ -88,7 +87,7 @@ class Field extends React.Component {
                 </div>
               </div>
             }
-            {!this.state.showDetails &&
+            {!this.props.showDetails &&
               <div className={classes.toggleContainer}>
                 <div className={classes.green} onClick={::this._toggleDetails}>
                   <Icon src={require('assets/icons/edit.svg')} />
@@ -100,13 +99,13 @@ class Field extends React.Component {
             }
           </td>
         </tr>
-        {this.state.showDetails &&
+        {this.props.showDetails &&
           <tr className={classes.details}>
             <td colSpan={4}>
               <FieldDetails
                 ref='details'
                 field={field}
-                close={() => this.setState({ showDetails: false })}
+                close={this.props.toggleShowDetails}
               />
             </td>
           </tr>

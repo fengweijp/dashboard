@@ -17,10 +17,23 @@ export default class FieldsTab extends React.Component {
     super(props)
 
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this)
+
+    this.state = {
+      toggledFieldId: null,
+    }
+  }
+
+  _toggleFieldDetails (field) {
+    const toggledFieldId = this.state.toggledFieldId === field.id ? null : field.id
+    this.setState({ toggledFieldId })
   }
 
   render () {
     const modelNames = this.props.allModels.map((model) => model.name)
+
+    const newFieldCallback = (field) => {
+      this.setState({ toggledFieldId: field.id })
+    }
 
     return (
       <div className={classes.root}>
@@ -37,6 +50,7 @@ export default class FieldsTab extends React.Component {
             <NewFieldLine
               modelNames={modelNames}
               params={this.props.params}
+              callback={newFieldCallback}
             />
             <tr className={classes.spacer}>
               <td />
@@ -47,6 +61,8 @@ export default class FieldsTab extends React.Component {
           </tbody>
           {this.props.fields.map((field) => (
             <Field
+              showDetails={this.state.toggledFieldId === field.id}
+              toggleShowDetails={() => this._toggleFieldDetails(field)}
               key={field.id}
               field={field}
               params={this.props.params}
