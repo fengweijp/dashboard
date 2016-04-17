@@ -67,6 +67,7 @@ export class RootView extends React.Component {
             <SideNav
               params={this.props.params}
               project={this.props.project}
+              viewer={this.props.viewer}
               />
           </div>
           <div className={classes.content}>
@@ -100,6 +101,7 @@ export default Relay.createContainer(MappedRootView, {
       fragment on Viewer {
         id
         ${LoginView.getFragment('viewer')}
+        ${SideNav.getFragment('viewer')}
         project(id: $projectId) {
           id
           name
