@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
 import { findDOMNode } from 'react-dom'
+import Tooltip from 'react-tooltip'
 import Loading from 'react-loading'
 import Icon from 'components/Icon/Icon'
 import PermissionType from './PermissionType'
@@ -27,20 +28,20 @@ class FieldDetails extends React.Component {
   }
 
   componentDidMount () {
-    document.addEventListener('click', this._handleClick, true)
+    document.addEventListener('click', this._handleClickOutside, true)
   }
 
   componentWillUnmount () {
-    document.removeEventListener('click', this._handleClick, true)
+    document.removeEventListener('click', this._handleClickOutside, true)
   }
 
-  _handleClick = (e) => {
+  _handleClickOutside = (e) => {
     const el = this.refs.container.parentNode.parentNode.parentNode
     if (!el.contains(e.target)) {
-      if (window.confirm('You have unsaved changed. Do you really want to continue?')) {
-        this.props.close()
-      } else {
+      if (this._changesMade() && !window.confirm('You have unsaved changed. Do you really want to continue?')) {
         e.preventDefault()
+      } else {
+        this.props.close()
       }
     }
   };
@@ -110,6 +111,16 @@ class FieldDetails extends React.Component {
     this.setState({ userType, userPath })
   }
 
+  _changesMade () {
+    const isUnique = findDOMNode(this.refs.unique).checked
+    const defaultValue = findDOMNode(this.refs.defaultValue).value
+    const description = findDOMNode(this.refs.description).value
+
+    return isUnique !== this.props.field.isUnique ||
+      defaultValue !== (this.props.field.defaultValue || '') ||
+      description !== (this.props.field.description || '')
+  }
+
   render () {
     if (this.state.loading) {
       return (
@@ -123,6 +134,10 @@ class FieldDetails extends React.Component {
 
     return (
       <div ref='container' className={classes.root}>
+        <Tooltip
+          place='bottom'
+          effect='solid'
+        />
         <div className={classes.misc}>
           <div className={classes.defaultValue}>
             <label>
