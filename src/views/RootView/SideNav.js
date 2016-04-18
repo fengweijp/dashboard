@@ -43,48 +43,50 @@ export class SideNav extends React.Component {
   render () {
     return (
       <div className={classes.root}>
-        <Link
-          to={`/${this.props.params.projectId}/getting-started`}
-          className={classes.head}
-          >
-          <Icon width={19} height={19} src={require('assets/icons/cake.svg')} />
-          <span>Getting Started</span>
-        </Link>
-        <Link
-          to={`/${this.props.params.projectId}/models`}
-          className={classes.head}
-          >
-          <Icon width={19} height={19} src={require('assets/icons/model.svg')} />
-          <span>Models</span>
-        </Link>
-        {this.props.models &&
-          this.props.models.map((model) => (
-            <Link
-              key={model.name}
-              to={`/${this.props.params.projectId}/models/${model.id}`}
-              className={classes.listElement}
-              activeClassName={classes.listElementActive}
-              >
-              {model.name}
-            </Link>
-          ))
-        }
-        <div className={classes.add} onClick={::this._addModel}>+ Add model</div>
-        <Link
-          to={`/${this.props.params.projectId}/playground`}
-          className={classes.head}
-          >
-          <Icon width={19} height={19} src={require('assets/icons/play.svg')} />
-          <span>Playground</span>
-        </Link>
-        {this.state.projectSettingsVisible &&
-          <ProjectSettingsOverlay
-            viewer={this.props.viewer}
-            project={this.props.project}
-            hide={::this._toggleProjectSettings}
-            params={this.props.params}
-          />
-        }
+        <div className={classes.list}>
+          <Link
+            to={`/${this.props.params.projectId}/getting-started`}
+            className={classes.head}
+            >
+            <Icon width={19} height={19} src={require('assets/icons/cake.svg')} />
+            <span>Getting Started</span>
+          </Link>
+          <Link
+            to={`/${this.props.params.projectId}/models`}
+            className={classes.head}
+            >
+            <Icon width={19} height={19} src={require('assets/icons/model.svg')} />
+            <span>Models</span>
+          </Link>
+          {this.props.models &&
+            this.props.models.map((model) => (
+              <Link
+                key={model.name}
+                to={`/${this.props.params.projectId}/models/${model.id}`}
+                className={classes.listElement}
+                activeClassName={classes.listElementActive}
+                >
+                {model.name}
+              </Link>
+            ))
+          }
+          <div className={classes.add} onClick={::this._addModel}>+ Add model</div>
+          <Link
+            to={`/${this.props.params.projectId}/playground`}
+            className={classes.head}
+            >
+            <Icon width={19} height={19} src={require('assets/icons/play.svg')} />
+            <span>Playground</span>
+          </Link>
+          {this.state.projectSettingsVisible &&
+            <ProjectSettingsOverlay
+              viewer={this.props.viewer}
+              project={this.props.project}
+              hide={::this._toggleProjectSettings}
+              params={this.props.params}
+            />
+          }
+        </div>
         <div className={classes.foot} onClick={::this._toggleProjectSettings}>
           <Icon
             width={20} height={20}
