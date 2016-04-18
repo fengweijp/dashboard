@@ -21,7 +21,7 @@ export class DataTab extends React.Component {
 
     const clientEndpoint = `${__BACKEND_ADDR__}/graphql/${this.props.params.projectId}`
     const token = window.localStorage.getItem('token')
-    const headers = { Authorization: `Bearer ${token}` }
+    const headers = { Authorization: `Bearer ${token}`, 'X-GraphCool-Source': 'dashboard:data-tab' }
     const transport = new Transport(clientEndpoint, { headers })
 
     this._lokka = new Lokka({ transport })

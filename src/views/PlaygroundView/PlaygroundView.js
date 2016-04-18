@@ -38,7 +38,7 @@ export default class PlaygroundView extends React.Component {
 
     const clientEndpoint = `${__BACKEND_ADDR__}/graphql/${this.props.params.projectId}`
     const token = window.localStorage.getItem('token')
-    const headers = { Authorization: `Bearer ${token}` }
+    const headers = { Authorization: `Bearer ${token}`, 'X-GraphCool-Source': 'dashboard:playground' }
     const transport = new Transport(clientEndpoint, { headers })
 
     this._lokka = new Lokka({ transport })
@@ -93,6 +93,7 @@ export default class PlaygroundView extends React.Component {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
+          'X-GraphCool-Source': 'dashboard:playground',
         },
         body: JSON.stringify(graphQLParams),
       })
