@@ -69,7 +69,7 @@ export default class GettingStartedView extends React.Component {
               also check out the interactive playgroud.
             </p>
             <a
-              href='https://github.com/graphcool/examples/tree/master/todo-example'
+              href='https://github.com/graphcool-examples/react-relay-todo-example'
               target='_blank'
               className={classes.action}
             >
