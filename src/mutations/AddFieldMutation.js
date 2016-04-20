@@ -31,7 +31,6 @@ export default class AddFieldMutation extends Relay.Mutation {
   getVariables () {
     return {
       modelId: this.props.modelId,
-      projectId: this.props.projectId, // TODO remove redundancy
       fieldName: this.props.fieldName,
       typeIdentifier: this.props.typeIdentifier,
       enumValues: this.props.enumValues,

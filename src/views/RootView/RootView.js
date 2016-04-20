@@ -50,7 +50,6 @@ class GettingStartedState {
       case 'STEP8_GOTO_GETTING_STARTED': this.progress = 2; break
       case 'STEP9_WAITING_FOR_REQUESTS': this.progress = 2; break
       case 'STEP10_DONE': this.progress = 3; break
-      case null: this.progress = 3; break // TODO remove me
     }
   }
 

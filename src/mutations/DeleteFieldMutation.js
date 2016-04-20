@@ -28,8 +28,6 @@ export default class DeleteFieldMutation extends Relay.Mutation {
   getVariables () {
     return {
       fieldId: this.props.fieldId,
-      projectId: this.props.projectId, // TODO remove redundancy
-      modelId: this.props.modelId, // TODO remove redundancy
     }
   }
 
