@@ -37,7 +37,7 @@ export default (
           <IndexRedirect to='fields' />
         </Route>
       </Route>
-      <Route path='playground' component={PlaygroundView} />
+      <Route path='playground' component={PlaygroundView} queries={ViewerQuery} renderLoading={loading} />
       <Route path='getting-started' component={GettingStartedView} />
       <IndexRedirect to='getting-started' />
     </Route>

@@ -9,10 +9,10 @@ import ResetProjectMutation from 'mutations/ResetProjectMutation'
 export default class ProjectSettingsOverlay extends React.Component {
 
   static propTypes = {
+    params: PropTypes.object.isRequired,
     viewer: PropTypes.object.isRequired,
     project: PropTypes.object.isRequired,
     hide: PropTypes.func.isRequired,
-    params: PropTypes.object.isRequired,
   };
 
   static contextTypes = {
@@ -30,19 +30,23 @@ export default class ProjectSettingsOverlay extends React.Component {
   _onClickReset () {
     if (window.confirm('Do you really want to reset all data of this project?')) {
       Relay.Store.commitUpdate(new ResetProjectMutation({
-        projectId: this.props.params.projectId,
-      }))
+        projectId: this.props.project.id,
+      }), {
+        onSuccess: () => {
+          this.context.router.replace(`/${this.props.params.projectName}/playground`)
+        },
+      })
     }
   }
 
   _onClickDelete () {
     if (window.confirm('Do you really want to delete this project?')) {
       Relay.Store.commitUpdate(new DeleteProjectMutation({
-        projectId: this.props.params.projectId,
+        projectId: this.props.project.id,
         userId: this.props.viewer.user.id,
       }))
 
-      this.context.router.replace('/')
+      this.context.router.replace(`/${this.props.params.projectName}`)
     }
   }
 

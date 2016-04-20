@@ -1,15 +1,6 @@
 import Relay from 'react-relay'
 
 export default class UpdateProjectMutation extends Relay.Mutation {
-  static fragments = {
-    project: () => Relay.QL`
-      fragment on Project {
-        id,
-        name,
-        webhookUrl
-      }
-    `,
-  };
 
   getMutation () {
     return Relay.QL`mutation{updateProject}`
@@ -53,4 +44,5 @@ export default class UpdateProjectMutation extends Relay.Mutation {
       },
     }
   }
+
 }

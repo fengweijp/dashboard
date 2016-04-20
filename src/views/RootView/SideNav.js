@@ -66,7 +66,13 @@ export class SideNav extends React.Component {
   }
 
   render () {
-    const gettingStartedOnClick = () => {
+    const secondStepOnClick = () => {
+      if (this.context.gettingStartedState.isActive('STEP5_GOTO_DATA_TAB')) {
+        this.context.gettingStartedState.nextStep()
+      }
+    }
+
+    const thirdStepOnClick = () => {
       if (this.context.gettingStartedState.isActive('STEP8_GOTO_GETTING_STARTED')) {
         this.context.gettingStartedState.nextStep()
       }
@@ -91,28 +97,41 @@ export class SideNav extends React.Component {
               <Link
                 to={`/${this.props.params.projectName}/getting-started`}
                 className={classes.head}
-                onClick={gettingStartedOnClick}
-                >
+                onClick={thirdStepOnClick}
+              >
                 <Icon width={19} height={19} src={require('assets/icons/cake.svg')} />
-                <Tether
-                  steps={{
-                    STEP8_GOTO_GETTING_STARTED: 'You\'re almost done. Let\'s run an example app...',
-                  }}
-                  offsetX={-26}
-                  offsetY={-5}
-                >
-                  <span>Getting Started</span>
-                </Tether>
+                <span>Getting Started</span>
               </Link>
               <div className={classes.gettingStarted}>
                 <div className={gettingStartedStepClass(0)}>
-                  1. Create Todo model
+                  <Link
+                    to={`/${this.props.params.projectName}/getting-started`}
+                  >
+                    1. Create Todo model
+                  </Link>
                 </div>
                 <div className={gettingStartedStepClass(1)}>
-                  2. Add some data
+                  <Link
+                    to={`/${this.props.params.projectName}/models/Todo/data`}
+                    onClick={secondStepOnClick}
+                  >
+                    2. Add some data
+                  </Link>
                 </div>
                 <div className={gettingStartedStepClass(2)}>
-                  3. Run example app
+                  <Tether
+                    steps={{
+                      STEP8_GOTO_GETTING_STARTED: 'You\'re almost done. Let\'s run an example app now...',
+                    }}
+                    offsetY={-5}
+                  >
+                    <Link
+                      to={`/${this.props.params.projectName}/getting-started`}
+                      onClick={thirdStepOnClick}
+                    >
+                      3. Run example app
+                    </Link>
+                  </Tether>
                 </div>
                 <div onClick={::this._skipGettingStarted} className={classes.gettingStartedSkip}>
                   Skip getting started
@@ -159,8 +178,8 @@ export class SideNav extends React.Component {
             <ProjectSettingsOverlay
               viewer={this.props.viewer}
               project={this.props.project}
-              hide={::this._toggleProjectSettings}
               params={this.props.params}
+              hide={::this._toggleProjectSettings}
             />
           }
         </div>

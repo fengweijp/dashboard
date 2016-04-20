@@ -58,15 +58,15 @@
     margin: 11px 0;
   }
 
-  .gettingStartedStepDisabled {
+  .gettingStartedStepDisabled a {
     color: #CBCBE2;
   }
 
-  .gettingStartedStepActive {
+  .gettingStartedStepActive a {
     font-weight: 500;
   }
 
-  .gettingStartedStepDone {
+  .gettingStartedStepDone a {
     color: $accent;
     text-decoration: line-through;
   }

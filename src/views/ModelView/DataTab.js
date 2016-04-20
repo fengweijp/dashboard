@@ -152,18 +152,7 @@ export class DataTab extends React.Component {
           </thead>
           <tbody>
             <tr id='newDataItem' className={classes.addRow}>
-              <Tether
-                steps={{
-                  STEP6_ADD_DATA_ITEM_1: `Add your first Todo item to the database.
-                  It doesn\'t matter what you type here.`,
-                  STEP7_ADD_DATA_ITEM_2: 'Well done. Let\'s add another one.',
-                }}
-                offsetX={-10}
-                offsetY={15}
-                width={290}
-              >
-                <td>ID (generated)</td>
-              </Tether>
+              <td>ID (generated)</td>
               {this.props.fields.filter((f) => f.fieldName !== 'id').map((field) => {
                 let element
                 switch (field.typeIdentifier) {
@@ -194,13 +183,33 @@ export class DataTab extends React.Component {
                         type='text'
                       />
                     )
+                    if (
+                      this.props.modelName === 'Todo' &&
+                      field.fieldName === 'text' &&
+                      (this.context.gettingStartedState.isActive('STEP6_ADD_DATA_ITEM_1') ||
+                      this.context.gettingStartedState.isActive('STEP7_ADD_DATA_ITEM_2'))) {
+                      element = (
+                        <Tether
+                          steps={{
+                            STEP6_ADD_DATA_ITEM_1: `Add your first Todo item to the database.
+                            It doesn\'t matter what you type here.`,
+                            STEP7_ADD_DATA_ITEM_2: 'Well done. Let\'s add another one.',
+                          }}
+                          offsetX={-10}
+                          offsetY={5}
+                          width={290}
+                        >
+                          {element}
+                        </Tether>
+                      )
+                    }
                 }
                 return (
                   <td key={field.id}>{element}</td>
                 )
               })}
               <td className={classes.addButton}>
-                <span onClick={::this._add}>+</span>
+                <span onClick={::this._add}>Add item</span>
               </td>
             </tr>
             {this.state.items.map((item) => (

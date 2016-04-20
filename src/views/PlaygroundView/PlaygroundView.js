@@ -1,4 +1,6 @@
 import React, { PropTypes } from 'react'
+import Relay from 'react-relay'
+import mapProps from 'map-props'
 import { Lokka } from 'lokka'
 import { Transport } from 'lokka-transport-http'
 import GraphiQL from 'graphiql'
@@ -28,15 +30,15 @@ const DEFAULT_QUERY = `{
   }
 }`
 
-export default class PlaygroundView extends React.Component {
+class PlaygroundView extends React.Component {
   static propTypes = {
-    params: PropTypes.object.isRequired,
+    projectId: PropTypes.string.isRequired,
   };
 
   constructor (props) {
     super(props)
 
-    const clientEndpoint = `${__BACKEND_ADDR__}/graphql/${this.props.params.projectId}`
+    const clientEndpoint = `${__BACKEND_ADDR__}/graphql/${this.props.projectId}`
     const token = window.localStorage.getItem('token')
     const headers = { Authorization: `Bearer ${token}`, 'X-GraphCool-Source': 'dashboard:playground' }
     const transport = new Transport(clientEndpoint, { headers })
@@ -88,7 +90,7 @@ export default class PlaygroundView extends React.Component {
   render () {
     const token = window.localStorage.getItem('token')
     const fetcher = (graphQLParams) => (
-      fetch(`${__BACKEND_ADDR__}/graphql/${this.props.params.projectId}`, {
+      fetch(`${__BACKEND_ADDR__}/graphql/${this.props.projectId}`, {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
@@ -105,7 +107,7 @@ export default class PlaygroundView extends React.Component {
             variables: graphQLParams.variables,
             date: new Date(),
           }
-          saveQuery(query, this.props.params.projectId)
+          saveQuery(query, this.props.projectId)
         }
 
         return response.json()
@@ -122,7 +124,7 @@ export default class PlaygroundView extends React.Component {
             {this.state.historyVisible &&
               <div className={classes.historyOverlay}>
                 <QueryHistory
-                  projectId={this.props.params.projectId}
+                  projectId={this.props.projectId}
                   onQuerySelect={::this._onHistoryQuerySelect}
                   />
               </div>
@@ -157,3 +159,22 @@ export default class PlaygroundView extends React.Component {
     )
   }
 }
+
+const MappedPlaygroundView = mapProps({
+  projectId: (props) => props.viewer.project.id,
+})(PlaygroundView)
+
+export default Relay.createContainer(MappedPlaygroundView, {
+  initialVariables: {
+    projectName: null, // injected from router
+  },
+  fragments: {
+    viewer: () => Relay.QL`
+      fragment on Viewer {
+        project: projectByName(projectName: $projectName) {
+          id
+        }
+      }
+    `,
+  },
+})
