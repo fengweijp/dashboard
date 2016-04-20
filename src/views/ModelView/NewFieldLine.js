@@ -3,6 +3,7 @@ import Relay from 'react-relay'
 import { findDOMNode } from 'react-dom'
 // import TagsInput from 'react-tagsinput'
 import AddFieldMutation from 'mutations/AddFieldMutation'
+import Tether from 'components/Tether/Tether'
 import Icon from 'components/Icon/Icon'
 import classes from './NewFieldLine.scss'
 
@@ -23,6 +24,12 @@ export default class NewFieldLine extends React.Component {
     modelNames: PropTypes.array.isRequired,
     params: PropTypes.object.isRequired,
     callback: PropTypes.func.isRequired,
+    projectId: PropTypes.string.isRequired,
+    modelId: PropTypes.string.isRequired,
+  };
+
+  static contextTypes = {
+    gettingStartedState: PropTypes.object.isRequired,
   };
 
   constructor (props) {
@@ -48,8 +55,8 @@ export default class NewFieldLine extends React.Component {
     }
 
     Relay.Store.commitUpdate(new AddFieldMutation({
-      modelId: this.props.params.modelId,
-      projectId: this.props.params.projectId,
+      modelId: this.props.modelId,
+      projectId: this.props.projectId,
       fieldName,
       typeIdentifier,
       enumValues,
@@ -60,6 +67,16 @@ export default class NewFieldLine extends React.Component {
       onSuccess: (response) => {
         this.props.callback(response.addField.fieldEdge.node)
         this._reset()
+
+        // getting-started onboarding step
+        if (
+           (this.context.gettingStartedState.isActive('STEP3_CREATE_TEXT_FIELD') &&
+            fieldName === 'text' && typeIdentifier === 'String') ||
+          (this.context.gettingStartedState.isActive('STEP4_CREATE_COMPLETED_FIELD') &&
+           fieldName === 'complete' && typeIdentifier === 'Boolean')
+        ) {
+          this.context.gettingStartedState.nextStep()
+        }
       },
       onFailure: (transaction) => {
         alert(transaction.getError())
@@ -101,11 +118,21 @@ export default class NewFieldLine extends React.Component {
     return (
       <tr className={classes.root}>
         <td className={classes.fieldName}>
-          <input
-            ref='fieldName'
-            type='text'
-            placeholder='Fieldname'
-          />
+          <Tether
+            steps={{
+              STEP3_CREATE_TEXT_FIELD: 'Add a new field called "text" and select type "String"',
+              STEP4_CREATE_COMPLETED_FIELD: 'Good job! Create another one called "complete" with type "Boolean"',
+            }}
+            offsetX={-26}
+            offsetY={10}
+          >
+            <input
+              ref='fieldName'
+              type='text'
+              placeholder='Fieldname'
+              id='newFieldName'
+            />
+          </Tether>
         </td>
         <td className={classes.type}>
           <div>

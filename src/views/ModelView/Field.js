@@ -14,10 +14,6 @@ class Field extends React.Component {
     params: PropTypes.object.isRequired,
   };
 
-  constructor (props) {
-    super(props)
-  }
-
   _toggleDetails () {
     this.props.toggleShowDetails()
   }

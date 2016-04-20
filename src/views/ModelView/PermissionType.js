@@ -5,7 +5,7 @@ export default class PermissionType extends React.Component {
 
   static propTypes = {
     className: PropTypes.string,
-    disabled: PropTypes.boolean,
+    disabled: PropTypes.bool,
     dataCallback: PropTypes.func,
     userType: PropTypes.string.isRequired,
     userPath: PropTypes.string,

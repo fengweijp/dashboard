@@ -8,8 +8,10 @@ import { updateNetworkLayer } from './utils/relay.js'
 updateNetworkLayer()
 
 ReactDOM.render(
-  <RelayRouter history={browserHistory}>
-    {routes}
-  </RelayRouter>,
+  <RelayRouter
+    forceFetch
+    routes={routes}
+    history={browserHistory}
+  />,
   document.getElementById('root')
 )

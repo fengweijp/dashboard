@@ -5,6 +5,7 @@ import mapProps from 'map-props'
 import { Lokka } from 'lokka'
 import { Transport } from 'lokka-transport-http'
 import { isScalar } from 'utils/graphql'
+import Tether from 'components/Tether/Tether'
 import Icon from 'components/Icon/Icon'
 import Loading from 'react-loading'
 import classes from './DataTab.scss'
@@ -14,12 +15,17 @@ export class DataTab extends React.Component {
     params: PropTypes.object.isRequired,
     modelName: PropTypes.string.isRequired,
     fields: PropTypes.array.isRequired,
-  };
+    projectId: PropTypes.string.isRequired,
+  }
+
+  static contextTypes = {
+    gettingStartedState: PropTypes.object.isRequired,
+  }
 
   constructor (props) {
     super(props)
 
-    const clientEndpoint = `${__BACKEND_ADDR__}/graphql/${this.props.params.projectId}`
+    const clientEndpoint = `${__BACKEND_ADDR__}/graphql/${this.props.projectId}`
     const token = window.localStorage.getItem('token')
     const headers = { Authorization: `Bearer ${token}`, 'X-GraphCool-Source': 'dashboard:data-tab' }
     const transport = new Transport(clientEndpoint, { headers })
@@ -54,7 +60,7 @@ export class DataTab extends React.Component {
         }
       }
     `
-    this._lokka.query(query)
+    return this._lokka.query(query)
       .then((results) => {
         const items = results.viewer[`all${this.props.modelName}s`].edges.map((edge) => edge.node)
         this.setState({ items, loading: false })
@@ -105,7 +111,17 @@ export class DataTab extends React.Component {
         }
       }
     `
-    this._lokka.mutate(mutation).then(::this._reloadData)
+    this._lokka.mutate(mutation)
+      .then(::this._reloadData)
+      .then(() => {
+        // getting-started onboarding step
+        if (this.props.modelName === 'Todo' && (
+           this.context.gettingStartedState.isActive('STEP6_ADD_DATA_ITEM_1') ||
+           this.context.gettingStartedState.isActive('STEP7_ADD_DATA_ITEM_2')
+             )) {
+          this.context.gettingStartedState.nextStep()
+        }
+      })
   }
 
   _listenForEnter (e) {
@@ -135,8 +151,19 @@ export class DataTab extends React.Component {
             </tr>
           </thead>
           <tbody>
-            <tr className={classes.addRow}>
-              <td>ID (generated)</td>
+            <tr id='newDataItem' className={classes.addRow}>
+              <Tether
+                steps={{
+                  STEP6_ADD_DATA_ITEM_1: `Add your first Todo item to the database.
+                  It doesn\'t matter what you type here.`,
+                  STEP7_ADD_DATA_ITEM_2: 'Well done. Let\'s add another one.',
+                }}
+                offsetX={-10}
+                offsetY={15}
+                width={290}
+              >
+                <td>ID (generated)</td>
+              </Tether>
               {this.props.fields.filter((f) => f.fieldName !== 'id').map((field) => {
                 let element
                 switch (field.typeIdentifier) {
@@ -210,16 +237,18 @@ const MappedDataTab = mapProps({
       .filter((field) => isScalar(field.typeIdentifier))
   ),
   modelName: (props) => props.viewer.model.name,
+  projectId: (props) => props.viewer.project.id,
 })(DataTab)
 
 export default Relay.createContainer(MappedDataTab, {
   initialVariables: {
-    modelId: null, // injected from router
+    modelName: null, // injected from router
+    projectName: null, // injected from router
   },
   fragments: {
     viewer: () => Relay.QL`
       fragment on Viewer {
-        model(id: $modelId) {
+        model: modelByName(projectName: $projectName, modelName: $modelName) {
           name
           fields(first: 100) {
             edges {
@@ -230,6 +259,9 @@ export default Relay.createContainer(MappedDataTab, {
               }
             }
           }
+        }
+        project: projectByName(projectName: $projectName) {
+          id
         }
       }
     `,

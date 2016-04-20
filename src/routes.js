@@ -25,11 +25,11 @@ const redirectToRoot = () => {
 export default (
   <Route path='/'>
     <IndexRoute component={RootRedirectView} queries={ViewerQuery} renderLoading={loading} />
-    <Route path=':projectId' component={RootView} queries={ViewerQuery}
+    <Route path=':projectName' component={RootView} queries={ViewerQuery}
       renderFailure={redirectToRoot} renderLoading={loading} >
       <Route path='models'>
         <IndexRoute component={ModelRedirectView} queries={ViewerQuery} renderLoading={loading} />
-        <Route path=':modelId' component={ModelView}>
+        <Route path=':modelName' component={ModelView} queries={ViewerQuery} renderLoading={loading}>
           <Route path='fields' component={FieldsTab} renderFailure={() => <ModelRedirectView />}
             queries={ViewerQuery} renderLoading={loading} />
           <Route path='data' component={DataTab} renderFailure={() => <ModelRedirectView />}
@@ -38,9 +38,8 @@ export default (
         </Route>
       </Route>
       <Route path='playground' component={PlaygroundView} />
-      <Route path='getting-started' component={GettingStartedView}
-        queries={ViewerQuery} renderLoading={loading} />
-      <IndexRedirect to='models' />
+      <Route path='getting-started' component={GettingStartedView} />
+      <IndexRedirect to='getting-started' />
     </Route>
   </Route>
 )

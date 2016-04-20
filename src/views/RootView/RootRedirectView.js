@@ -6,7 +6,7 @@ import LoginView from 'views/LoginView/LoginView'
 export class RootRedirectView extends React.Component {
   static propTypes = {
     viewer: PropTypes.object.isRequired,
-    projectId: PropTypes.string,
+    projectName: PropTypes.string,
     isLoggedin: PropTypes.bool.isRequired,
   };
 
@@ -16,13 +16,13 @@ export class RootRedirectView extends React.Component {
 
   componentWillMount () {
     if (this.props.isLoggedin) {
-      this.context.router.replace(`/${this.props.projectId}`)
+      this.context.router.replace(`/${this.props.projectName}`)
     }
   }
 
   shouldComponentUpdate (nextProps) {
     if (nextProps.isLoggedin) {
-      this.context.router.replace(`/${nextProps.projectId}`)
+      this.context.router.replace(`/${nextProps.projectName}`)
       return false
     }
 
@@ -44,9 +44,9 @@ export class RootRedirectView extends React.Component {
 
 const MappedRootRedirectView = mapProps({
   viewer: (props) => props.viewer,
-  projectId: (props) => (
+  projectName: (props) => (
     props.viewer.user
-     ? props.viewer.user.projects.edges[0].node.id
+     ? props.viewer.user.projects.edges[0].node.name
      : null
   ),
   isLoggedin: (props) => props.viewer.user !== null,

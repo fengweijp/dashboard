@@ -1,18 +1,23 @@
 import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
+import mapProps from 'map-props'
 import { Link } from 'react-router'
 import DeleteModelMutation from 'mutations/DeleteModelMutation'
 import Icon from 'components/Icon/Icon'
+import Tether from 'components/Tether/Tether'
 import classes from './ModelView.scss'
 
-export default class ModelView extends React.Component {
+class ModelView extends React.Component {
   static propTypes = {
     children: PropTypes.element.isRequired,
     params: PropTypes.object.isRequired,
+    projectId: PropTypes.string.isRequired,
+    modelId: PropTypes.string.isRequired,
   };
 
   static contextTypes = {
     router: PropTypes.object.isRequired,
+    gettingStartedState: PropTypes.object.isRequired,
   };
 
   constructor (props) {
@@ -24,32 +29,47 @@ export default class ModelView extends React.Component {
   _deleteModel () {
     if (window.confirm('Do you really want to delete this model?')) {
       Relay.Store.commitUpdate(new DeleteModelMutation({
-        projectId: this.props.params.projectId,
-        modelId: this.props.params.modelId,
+        projectId: this.props.projectId,
+        modelId: this.props.modelId,
       }))
 
-      this.context.router.replace(`/${this.props.params.projectId}/models`)
+      this.context.router.replace(`/${this.props.params.projectName}/models`)
     }
   }
 
   render () {
+    const dataTabOnClick = () => {
+      if (this.context.gettingStartedState.isActive('STEP5_GOTO_DATA_TAB')) {
+        this.context.gettingStartedState.nextStep()
+      }
+    }
+
     return (
       <div className={classes.root}>
         <div className={classes.head}>
           <Link
-            to={`/${this.props.params.projectId}/models/${this.props.params.modelId}/fields`}
+            to={`/${this.props.params.projectName}/models/${this.props.params.modelName}/fields`}
             className={classes.tab}
             activeClassName={classes.tabActive}
             >
             Fields
           </Link>
-          <Link
-            to={`/${this.props.params.projectId}/models/${this.props.params.modelId}/data`}
-            className={classes.tab}
-            activeClassName={classes.tabActive}
+          <Tether
+            steps={{
+              STEP5_GOTO_DATA_TAB: 'Nice, you\'re done setting up the model. Let\'s add some data',
+            }}
+            offsetX={-26}
+            offsetY={5}
+          >
+            <Link
+              to={`/${this.props.params.projectName}/models/${this.props.params.modelName}/data`}
+              className={classes.tab}
+              activeClassName={classes.tabActive}
+              onClick={dataTabOnClick}
             >
-            Data
-          </Link>
+              Data
+            </Link>
+          </Tether>
           <span className={classes.delete} onClick={this._deleteModel}>
             <Icon src={require('assets/icons/delete.svg')} />
           </span>
@@ -59,3 +79,29 @@ export default class ModelView extends React.Component {
     )
   }
 }
+
+const MappedModelView = mapProps({
+  params: (props) => props.params,
+  children: (props) => props.children,
+  modelId: (props) => props.viewer.model.id,
+  projectId: (props) => props.viewer.project.id,
+})(ModelView)
+
+export default Relay.createContainer(MappedModelView, {
+  initialVariables: {
+    modelName: null, // injected from router
+    projectName: null, // injected from router
+  },
+  fragments: {
+    viewer: () => Relay.QL`
+      fragment on Viewer {
+        model: modelByName(projectName: $projectName, modelName: $modelName) {
+          id
+        }
+        project: projectByName(projectName: $projectName) {
+          id
+        }
+      }
+    `,
+  },
+})

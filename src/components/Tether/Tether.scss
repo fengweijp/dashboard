@@ -1,0 +1,26 @@
+@import '~styles/variables';
+
+.tether {
+  margin-top: 20px;
+  background: $accent;
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 5px;
+  font-size: 14px;
+  line-height: 20px;
+
+  &:before {
+    width: 0;
+    height: 0;
+    margin-top: 20px;
+    border-left: solid transparent 10px;
+    border-right: solid transparent 10px;
+    border-bottom: solid $accent 10px;
+    top: -10px;
+    left: 0;
+    content: ' ';
+    margin-left: 13px;
+    position: absolute;
+  }
+}
+

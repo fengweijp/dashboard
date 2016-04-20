@@ -5,7 +5,7 @@ import mapProps from 'map-props'
 export class ModelRedirectView extends React.Component {
   static propTypes = {
     params: PropTypes.object.isRequired,
-    modelId: PropTypes.string.isRequired,
+    modelName: PropTypes.string.isRequired,
   };
 
   static contextTypes = {
@@ -13,7 +13,7 @@ export class ModelRedirectView extends React.Component {
   };
 
   componentWillMount () {
-    this.context.router.replace(`/${this.props.params.projectId}/models/${this.props.modelId}`)
+    this.context.router.replace(`/${this.props.params.projectName}/models/${this.props.modelName}`)
   }
 
   render () {
@@ -25,18 +25,18 @@ export class ModelRedirectView extends React.Component {
 
 const MappedModelRedirectView = mapProps({
   params: (props) => props.params,
-  modelId: (props) => props.viewer.project.models.edges[0].node.id,
+  modelName: (props) => props.viewer.project.models.edges[0].node.name,
 })(ModelRedirectView)
 
 export default Relay.createContainer(MappedModelRedirectView, {
   initialVariables: {
-    projectId: '',
+    projectName: null, // injected from router
   },
   fragments: {
     // NOTE name needed because of relay bug
     viewer: () => Relay.QL`
       fragment on Viewer {
-        project(id: $projectId) {
+        project: projectByName(projectName: $projectName) {
           models(first: 1) {
             edges {
               node {

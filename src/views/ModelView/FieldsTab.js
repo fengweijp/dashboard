@@ -11,6 +11,12 @@ export default class FieldsTab extends React.Component {
     params: PropTypes.object.isRequired,
     fields: PropTypes.array.isRequired,
     allModels: PropTypes.array.isRequired,
+    projectId: PropTypes.string.isRequired,
+    modelId: PropTypes.string.isRequired,
+  };
+
+  static contextTypes = {
+    gettingStartedState: PropTypes.object.isRequired,
   };
 
   constructor (props) {
@@ -32,6 +38,11 @@ export default class FieldsTab extends React.Component {
     const modelNames = this.props.allModels.map((model) => model.name)
 
     const newFieldCallback = (field) => {
+      // don't toggle up while onboarding
+      if (this.context.gettingStartedState.isActive) {
+        return
+      }
+
       this.setState({ toggledFieldId: field.id })
     }
 
@@ -51,6 +62,8 @@ export default class FieldsTab extends React.Component {
               modelNames={modelNames}
               params={this.props.params}
               callback={newFieldCallback}
+              projectId={this.props.projectId}
+              modelId={this.props.modelId}
             />
             <tr className={classes.spacer}>
               <td />
@@ -78,17 +91,19 @@ const MappedFieldsTab = mapProps({
   params: (props) => props.params,
   allModels: (props) => props.viewer.project.models.edges.map((edge) => edge.node),
   fields: (props) => props.viewer.model.fields.edges.map((edge) => edge.node),
+  modelId: (props) => props.viewer.model.id,
+  projectId: (props) => props.viewer.project.id,
 })(FieldsTab)
 
 export default Relay.createContainer(MappedFieldsTab, {
   initialVariables: {
-    modelId: null, // injected from router
-    projectId: null, // injected from router
+    modelName: null, // injected from router
+    projectName: null, // injected from router
   },
   fragments: {
     viewer: () => Relay.QL`
       fragment on Viewer {
-        model(id: $modelId) {
+        model: modelByName(projectName: $projectName, modelName: $modelName) {
           id
           name
           fields(first: 100) {
@@ -100,7 +115,8 @@ export default Relay.createContainer(MappedFieldsTab, {
             }
           }
         }
-        project(id: $projectId) {
+        project: projectByName(projectName: $projectName) {
+          id
           models(first: 100) {
             edges {
               node {

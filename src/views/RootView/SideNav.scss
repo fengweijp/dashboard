@@ -49,6 +49,45 @@
   }
 }
 
+.gettingStarted {
+  background: #E5E5F8;
+  padding: 20px 70px;
+  font-size: 14px;
+
+  .gettingStartedStepDisabled, .gettingStartedStepActive, .gettingStartedStepDone {
+    margin: 11px 0;
+  }
+
+  .gettingStartedStepDisabled {
+    color: #CBCBE2;
+  }
+
+  .gettingStartedStepActive {
+    font-weight: 500;
+  }
+
+  .gettingStartedStepDone {
+    color: $accent;
+    text-decoration: line-through;
+  }
+
+  .gettingStartedSkip {
+    background: $blue-grey;
+    padding: 9px 12px;
+    text-align: center;
+    text-transform: uppercase;
+    margin-top: 30px;
+    font-size: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+      background: #E87C7C;
+      color: #fff;
+    }
+  }
+}
+
 .add {
   width: 100%;
   margin: 12px 0;

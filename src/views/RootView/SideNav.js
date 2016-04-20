@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import mapProps from 'map-props'
 import Icon from 'components/Icon/Icon'
+import Tether from 'components/Tether/Tether'
 import ProjectSettingsOverlay from 'components/ProjectSettingsOverlay/ProjectSettingsOverlay'
 import AddModelMutation from 'mutations/AddModelMutation'
 import classes from './SideNav.scss'
@@ -14,7 +15,12 @@ export class SideNav extends React.Component {
     project: PropTypes.object.isRequired,
     viewer: PropTypes.object.isRequired,
     models: PropTypes.array,
-  };
+  }
+
+  static contextTypes = {
+    gettingStartedState: PropTypes.object.isRequired,
+    router: PropTypes.object.isRequired,
+  }
 
   constructor (props) {
     super(props)
@@ -28,11 +34,30 @@ export class SideNav extends React.Component {
 
   _addModel () {
     const modelName = window.prompt('Model name')
+    const redirect = () => {
+      this.context.router.replace(`/${this.props.params.projectName}/models/Todo`)
+    }
+
     if (modelName) {
       Relay.Store.commitUpdate(new AddModelMutation({
         modelName,
-        projectId: this.props.params.projectId,
-      }))
+        projectId: this.props.project.id,
+      }), {
+        onSuccess: (response) => {
+          // getting-started onboarding step
+          if (modelName === 'Todo' && this.context.gettingStartedState.isActive('STEP2_CREATE_TODO_MODEL')) {
+            this.context.gettingStartedState.nextStep().then(redirect)
+          } else {
+            redirect()
+          }
+        },
+      })
+    }
+  }
+
+  _skipGettingStarted () {
+    if (window.confirm('Do you really want skip the getting started tour?')) {
+      this.context.gettingStartedState.skip()
     }
   }
 
@@ -41,18 +66,62 @@ export class SideNav extends React.Component {
   }
 
   render () {
+    const gettingStartedOnClick = () => {
+      if (this.context.gettingStartedState.isActive('STEP8_GOTO_GETTING_STARTED')) {
+        this.context.gettingStartedState.nextStep()
+      }
+    }
+
+    const gettingStartedIsActive = this.context.gettingStartedState.isActive()
+    const gettingStartedStepClass = (index) => {
+      if (this.context.gettingStartedState.progress === index) {
+        return classes.gettingStartedStepActive
+      } else if (this.context.gettingStartedState.progress > index) {
+        return classes.gettingStartedStepDone
+      } else {
+        return classes.gettingStartedStepDisabled
+      }
+    }
+
     return (
       <div className={classes.root}>
         <div className={classes.list}>
+          {gettingStartedIsActive &&
+            <div>
+              <Link
+                to={`/${this.props.params.projectName}/getting-started`}
+                className={classes.head}
+                onClick={gettingStartedOnClick}
+                >
+                <Icon width={19} height={19} src={require('assets/icons/cake.svg')} />
+                <Tether
+                  steps={{
+                    STEP8_GOTO_GETTING_STARTED: 'You\'re almost done. Let\'s run an example app...',
+                  }}
+                  offsetX={-26}
+                  offsetY={-5}
+                >
+                  <span>Getting Started</span>
+                </Tether>
+              </Link>
+              <div className={classes.gettingStarted}>
+                <div className={gettingStartedStepClass(0)}>
+                  1. Create Todo model
+                </div>
+                <div className={gettingStartedStepClass(1)}>
+                  2. Add some data
+                </div>
+                <div className={gettingStartedStepClass(2)}>
+                  3. Run example app
+                </div>
+                <div onClick={::this._skipGettingStarted} className={classes.gettingStartedSkip}>
+                  Skip getting started
+                </div>
+              </div>
+            </div>
+          }
           <Link
-            to={`/${this.props.params.projectId}/getting-started`}
-            className={classes.head}
-            >
-            <Icon width={19} height={19} src={require('assets/icons/cake.svg')} />
-            <span>Getting Started</span>
-          </Link>
-          <Link
-            to={`/${this.props.params.projectId}/models`}
+            to={`/${this.props.params.projectName}/models`}
             className={classes.head}
             >
             <Icon width={19} height={19} src={require('assets/icons/model.svg')} />
@@ -62,7 +131,7 @@ export class SideNav extends React.Component {
             this.props.models.map((model) => (
               <Link
                 key={model.name}
-                to={`/${this.props.params.projectId}/models/${model.id}`}
+                to={`/${this.props.params.projectName}/models/${model.name}`}
                 className={classes.listElement}
                 activeClassName={classes.listElementActive}
                 >
@@ -70,9 +139,17 @@ export class SideNav extends React.Component {
               </Link>
             ))
           }
-          <div className={classes.add} onClick={::this._addModel}>+ Add model</div>
+          <div className={classes.add} onClick={::this._addModel}>
+            <Tether
+              steps={{
+                STEP2_CREATE_TODO_MODEL: 'First you need to create a new model called "Todo"',
+              }}
+            >
+              <div>+ Add model</div>
+            </Tether>
+          </div>
           <Link
-            to={`/${this.props.params.projectId}/playground`}
+            to={`/${this.props.params.projectName}/playground`}
             className={classes.head}
             >
             <Icon width={19} height={19} src={require('assets/icons/play.svg')} />

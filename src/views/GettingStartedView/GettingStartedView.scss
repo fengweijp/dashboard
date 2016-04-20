@@ -37,5 +37,23 @@
 
   &.currentStep {
     opacity: 1;
+
+    .action {
+      cursor: pointer;
+    }
+  }
+
+  .action {
+    display: inline-block;
+    margin: 10px 0;
+    color: #fff;
+    background: $accent;
+    padding: 12px 16px;
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 500;
+    border-radius: 5px;
+    cursor: default;
   }
 }
+

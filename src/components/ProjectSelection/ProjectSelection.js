@@ -7,7 +7,6 @@ import classes from './ProjectSelection.scss'
 const ProjectPropType = React.PropTypes.shape({
   webhookUrl: React.PropTypes.string,
   name: React.PropTypes.string.isRequired,
-  id: React.PropTypes.string.isRequired,
 })
 
 export default class ProjectSelection extends React.Component {
@@ -64,7 +63,7 @@ export default class ProjectSelection extends React.Component {
                 key={project.name}
                 className={classes.listElement}
                 onClick={::this._toggle}
-                to={`/${project.id}`}
+                to={`/${project.name}`}
                 activeClassName={classes.listElementActive}
                 >
                 {project.name}
