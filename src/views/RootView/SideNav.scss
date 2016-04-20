@@ -56,6 +56,10 @@
 
   .gettingStartedStepDisabled, .gettingStartedStepActive, .gettingStartedStepDone {
     margin: 11px 0;
+
+    a {
+      color: #626477;
+    }
   }
 
   .gettingStartedStepDisabled a {

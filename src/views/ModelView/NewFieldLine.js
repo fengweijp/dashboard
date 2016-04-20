@@ -139,6 +139,7 @@ export default class NewFieldLine extends React.Component {
             <select
               onChange={::this._onSelectTypeIdentifier}
               ref='typeIdentifier'
+              value={this.state.typeIdentifier}
               >
               {Object.keys(types).map((type) => (
                 <option key={type} value={type}>{types[type]}</option>

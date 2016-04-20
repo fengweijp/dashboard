@@ -66,6 +66,12 @@ export class SideNav extends React.Component {
   }
 
   render () {
+    const firstStepOnClick = () => {
+      if (this.context.gettingStartedState.isActive('STEP1_OVERVIEW')) {
+        this.context.gettingStartedState.nextStep()
+      }
+    }
+
     const secondStepOnClick = () => {
       if (this.context.gettingStartedState.isActive('STEP5_GOTO_DATA_TAB')) {
         this.context.gettingStartedState.nextStep()
@@ -106,6 +112,7 @@ export class SideNav extends React.Component {
                 <div className={gettingStartedStepClass(0)}>
                   <Link
                     to={`/${this.props.params.projectName}/getting-started`}
+                    onClick={firstStepOnClick}
                   >
                     1. Create Todo model
                   </Link>

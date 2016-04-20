@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
 import Tooltip from 'react-tooltip'
+import PureRenderMixin from 'react-addons-pure-render-mixin'
 import mapProps from 'map-props'
 import ProjectSelection from 'components/ProjectSelection/ProjectSelection'
 import Header from 'components/Header/Header'
@@ -37,6 +38,12 @@ class GettingStartedState {
   }
 
   update (step) {
+    const currentStepIndex = GettingStartedState.steps.indexOf(this.step)
+    const stepIndex = GettingStartedState.steps.indexOf(step)
+    if (currentStepIndex > stepIndex) {
+      return
+    }
+
     this.step = step
 
     switch (step) {
@@ -94,6 +101,8 @@ export class RootView extends React.Component {
 
   constructor (props) {
     super(props)
+
+    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this)
 
     const gettingStartedState = new GettingStartedState({
       userId: props.user.id,
@@ -210,8 +219,6 @@ export default Relay.createContainer(MappedRootView, {
     viewer: () => Relay.QL`
       fragment on Viewer {
         id
-        ${LoginView.getFragment('viewer')}
-        ${SideNav.getFragment('viewer')}
         project: projectByName(projectName: $projectName) {
           id
           name
@@ -230,6 +237,8 @@ export default Relay.createContainer(MappedRootView, {
           }
           ${Header.getFragment('user')}
         }
+        ${LoginView.getFragment('viewer')}
+        ${SideNav.getFragment('viewer')}
       }
     `,
   },
