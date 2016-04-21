@@ -2,18 +2,8 @@ import React, { PropTypes } from 'react'
 import { findDOMNode } from 'react-dom'
 import Relay from 'react-relay'
 import Icon from 'components/Icon/Icon'
+import endpoints from 'utils/endpoints'
 import classes from './Header.scss'
-
-const endpoints = {
-  RELAY: {
-    title: 'Relay Endpoint',
-    alias: 'relay/v1',
-  },
-  SIMPLE: {
-    title: 'Simple GraphQL Endpoint',
-    alias: 'simple/v1',
-  },
-}
 
 export default class Header extends React.Component {
 

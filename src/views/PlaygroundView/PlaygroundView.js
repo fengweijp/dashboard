@@ -7,6 +7,7 @@ import GraphiQL from 'graphiql'
 import { saveQuery } from 'utils/QueryHistoryStorage'
 import QueryHistory from 'components/QueryHistory/QueryHistory'
 import Icon from 'components/Icon/Icon'
+import endpoints from 'utils/endpoints'
 import classes from './PlaygroundView.scss'
 
 import 'graphiql/graphiql.css'
@@ -50,6 +51,7 @@ class PlaygroundView extends React.Component {
       historyVisible: false,
       query: undefined,
       variables: undefined,
+      selectedEndpoint: Object.keys(endpoints)[0],
     }
   }
 
@@ -87,10 +89,16 @@ class PlaygroundView extends React.Component {
     this.setState({ historyVisible: false })
   }
 
+  _changeEndpoint (e) {
+    const selectedEndpoint = e.target.value
+    this.setState({ selectedEndpoint })
+    this.forceUpdate()
+  }
+
   render () {
     const token = window.localStorage.getItem('token')
     const fetcher = (graphQLParams) => (
-      fetch(`${__BACKEND_ADDR__}/graphql/${this.props.projectId}`, {
+      fetch(`${__BACKEND_ADDR__}/${endpoints[this.state.selectedEndpoint].alias}/${this.props.projectId}`, {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
@@ -137,6 +145,13 @@ class PlaygroundView extends React.Component {
             <span>{this.state.historyVisible ? 'Close' : 'History'}</span>
 
           </div>
+          <div className={classes.endpoint}>
+            <select onChange={::this._changeEndpoint}>
+              {Object.keys(endpoints).map((endpoint) => (
+                <option key={endpoint} value={endpoint}>{endpoints[endpoint].title}</option>
+              ))}
+            </select>
+          </div>
           <div className={classes.user}>
             <select>
               {this.state.users.map((user) => {
@@ -151,6 +166,7 @@ class PlaygroundView extends React.Component {
           </div>
         </div>
         <GraphiQL
+          key={this.state.selectedEndpoint}
           fetcher={fetcher}
           query={this.state.query || DEFAULT_QUERY}
           variables={this.state.variables}

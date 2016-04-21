@@ -19,8 +19,15 @@
   font-size: 15px;
 }
 
+.endpoint {
+  width: 33%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .history {
-  width: 50%;
+  width: 33%;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -33,7 +40,7 @@
 
 .user {
   text-align: right;
-  width: 50%;
+  width: 33%;
   display: flex;
   align-items: center;
   justify-content: flex-end;
