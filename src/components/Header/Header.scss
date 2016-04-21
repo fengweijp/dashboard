@@ -11,6 +11,11 @@
   color: #70738C;
   display: flex;
   align-items: center;
+  padding-left: 12px;
+
+  select {
+    margin: 0 10px;
+  }
 
   .endpoint {
     font-size: 11px;
@@ -18,10 +23,6 @@
     padding: 7px 12px;
     font-family: Consolas, Inconsolata, 'Droid Sans Mono', Monaco, monospace;
     cursor: pointer;
-  }
-
-  svg {
-    margin: 0 8px 0 22px;
   }
 }
 

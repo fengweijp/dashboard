@@ -4,6 +4,17 @@ import Relay from 'react-relay'
 import Icon from 'components/Icon/Icon'
 import classes from './Header.scss'
 
+const endpoints = {
+  RELAY: {
+    title: 'Relay Endpoint',
+    alias: 'relay/v1',
+  },
+  SIMPLE: {
+    title: 'Simple GraphQL Endpoint',
+    alias: 'simple/v1',
+  },
+}
+
 export default class Header extends React.Component {
 
   static propTypes = {
@@ -16,6 +27,7 @@ export default class Header extends React.Component {
 
     this.state = {
       rightOverlayVisible: false,
+      selectedEndpoint: window.localStorage.getItem('SELECTED_ENDPOINT') || Object.keys(endpoints)[0],
     }
   }
 
@@ -36,18 +48,23 @@ export default class Header extends React.Component {
     window.getSelection().addRange(range)
   }
 
+  _changeEndpoint (e) {
+    const selectedEndpoint = e.target.value
+    this.setState({ selectedEndpoint })
+    window.localStorage.setItem('SELECTED_ENDPOINT', selectedEndpoint)
+  }
+
   render () {
     return (
       <div className={classes.root}>
-        <div className={classes.left} onClick={::this._selectEndpoint} title='Endpoint'>
-          <Icon
-            src={require('assets/icons/api.svg')}
-            color='#70738C'
-            width={20}
-            height={20}
-            />
-          <span className={classes.endpoint} ref='endpoint'>
-            https://api.graph.cool/graphql/{this.props.projectId}
+        <div className={classes.left} title='Endpoint'>
+          <select onChange={::this._changeEndpoint} value={this.state.selectedEndpoint}>
+            {Object.keys(endpoints).map((endpoint) => (
+              <option key={endpoint} value={endpoint}>{endpoints[endpoint].title}</option>
+            ))}
+          </select>
+          <span onClick={::this._selectEndpoint} className={classes.endpoint} ref='endpoint'>
+            https://api.graph.cool/{endpoints[this.state.selectedEndpoint].alias}/{this.props.projectId}
           </span>
         </div>
         {this.state.rightOverlayVisible &&
