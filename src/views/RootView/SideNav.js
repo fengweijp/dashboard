@@ -109,7 +109,7 @@ export class SideNav extends React.Component {
                 <span>Getting Started</span>
               </Link>
               <div className={classes.gettingStarted}>
-                <div className={gettingStartedStepClass(0)}>
+                <div className={gettingStartedStepClass(1)}>
                   <Link
                     to={`/${this.props.params.projectName}/getting-started`}
                     onClick={firstStepOnClick}
@@ -117,7 +117,7 @@ export class SideNav extends React.Component {
                     1. Create Todo model
                   </Link>
                 </div>
-                <div className={gettingStartedStepClass(1)}>
+                <div className={gettingStartedStepClass(2)}>
                   <Link
                     to={`/${this.props.params.projectName}/models/Todo/data`}
                     onClick={secondStepOnClick}
@@ -125,7 +125,7 @@ export class SideNav extends React.Component {
                     2. Add some data
                   </Link>
                 </div>
-                <div className={gettingStartedStepClass(2)}>
+                <div className={gettingStartedStepClass(3)}>
                   <Tether
                     steps={{
                       STEP8_GOTO_GETTING_STARTED: 'You\'re almost done. Let\'s run an example app now...',

@@ -48,15 +48,15 @@ class GettingStartedState {
 
     switch (step) {
       case 'STEP1_OVERVIEW': this.progress = 0; break
-      case 'STEP2_CREATE_TODO_MODEL': this.progress = 0; break
-      case 'STEP3_CREATE_TEXT_FIELD': this.progress = 0; break
-      case 'STEP4_CREATE_COMPLETED_FIELD': this.progress = 0; break
-      case 'STEP5_GOTO_DATA_TAB': this.progress = 1; break
-      case 'STEP6_ADD_DATA_ITEM_1': this.progress = 1; break
-      case 'STEP7_ADD_DATA_ITEM_2': this.progress = 1; break
-      case 'STEP8_GOTO_GETTING_STARTED': this.progress = 2; break
-      case 'STEP9_WAITING_FOR_REQUESTS': this.progress = 2; break
-      case 'STEP10_DONE': this.progress = 3; break
+      case 'STEP2_CREATE_TODO_MODEL': this.progress = 1; break
+      case 'STEP3_CREATE_TEXT_FIELD': this.progress = 1; break
+      case 'STEP4_CREATE_COMPLETED_FIELD': this.progress = 1; break
+      case 'STEP5_GOTO_DATA_TAB': this.progress = 2; break
+      case 'STEP6_ADD_DATA_ITEM_1': this.progress = 2; break
+      case 'STEP7_ADD_DATA_ITEM_2': this.progress = 2; break
+      case 'STEP8_GOTO_GETTING_STARTED': this.progress = 3; break
+      case 'STEP9_WAITING_FOR_REQUESTS': this.progress = 3; break
+      case 'STEP10_DONE': this.progress = 4; break
     }
   }
 
