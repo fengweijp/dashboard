@@ -120,7 +120,7 @@ export default class NewFieldLine extends React.Component {
         <td className={classes.fieldName}>
           <Tether
             steps={{
-              STEP3_CREATE_TEXT_FIELD: 'Add a new field called "text" and select type "String"',
+              STEP3_CREATE_TEXT_FIELD: 'Add a new field called "text" and select type "String". Then click the "Add Field" button.',
               STEP4_CREATE_COMPLETED_FIELD: 'Good job! Create another one called "complete" with type "Boolean"',
             }}
             offsetX={-26}
