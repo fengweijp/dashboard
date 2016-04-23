@@ -124,8 +124,9 @@ export default class NewFieldLine extends React.Component {
               ' Then click the "Add Field" button.',
               STEP4_CREATE_COMPLETED_FIELD: 'Good job! Create another one called "complete" with type "Boolean"',
             }}
-            offsetX={-26}
-            offsetY={10}
+            side='top'
+            offsetX={-126}
+            offsetY={30}
           >
             <input
               ref='fieldName'

@@ -12,15 +12,24 @@
   &:before {
     width: 0;
     height: 0;
-    margin-top: 20px;
     border-left: solid transparent 10px;
     border-right: solid transparent 10px;
-    border-bottom: solid $accent 10px;
-    top: -10px;
     left: 0;
     content: ' ';
     margin-left: 13px;
     position: absolute;
+  }
+
+  &.bottom:before {
+    margin-top: 20px;
+    border-bottom: solid $accent 10px;
+    top: -10px;
+  }
+
+  &.top:before {
+    margin-bottom: -20px;
+    border-top: solid $accent 10px;
+    bottom: 10px;
   }
 }
 

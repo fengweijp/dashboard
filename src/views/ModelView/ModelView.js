@@ -58,6 +58,8 @@ class ModelView extends React.Component {
             steps={{
               STEP5_GOTO_DATA_TAB: 'Nice, you\'re done setting up the model. Let\'s add some data.',
             }}
+            width={300}
+            side='top'
             offsetX={-26}
             offsetY={5}
           >
