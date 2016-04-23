@@ -9,11 +9,12 @@ import QueryHistory from 'components/QueryHistory/QueryHistory'
 import Icon from 'components/Icon/Icon'
 import endpoints from 'utils/endpoints'
 import classes from './PlaygroundView.scss'
+import LoginCLientUserMutation from 'mutations/LoginCLientUserMutation'
 
 import 'graphiql/graphiql.css'
 
 const DASHBOARD_ADMIN = {
-  id: 0,
+  id: '0',
   email: 'ADMIN',
   roles: null,
 }
@@ -52,6 +53,8 @@ class PlaygroundView extends React.Component {
       query: undefined,
       variables: undefined,
       selectedEndpoint: window.localStorage.getItem('SELECTED_ENDPOINT') || Object.keys(endpoints)[0],
+      selectedUserId: DASHBOARD_ADMIN.id,
+      selectedUserToken: null,
     }
   }
 
@@ -95,8 +98,29 @@ class PlaygroundView extends React.Component {
     window.localStorage.setItem('SELECTED_ENDPOINT', selectedEndpoint)
   }
 
+  _changeUser (e) {
+    console.log(e.target.value)
+    const selectedUserId = e.target.value
+
+    if (selectedUserId === DASHBOARD_ADMIN.id) {
+      this.setState({selectedUserId, selectedUserToken: null})
+    } else {
+      Relay.Store.commitUpdate(new LoginCLientUserMutation({
+        clientUserId: selectedUserId,
+        projectId: this.props.projectId,
+      }), {
+        onSuccess: (response) => {
+          this.setState({selectedUserId, selectedUserToken: response.signinClientUser.token})
+        },
+        onFailure: (transaction) => {
+          alert(transaction.getError())
+        },
+      })
+    }
+  }
+
   render () {
-    const token = window.localStorage.getItem('token')
+    const token = this.state.selectedUserToken || window.localStorage.getItem('token')
     const fetcher = (graphQLParams) => (
       fetch(`${__BACKEND_ADDR__}/${endpoints[this.state.selectedEndpoint].alias}/${this.props.projectId}`, {
         method: 'post',
@@ -153,7 +177,7 @@ class PlaygroundView extends React.Component {
             </select>
           </div>
           <div className={classes.user}>
-            <select>
+            <select value={this.state.selectedUserId} onChange={::this._changeUser}>
               {this.state.users.map((user) => {
                 const rolesStr = user.roles ? `(${user.roles.join(', ')})` : ''
                 return (
