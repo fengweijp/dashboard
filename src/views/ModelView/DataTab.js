@@ -82,7 +82,7 @@ export class DataTab extends React.Component {
     this._lokka.mutate(mutation)
       .then(() => {
         const items = this.state.items.filter((i) => i.id !== item.id)
-        this.setState({ items })
+        this.setState({ items, loading: false })
       })
   }
 
