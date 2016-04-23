@@ -9,7 +9,7 @@ import QueryHistory from 'components/QueryHistory/QueryHistory'
 import Icon from 'components/Icon/Icon'
 import endpoints from 'utils/endpoints'
 import classes from './PlaygroundView.scss'
-import LoginCLientUserMutation from 'mutations/LoginCLientUserMutation'
+import LoginClientUserMutation from 'mutations/LoginClientUserMutation'
 
 import 'graphiql/graphiql.css'
 
@@ -105,7 +105,7 @@ class PlaygroundView extends React.Component {
     if (selectedUserId === DASHBOARD_ADMIN.id) {
       this.setState({selectedUserId, selectedUserToken: null})
     } else {
-      Relay.Store.commitUpdate(new LoginCLientUserMutation({
+      Relay.Store.commitUpdate(new LoginClientUserMutation({
         clientUserId: selectedUserId,
         projectId: this.props.projectId,
       }), {
