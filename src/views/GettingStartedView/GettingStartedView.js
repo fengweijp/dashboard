@@ -83,7 +83,7 @@ class GettingStartedView extends React.Component {
                 To make your start a bit easier, we have prepared a little tour for you.
               </p>
               <p>
-                It will take about 3 mintues and show you the basic features<br />
+                It will take about 3 minutes and show you the basic features<br />
                 by creating a GraphQL backend for an example Todo app.
               </p>
             </div>
