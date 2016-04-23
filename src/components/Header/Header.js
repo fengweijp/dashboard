@@ -1,8 +1,6 @@
 import React, { PropTypes } from 'react'
 import { findDOMNode } from 'react-dom'
-import Relay from 'react-relay'
 import Icon from 'components/Icon/Icon'
-import endpoints from 'utils/endpoints'
 import classes from './Header.scss'
 
 export default class Header extends React.Component {
@@ -16,13 +14,12 @@ export default class Header extends React.Component {
     super(props)
 
     this.state = {
-      rightOverlayVisible: false,
-      selectedEndpoint: window.localStorage.getItem('SELECTED_ENDPOINT') || Object.keys(endpoints)[0],
+      userDropdownVisible: false,
     }
   }
 
   _toggleRightOverlay () {
-    this.setState({ rightOverlayVisible: !this.state.rightOverlayVisible })
+    this.setState({ userDropdownVisible: !this.state.userDropdownVisible })
   }
 
   _logout () {
@@ -30,35 +27,29 @@ export default class Header extends React.Component {
     window.location.pathname = '/'
   }
 
-  _selectEndpoint () {
-    const endpoint = findDOMNode(this.refs.endpoint)
+  _selectProjectId () {
+    const projectId = findDOMNode(this.refs.projectId)
     const range = document.createRange()
-    range.setStartBefore(endpoint)
-    range.setEndAfter(endpoint)
+    range.setStartBefore(projectId)
+    range.setEndAfter(projectId)
     window.getSelection().addRange(range)
-  }
-
-  _changeEndpoint (e) {
-    const selectedEndpoint = e.target.value
-    this.setState({ selectedEndpoint })
-    window.localStorage.setItem('SELECTED_ENDPOINT', selectedEndpoint)
   }
 
   render () {
     return (
       <div className={classes.root}>
-        <div className={classes.left} title='Endpoint'>
-          <select onChange={::this._changeEndpoint} value={this.state.selectedEndpoint}>
-            {Object.keys(endpoints).map((endpoint) => (
-              <option key={endpoint} value={endpoint}>{endpoints[endpoint].title}</option>
-            ))}
-          </select>
-          <span onClick={::this._selectEndpoint} className={classes.endpoint} ref='endpoint'>
-            https://api.graph.cool/{endpoints[this.state.selectedEndpoint].alias}/{this.props.projectId}
-          </span>
+        <div className={classes.left} title='Project Id'>
+          <div onClick={::this._selectProjectId} className={classes.copyWrapper}>
+            <span className={classes.projectId} ref='projectId'>
+              {this.props.projectId}
+            </span>
+            <span className={classes.label}>
+              Copy Project Id
+            </span>
+          </div>
         </div>
-        {this.state.rightOverlayVisible &&
-          <div className={classes.rightOverlay} onClick={::this._logout}>
+        {this.state.userDropdownVisible &&
+          <div className={classes.userDropdown} onClick={::this._logout}>
             Logout
           </div>
         }
@@ -73,14 +64,3 @@ export default class Header extends React.Component {
     )
   }
 }
-
-export default Relay.createContainer(Header, {
-  fragments: {
-    user: () => Relay.QL`
-      fragment on User {
-        id
-        name
-      }
-    `,
-  },
-})

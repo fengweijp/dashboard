@@ -235,7 +235,6 @@ export default Relay.createContainer(MappedRootView, {
               }
             }
           }
-          ${Header.getFragment('user')}
         }
         ${LoginView.getFragment('viewer')}
         ${SideNav.getFragment('viewer')}

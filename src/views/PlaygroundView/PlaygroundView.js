@@ -51,7 +51,7 @@ class PlaygroundView extends React.Component {
       historyVisible: false,
       query: undefined,
       variables: undefined,
-      selectedEndpoint: Object.keys(endpoints)[0],
+      selectedEndpoint: window.localStorage.getItem('SELECTED_ENDPOINT') || Object.keys(endpoints)[0],
     }
   }
 
@@ -92,7 +92,7 @@ class PlaygroundView extends React.Component {
   _changeEndpoint (e) {
     const selectedEndpoint = e.target.value
     this.setState({ selectedEndpoint })
-    this.forceUpdate()
+    window.localStorage.setItem('SELECTED_ENDPOINT', selectedEndpoint)
   }
 
   render () {
@@ -146,7 +146,7 @@ class PlaygroundView extends React.Component {
 
           </div>
           <div className={classes.endpoint}>
-            <select onChange={::this._changeEndpoint}>
+            <select onChange={::this._changeEndpoint} value={this.state.selectedEndpoint}>
               {Object.keys(endpoints).map((endpoint) => (
                 <option key={endpoint} value={endpoint}>{endpoints[endpoint].title}</option>
               ))}

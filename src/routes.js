@@ -38,7 +38,7 @@ export default (
         </Route>
       </Route>
       <Route path='playground' component={PlaygroundView} queries={ViewerQuery} renderLoading={loading} />
-      <Route path='getting-started' component={GettingStartedView} />
+      <Route path='getting-started' component={GettingStartedView} queries={ViewerQuery} renderLoading={loading} />
       <IndexRedirect to='getting-started' />
     </Route>
   </Route>

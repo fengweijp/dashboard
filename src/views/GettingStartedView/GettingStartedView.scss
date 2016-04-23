@@ -19,6 +19,7 @@
   transform: translate(-50%, -50%);
   margin-top: -70px;
   background: rgba(255, 255, 255, 0.5);
+  padding: 20px 0;
 
   h2 {
     margin: 10px 0 52px;
@@ -35,26 +36,41 @@
 
   .buttons {
     margin-top: 90px;
+  }
 
-    div {
-      margin: 0 13px;
-      display: inline-block;
-      padding: 17px;
-      font-size: 19px;
-      font-weight: 500;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+  .emoji {
+    font-size: 69px;
+    margin-bottom: 30px;
+  }
 
-    .green {
-      color: #fff;
-      background: $accent;
-    }
+  .social {
+    display: flex;
+    justify-content: center;
+  }
 
-    .grey {
-      color: #8A8A8E;
-      background: #F0EFEF;
-    }
+  .twitter {
+    margin: 0 10px 0 0;
+    display: block;
+  }
+}
+
+.button {
+  margin: 0 13px;
+  display: inline-block;
+  padding: 17px 30px;
+  font-size: 19px;
+  font-weight: 500;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &.green {
+    color: #fff;
+    background: $accent;
+  }
+
+  &.grey {
+    color: #8A8A8E;
+    background: #F0EFEF;
   }
 }
 
@@ -63,6 +79,7 @@
   width: 840px;
   display: flex;
   justify-content: space-between;
+  flex-flow: row wrap;
 
   &.blurred {
     filter: blur(15px);
@@ -87,6 +104,53 @@
 
   .image {
     width: 210px;
+  }
+
+  .instructions {
+    width: 100%;
+    display: flex;
+    margin-top: 20px;
+
+    h3 {
+      font-size: 19px;
+      color: #8A8A8E;
+      font-weight: normal;
+      margin-bottom: 30px;
+
+      a {
+        color: $accent;
+        font-weight: 500;
+      }
+    }
+
+    .step1, .step2 {
+      text-align: center;
+    }
+
+    .step1 {
+      width: 40%;
+    }
+
+    .step2 {
+      width: 60%;
+    }
+
+    .field {
+      margin-top: 8px;
+      display: inline-block;
+      padding: 12px 21px;
+      background: #F3F3F3;
+      font-size: 13px;
+      font-family: Consolas, Inconsolata, 'Droid Sans Mono', Monaco, monospace;
+    }
+  }
+
+  .status {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 50px 0 0;
   }
 }
 
@@ -113,53 +177,53 @@
 }
 
 /*.progressBarBackground {*/
-  /*margin: 40px 0 0;*/
-  /*width: 100%;*/
-  /*height: 5px;*/
-  /*background: #E9E9F3;*/
+/*margin: 40px 0 0;*/
+/*width: 100%;*/
+/*height: 5px;*/
+/*background: #E9E9F3;*/
 /*}*/
 
 /*.progressBar {*/
-  /*height: 100%;*/
-  /*padding: 0 0 0 40px;*/
-  /*background: $accent;*/
+/*height: 100%;*/
+/*padding: 0 0 0 40px;*/
+/*background: $accent;*/
 /*}*/
 
 /*.steps {*/
-  /*display: flex;*/
-  /*padding: 0 20px 20px 20px;*/
+/*display: flex;*/
+/*padding: 0 20px 20px 20px;*/
 /*}*/
 
 /*.step {*/
-  /*width: 33%;*/
-  /*padding: 20px;*/
-  /*opacity: 0.4;*/
+/*width: 33%;*/
+/*padding: 20px;*/
+/*opacity: 0.4;*/
 
-  /*img {*/
-    /*padding: 10px;*/
-    /*height: 170px;*/
-    /*margin: 0 auto;*/
-  /*}*/
+/*img {*/
+/*padding: 10px;*/
+/*height: 170px;*/
+/*margin: 0 auto;*/
+/*}*/
 
-  /*&.currentStep {*/
-    /*opacity: 1;*/
+/*&.currentStep {*/
+/*opacity: 1;*/
 
-    /*.action {*/
-      /*cursor: pointer;*/
-    /*}*/
-  /*}*/
+/*.action {*/
+/*cursor: pointer;*/
+/*}*/
+/*}*/
 
-  /*.action {*/
-    /*display: inline-block;*/
-    /*margin: 10px 0;*/
-    /*color: #fff;*/
-    /*background: $accent;*/
-    /*padding: 12px 16px;*/
-    /*font-size: 14px;*/
-    /*text-transform: uppercase;*/
-    /*font-weight: 500;*/
-    /*border-radius: 5px;*/
-    /*cursor: default;*/
-  /*}*/
+/*.action {*/
+/*display: inline-block;*/
+/*margin: 10px 0;*/
+/*color: #fff;*/
+/*background: $accent;*/
+/*padding: 12px 16px;*/
+/*font-size: 14px;*/
+/*text-transform: uppercase;*/
+/*font-weight: 500;*/
+/*border-radius: 5px;*/
+/*cursor: default;*/
+/*}*/
 /*}*/
 
