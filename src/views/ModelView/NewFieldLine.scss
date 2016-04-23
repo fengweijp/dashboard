@@ -72,13 +72,13 @@
 }
 
 .submit {
-  background: #F0F0F9;
-  color: #B7B7D1;
-  cursor: pointer;
 
   &:hover {
-    background: $accent;
-    color: #fff;
+
+    button {
+      background: $accent;
+      color: #fff;
+    }
 
     svg {
       fill: #fff;
@@ -86,7 +86,10 @@
   }
 
   button {
+    background: #F0F0F9;
+    color: #B7B7D1;
     border: 0;
+    cursor: pointer;
     background: none;
     font-size: 13px;
     font-weight: 500;
@@ -96,6 +99,7 @@
     justify-content: center;
     height: 100%;
     width: 100%;
+    padding: 0;
 
     svg {
       margin-left: 17px;

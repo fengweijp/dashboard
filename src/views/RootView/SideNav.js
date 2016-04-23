@@ -131,6 +131,7 @@ export class SideNav extends React.Component {
                       STEP8_GOTO_GETTING_STARTED: 'You\'re almost done. Let\'s run an example app now...',
                     }}
                     offsetY={-5}
+                    width={260}
                   >
                     <Link
                       to={`/${this.props.params.projectName}/getting-started`}
@@ -170,6 +171,8 @@ export class SideNav extends React.Component {
               steps={{
                 STEP2_CREATE_TODO_MODEL: 'First you need to create a new model called "Todo"',
               }}
+              offsetY={-5}
+              width={260}
             >
               <div>+ Add model</div>
             </Tether>

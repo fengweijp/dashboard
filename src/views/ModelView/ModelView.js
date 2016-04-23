@@ -56,7 +56,7 @@ class ModelView extends React.Component {
           </Link>
           <Tether
             steps={{
-              STEP5_GOTO_DATA_TAB: 'Nice, you\'re done setting up the model. Let\'s add some data',
+              STEP5_GOTO_DATA_TAB: 'Nice, you\'re done setting up the model. Let\'s add some data.',
             }}
             offsetX={-26}
             offsetY={5}

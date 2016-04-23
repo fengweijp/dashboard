@@ -36,6 +36,7 @@ class GettingStartedView extends React.Component {
   static propTypes = {
     params: PropTypes.object.isRequired,
     projectId: PropTypes.string.isRequired,
+    user: PropTypes.object.isRequired,
   }
 
   static contextTypes = {
@@ -72,13 +73,15 @@ class GettingStartedView extends React.Component {
   render () {
     const { progress } = this.context.gettingStartedState
     const overlayActive = progress === 0 || progress === 4
+    const firstName = this.props.user.name.split(' ')[0]
 
     return (
       <div className={classes.root}>
         {progress === 0 &&
           <div className={classes.overlay}>
+            <div className={classes.emoji}>🙌</div>
             <div>
-              <h2><strong>Hi there</strong>, welcome to our Dashboard.</h2>
+              <h2><strong>Hi {firstName}</strong>, welcome to our Dashboard.</h2>
               <p>
                 To make your start a bit easier, we have prepared a little tour for you.
               </p>
@@ -137,12 +140,10 @@ class GettingStartedView extends React.Component {
             <div className={classes.text}>
               <h2>1. Create <strong>Todo</strong> model</h2>
               <p>
-                In this first step you need to create a new <i>model</i> called <strong>Todo</strong>.
-                A model defines the structure of your data.
+                In this first step you will learn to create a new <i>model</i> called <strong>Todo</strong>.
               </p>
               <p>
-                Then you will add two <i>fields</i>: text and complete. Fields are the properties of your model.
-                Each field has a type.
+                A model is a collection of several fields defining the structure of your data.
               </p>
             </div>
             <div className={classes.image}>
@@ -231,6 +232,7 @@ class GettingStartedView extends React.Component {
 const MappedGettingStartedView = mapProps({
   params: (props) => props.params,
   projectId: (props) => props.viewer.project.id,
+  user: (props) => props.viewer.user,
 })(GettingStartedView)
 
 export default Relay.createContainer(MappedGettingStartedView, {
@@ -242,6 +244,9 @@ export default Relay.createContainer(MappedGettingStartedView, {
       fragment on Viewer {
         project: projectByName(projectName: $projectName) {
           id
+        }
+        user {
+          name
         }
       }
     `,
