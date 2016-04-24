@@ -32,6 +32,7 @@ export default class Header extends React.Component {
     const range = document.createRange()
     range.setStartBefore(projectId)
     range.setEndAfter(projectId)
+    window.getSelection().removeAllRanges()
     window.getSelection().addRange(range)
   }
 
