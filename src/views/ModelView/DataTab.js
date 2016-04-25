@@ -4,7 +4,7 @@ import { findDOMNode } from 'react-dom'
 import mapProps from 'map-props'
 import { Lokka } from 'lokka'
 import { Transport } from 'lokka-transport-http'
-import { isScalar } from 'utils/graphql'
+import { isScalar, isValidValueForType } from 'utils/graphql'
 import Tether from 'components/Tether/Tether'
 import Icon from 'components/Icon/Icon'
 import Loading from 'react-loading'
@@ -94,13 +94,18 @@ export class DataTab extends React.Component {
     }
   }
 
-  _updateField (itemId, field, fieldId, value) {
+  _updateField (item, field, fieldId, value) {
+    if (!isValidValueForType(value, field.typeIdentifier)) {
+      alert(`'${value}' is not a valid value for field ${field.fieldName}`)
+      return
+    }
+
     this.setState({savingFieldId: fieldId})
     const inputString = this._parseValueForField(field, value)
     const mutation = `
       {
         update${this.props.modelName}(input: {
-          id: "${itemId}",
+          id: "${item.id}",
           ${inputString},
           clientMutationId: "lokka-${Math.random().toString(36).substring(7)}"
         }) {
@@ -110,6 +115,7 @@ export class DataTab extends React.Component {
     `
     this._lokka.mutate(mutation)
       .then(() => {
+        item[field.fieldName] = value
         this.setState({editingFieldId: null, savingFieldId: null})
       })
   }
@@ -257,11 +263,19 @@ export class DataTab extends React.Component {
                   const fieldId = `${item.id}:${field.id}`
                   if (this.state.editingFieldId === fieldId) {
                     return <td key={fieldId}>
-                      <input className={classes.editField} autoFocus type='text' defaultValue={str}
-                        onBlur={(e) => this._updateField(item.id, field, fieldId, e.target.value)} />
+                      {field.typeIdentifier === 'Boolean'
+                      ? <select onChange={(e) => this._updateField(item, field, fieldId, e.target.value)}
+                        onBlur={(e) => this._updateField(item, field, fieldId, e.target.value)}
+                        autoFocus defaultValue={str}>
+                        <option value={'true'}>true</option>
+                        <option value={'false'}>false</option>
+                      </select>
+                      : <input className={classes.editField} autoFocus type='text' defaultValue={str}
+                        onBlur={(e) => this._updateField(item, field, fieldId, e.target.value)} />}
                     </td>
                   } else {
-                    return <td onDoubleClick={() => this._startEditing(fieldId)} key={fieldId}>{str}</td>
+                    return <td className={classes.padding}
+                      onDoubleClick={() => this._startEditing(fieldId)} key={fieldId}>{str}</td>
                   }
                 })}
                 <td>

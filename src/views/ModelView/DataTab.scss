@@ -17,17 +17,17 @@
       padding: 17px !important;
     }
   }
+}
 
-  input, select {
-    padding: 17px;
-    width: 100%;
-    height: 100%;
-    border: 0;
-    background: none;
+input, select {
+  padding: 17px;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: none;
 
-    @include placeholder {
-      color: #dadee2;
-    }
+  @include placeholder {
+    color: #dadee2;
   }
 }
 
@@ -77,8 +77,11 @@
     border-right: 1px solid #fff;
   }
 
-  td {
+  td.padding {
     padding: 17px;
+  }
+
+  td {
     border: 1px solid #D3D6E8;
     font-size: 13px;
     color: #9898AE;
