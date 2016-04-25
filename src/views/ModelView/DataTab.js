@@ -35,6 +35,8 @@ export class DataTab extends React.Component {
     this.state = {
       items: [],
       loading: true,
+      editingFieldId: null,
+      savingFieldId: null,
     }
   }
 
@@ -86,20 +88,50 @@ export class DataTab extends React.Component {
       })
   }
 
+  _startEditing (fieldId) {
+    if (this.state.editingFieldId === null) {
+      this.setState({editingFieldId: fieldId})
+    }
+  }
+
+  _updateField (itemId, field, fieldId, value) {
+    this.setState({savingFieldId: fieldId})
+    const inputString = this._parseValueForField(field, value)
+    const mutation = `
+      {
+        update${this.props.modelName}(input: {
+          id: "${itemId}",
+          ${inputString},
+          clientMutationId: "lokka-${Math.random().toString(36).substring(7)}"
+        }) {
+          clientMutationId
+        }
+      }
+    `
+    this._lokka.mutate(mutation)
+      .then(() => {
+        this.setState({editingFieldId: null, savingFieldId: null})
+      })
+  }
+
+  _parseValueForField (field, rawValue) {
+    const key = field.fieldName
+    switch (field.typeIdentifier) {
+      case 'String': return `${key}: "${rawValue}"`
+      case 'Int': return `${key}: ${parseInt(rawValue, 10)}`
+      case 'Float': return `${key}: ${parseFloat(rawValue)}`
+      case 'Boolean': return `${key}: ${rawValue === 'true'}`
+      default: throw Error(`Unsupported typeIdentifier: ${field.typeIdentifier}`)
+    }
+  }
+
   _add () {
     this.setState({ loading: true })
     const inputString = this.props.fields
       .filter((field) => field.fieldName !== 'id')
       .map((field) => {
-        const key = field.fieldName
         const rawValue = findDOMNode(this.refs[field.id]).value
-        switch (field.typeIdentifier) {
-          case 'String': return `${key}: "${rawValue}"`
-          case 'Int': return `${key}: ${parseInt(rawValue, 10)}`
-          case 'Float': return `${key}: ${parseFloat(rawValue)}`
-          case 'Boolean': return `${key}: ${rawValue === 'true'}`
-          default: throw Error(`Unsupported typeIdentifier: ${field.typeIdentifier}`)
-        }
+        return this._parseValueForField(field, rawValue)
       })
     const mutation = `
       {
@@ -222,7 +254,15 @@ export class DataTab extends React.Component {
                       str = str.substr(0, 47) + '...'
                     }
                   }
-                  return <td key={field.id}>{str}</td>
+                  const fieldId = `${item.id}:${field.id}`
+                  if (this.state.editingFieldId === fieldId) {
+                    return <td key={fieldId}>
+                      <input className={classes.editField} autoFocus type='text' defaultValue={str}
+                        onBlur={(e) => this._updateField(item.id, field, fieldId, e.target.value)} />
+                    </td>
+                  } else {
+                    return <td onDoubleClick={() => this._startEditing(fieldId)} key={fieldId}>{str}</td>
+                  }
                 })}
                 <td>
                   <span onClick={() => this._deleteItem(item)}>
