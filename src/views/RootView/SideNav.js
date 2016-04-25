@@ -35,7 +35,7 @@ export class SideNav extends React.Component {
   _addModel () {
     const modelName = window.prompt('Model name')
     const redirect = () => {
-      this.context.router.replace(`/${this.props.params.projectName}/models/Todo`)
+      this.context.router.replace(`/${this.props.params.projectName}/models/${modelName}`)
     }
 
     if (modelName) {
@@ -58,6 +58,7 @@ export class SideNav extends React.Component {
   _skipGettingStarted () {
     if (window.confirm('Do you really want skip the getting started tour?')) {
       this.context.gettingStartedState.skip()
+      this.context.router.replace(`/${this.props.params.projectName}/models`)
     }
   }
 

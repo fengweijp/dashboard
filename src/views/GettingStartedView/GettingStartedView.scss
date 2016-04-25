@@ -110,6 +110,7 @@
   .instructions {
     width: 100%;
     display: flex;
+    justify-content: space-between;
     margin-top: 20px;
 
     h3 {
@@ -124,22 +125,16 @@
       }
     }
 
-    .step1, .step2 {
+    .step1, .step2, .step3 {
       text-align: center;
-    }
-
-    .step1 {
-      width: 40%;
-    }
-
-    .step2 {
-      width: 60%;
+      width: 30%;
     }
 
     .field {
-      margin-top: 8px;
+      text-align: left;
+      margin-top: 2px;
       display: inline-block;
-      padding: 12px 21px;
+      padding: 12px 61px;
       background: #F3F3F3;
       font-size: 13px;
       font-family: Consolas, Inconsolata, 'Droid Sans Mono', Monaco, monospace;
@@ -151,7 +146,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 50px 0 0;
+    margin: 15px 0 0;
   }
 }
 
