@@ -62,11 +62,11 @@ class GettingStartedView extends React.Component {
     }
   }
 
-  _selectProjectId () {
-    const projectId = findDOMNode(this.refs.projectId)
+  _selectCommands () {
+    const commands = findDOMNode(this.refs.commands)
     const range = document.createRange()
-    range.setStartBefore(projectId)
-    range.setEndAfter(projectId)
+    range.setStartBefore(commands)
+    range.setEndAfter(commands)
     window.getSelection().addRange(range)
   }
 
@@ -74,6 +74,8 @@ class GettingStartedView extends React.Component {
     const { progress } = this.context.gettingStartedState
     const overlayActive = progress === 0 || progress === 4
     const firstName = this.props.user.name.split(' ')[0]
+    const exampleRepo = 'react-relay-todo-example'
+    const downloadUrl = `${__BACKEND_ADDR__}/resources/examples/${exampleRepo}?projectId=${this.props.projectId}`
 
     return (
       <div className={classes.root}>
@@ -186,7 +188,7 @@ class GettingStartedView extends React.Component {
               <div className={classes.step1}>
                 <h3>1. Download example app</h3>
                 <a
-                  href='https://github.com/graphcool-examples/react-relay-todo-example/archive/master.zip'
+                  href={downloadUrl}
                   className={`${classes.download} ${classes.button} ${classes.green}`}
                 >
                   Download example
@@ -194,29 +196,28 @@ class GettingStartedView extends React.Component {
               </div>
               <div className={classes.step2}>
                 <h3>
-                  2. Copy your <strong>Project ID</strong> and follow&nbsp;
-                  <a
-                    href='https://github.com/graphcool-examples/react-relay-todo-example#getting-started'
-                    target='_blank'
-                  >
-                    these instructions
-                  </a>
+                  2. Run these commands
                 </h3>
                 <div
-                  onClick={::this._selectProjectId}
+                  onClick={::this._selectCommands}
                   className={classes.field}
-                  ref='projectId'
+                  ref='commands'
                 >
-                  {this.props.projectId}
+                  npm install<br />npm start
                 </div>
               </div>
-            </div>
-            {progress === 3 &&
-              <div className={classes.status}>
-                <Loading type='bubbles' delay={0} color='#8989B1' />
-                &nbsp;&nbsp;Waiting for first API call...
+              <div className={classes.step3}>
+                <h3>
+                  <a href='http://localhost:3000' target='_blank'>3. Open the example app</a>
+                </h3>
+                {progress === 3 &&
+                  <div className={classes.status}>
+                    <Loading type='bubbles' delay={0} color='#8989B1' />
+                    &nbsp;&nbsp;Checking status...
+                  </div>
+                }
               </div>
-            }
+            </div>
           </div>
         }
         <div className={classes.pagination}>
