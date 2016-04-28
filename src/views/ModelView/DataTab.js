@@ -47,7 +47,9 @@ export class DataTab extends React.Component {
   _reloadData () {
     this.setState({ loading: true })
     const fieldNames = this.props.fields
-      .map((field) => field.fieldName)
+      .map((field) => isScalar(field.typeIdentifier)
+        ? field.fieldName
+        : `${field.fieldName} { id }`)
       .join(',')
     const query = `
       {
@@ -95,7 +97,12 @@ export class DataTab extends React.Component {
   }
 
   _updateField (item, field, fieldId, value) {
-    if (!isValidValueForType(value, field.typeIdentifier)) {
+    if (value === '') {
+      // todo: this should set to null but currently null is not supported by our api
+      this.setState({editingFieldId: null, savingFieldId: null})
+      return
+    }
+    if (!isValidValueForType(value, isScalar(field.typeIdentifier) ? field.typeIdentifier : 'GraphQLID')) {
       alert(`'${value}' is not a valid value for field ${field.fieldName}`)
       return
     }
@@ -115,19 +122,23 @@ export class DataTab extends React.Component {
     `
     this._lokka.mutate(mutation)
       .then(() => {
-        item[field.fieldName] = value
+        item[field.fieldName] = isScalar(field.typeIdentifier) ? value : {id: value}
         this.setState({editingFieldId: null, savingFieldId: null})
       })
   }
 
   _parseValueForField (field, rawValue) {
+    if (rawValue === '') {
+      // todo: this should set to null but currently null is not supported by our api
+      return ''
+    }
     const key = field.fieldName
     switch (field.typeIdentifier) {
       case 'String': return `${key}: "${rawValue}"`
       case 'Int': return `${key}: ${parseInt(rawValue, 10)}`
       case 'Float': return `${key}: ${parseFloat(rawValue)}`
       case 'Boolean': return `${key}: ${rawValue === 'true'}`
-      default: throw Error(`Unsupported typeIdentifier: ${field.typeIdentifier}`)
+      default: return `${key}Id: "${rawValue}"`
     }
   }
 
@@ -254,8 +265,11 @@ export class DataTab extends React.Component {
               <tr key={item.id}>
                 {this.props.fields.map((field) => {
                   let str = 'null'
-                  if (item[field.fieldName] !== null) {
-                    str = item[field.fieldName].toString()
+                  const fieldValue = isScalar(field.typeIdentifier)
+                    ? item[field.fieldName]
+                    : (item[`${field.fieldName}`] !== null ? item[`${field.fieldName}`].id : null)
+                  if (fieldValue !== null) {
+                    str = fieldValue.toString()
                     if (str.length > 50) {
                       str = str.substr(0, 47) + '...'
                     }
@@ -297,7 +311,7 @@ const MappedDataTab = mapProps({
   fields: (props) => (
     props.viewer.model.fields.edges
       .map((edge) => edge.node)
-      .filter((field) => isScalar(field.typeIdentifier))
+      .filter((field) => isScalar(field.typeIdentifier) || !field.isList)
   ),
   modelName: (props) => props.viewer.model.name,
   projectId: (props) => props.viewer.project.id,
@@ -319,6 +333,7 @@ export default Relay.createContainer(MappedDataTab, {
                 id
                 fieldName
                 typeIdentifier
+                isList
               }
             }
           }
