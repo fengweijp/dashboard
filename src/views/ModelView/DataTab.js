@@ -88,8 +88,8 @@ export class DataTab extends React.Component {
       })
   }
 
-  _startEditing (fieldId) {
-    if (this.state.editingFieldId === null) {
+  _startEditing (field, fieldId) {
+    if (field.fieldName !== 'id' && this.state.editingFieldId === null) {
       this.setState({editingFieldId: fieldId})
     }
   }
@@ -206,9 +206,9 @@ export class DataTab extends React.Component {
                     break
                   case 'Boolean':
                     element = (
-                      <select ref={field.id}>
-                        <option>true</option>
-                        <option>false</option>
+                      <select defaultValue='false' ref={field.id}>
+                        <option value='true'>true</option>
+                        <option value='false'>false</option>
                       </select>
                     )
                     break
@@ -270,12 +270,12 @@ export class DataTab extends React.Component {
                         <option value={'true'}>true</option>
                         <option value={'false'}>false</option>
                       </select>
-                      : <input className={classes.editField} autoFocus type='text' defaultValue={str}
+                      : <input autoFocus type='text' defaultValue={str}
                         onBlur={(e) => this._updateField(item, field, fieldId, e.target.value)} />}
                     </td>
                   } else {
                     return <td className={classes.padding}
-                      onDoubleClick={() => this._startEditing(fieldId)} key={fieldId}>{str}</td>
+                      onDoubleClick={() => this._startEditing(field, fieldId)} key={fieldId}>{str}</td>
                   }
                 })}
                 <td>
