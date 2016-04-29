@@ -1,5 +1,5 @@
 export function isScalar (typeIdentifier) {
-  const scalarTypes = ['String', 'Int', 'Float', 'Boolean', 'GraphQLID']
+  const scalarTypes = ['String', 'Int', 'Float', 'Boolean', 'GraphQLID', 'Enum', 'Password']
   return scalarTypes.includes(typeIdentifier)
 }
 
