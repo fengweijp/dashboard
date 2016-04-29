@@ -1,7 +1,8 @@
 import React from 'react'
+import Relay from 'react-relay'
 import ReactDOM from 'react-dom'
-import { RelayRouter } from 'react-router-relay'
-import { browserHistory } from 'react-router'
+import useRelay from 'react-router-relay'
+import { Router, browserHistory, applyRouterMiddleware } from 'react-router'
 import routes from './routes.js'
 import { updateNetworkLayer } from './utils/relay.js'
 import loadAnalytics from './utils/analytics.js'
@@ -15,9 +16,11 @@ browserHistory.listen(() => {
 })
 
 ReactDOM.render((
-  <RelayRouter
+  <Router
     forceFetch
     routes={routes}
+    environment={Relay.Store}
+    render={applyRouterMiddleware(useRelay)}
     history={browserHistory}
   />
 ), document.getElementById('root'))
