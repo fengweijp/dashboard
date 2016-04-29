@@ -3,6 +3,7 @@ import { Route, IndexRoute, IndexRedirect } from 'react-router'
 import Loading from 'react-loading'
 import RootView from 'views/RootView/RootView'
 import RootRedirectView from 'views/RootView/RootRedirectView'
+import TokenRedirectView from 'views/RootView/TokenRedirectView'
 import ModelView from 'views/ModelView/ModelView'
 import ModelRedirectView from 'views/ModelView/ModelRedirectView'
 import FieldsTab from 'views/ModelView/FieldsTab'
@@ -25,6 +26,7 @@ const redirectToRoot = () => {
 export default (
   <Route path='/'>
     <IndexRoute component={RootRedirectView} queries={ViewerQuery} renderLoading={loading} />
+    <Route path='token' component={TokenRedirectView} />
     <Route path=':projectName' component={RootView} queries={ViewerQuery}
       renderFailure={redirectToRoot} renderLoading={loading} >
       <Route path='models'>

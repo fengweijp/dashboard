@@ -27,7 +27,7 @@ export default function () {
     'identify',
     'reset',
     'group',
-    'track',
+    // 'track',
     'ready',
     'alias',
     'page',
@@ -35,6 +35,19 @@ export default function () {
     'off',
     'on',
   ]
+
+  analytics.track = function (event, properties, options, fn) {
+    const isFn = (value) => typeof value === 'function'
+    // Argument reshuffling.
+    /* eslint-disable no-unused-expressions, no-sequences */
+    if (isFn(options)) fn = options, options = null
+    if (isFn(properties)) fn = properties, options = null, properties = null
+    /* eslint-enable no-unused-expressions, no-sequences */
+
+    if (fn) fn()
+
+    return this
+  }
 
   // Define a factory to create stubs. These are placeholders
   // for methods in Analytics.js so that you never have to wait
