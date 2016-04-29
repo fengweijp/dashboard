@@ -167,6 +167,7 @@ export class DataTab extends React.Component {
       case 'Int': return `${key}: ${parseInt(rawValue, 10)}`
       case 'Float': return `${key}: ${parseFloat(rawValue)}`
       case 'Boolean': return `${key}: ${rawValue === 'true'}`
+      case 'Enum' : return `${key}: ${rawValue}`
       default: return `${key}Id: "${rawValue}"`
     }
   }
@@ -264,6 +265,15 @@ export class DataTab extends React.Component {
                       </select>
                     )
                     break
+                  case 'Enum':
+                    element = (
+                      <select defaultValue={field.defaultValue} ref={field.id}>
+                        {field.enumValues.map((value) =>
+                          <option value={value}>{value}</option>
+                        )}
+                      </select>
+                    )
+                    break
                   default:
                     element = (
                       <input
@@ -307,7 +317,7 @@ export class DataTab extends React.Component {
                 {this.props.fields.map((field) => {
                   let str = 'null'
                   const fieldValue = isScalar(field.typeIdentifier)
-                    ? item[field.fieldName]
+                    ? item[field.fieldName] || field.defaultValue || null
                     : (item[`${field.fieldName}`] !== null ? item[`${field.fieldName}`].id : null)
                   if (fieldValue !== null) {
                     str = fieldValue.toString()
@@ -324,6 +334,14 @@ export class DataTab extends React.Component {
                         autoFocus defaultValue={str}>
                         <option value={'true'}>true</option>
                         <option value={'false'}>false</option>
+                      </select>
+                      : field.typeIdentifier === 'Enum'
+                      ? <select defaultValue={str}
+                        onChange={(e) => this._updateField(item, field, fieldId, e.target.value)}
+                        onBlur={(e) => this._updateField(item, field, fieldId, e.target.value)}>
+                        {field.enumValues.map((value) =>
+                          <option value={value}>{value}</option>
+                        )}
                       </select>
                       : <input autoFocus type='text' defaultValue={str}
                         onBlur={(e) => this._updateField(item, field, fieldId, e.target.value)} />}
@@ -375,6 +393,7 @@ export default Relay.createContainer(MappedDataTab, {
                 fieldName
                 typeIdentifier
                 isList
+                enumValues
               }
             }
           }
