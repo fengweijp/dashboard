@@ -120,7 +120,7 @@ export class RootView extends React.Component {
       })
 
       Smooch.init({
-        appToken: '505tvtkv5udrd4kc5dbpppa6x',
+        appToken: __SMOOCH_TOKEN__,
         givenName: this.props.user.name,
         email: this.props.user.email,
         customText: {
