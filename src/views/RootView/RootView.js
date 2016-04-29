@@ -10,6 +10,7 @@ import LoginView from 'views/LoginView/LoginView'
 import AddProjectMutation from 'mutations/AddProjectMutation'
 import UpdateUserMutation from 'mutations/UpdateUserMutation'
 import classes from './RootView.scss'
+import Smooch from 'smooch'
 
 import '../../styles/core.scss'
 
@@ -116,6 +117,15 @@ export class RootView extends React.Component {
       analytics.identify(this.props.user.id, {
         name: this.props.user.name,
         email: this.props.user.email,
+      })
+
+      Smooch.init({
+        appToken: '505tvtkv5udrd4kc5dbpppa6x',
+        givenName: this.props.user.name,
+        email: this.props.user.email,
+        customText: {
+          headerText: 'Can I help you? 🙌',
+        },
       })
     }
 
