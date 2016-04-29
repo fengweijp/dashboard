@@ -14,11 +14,10 @@ browserHistory.listen(() => {
   analytics.page()
 })
 
-ReactDOM.render(
+ReactDOM.render((
   <RelayRouter
     forceFetch
     routes={routes}
     history={browserHistory}
-  />,
-  document.getElementById('root')
-)
+  />
+), document.getElementById('root'))

@@ -8,42 +8,42 @@ module.exports = {
   output: {
     path: './dist',
     filename: 'bundle.[hash].js',
-    publicPath: '/'
+    publicPath: '/',
   },
   module: {
     preLoaders: [{
       test: /\.js$/,
       loader: 'eslint',
-      exclude: /node_modules/
+      exclude: /node_modules/,
     }],
     loaders: [{
       test: /\.css/,
-      loader: 'style!css'
+      loader: 'style!css',
     }, {
       test: /\.scss/,
-      loader: 'style!css?modules&importLoaders=1!postcss!sass?sourceMap'
+      loader: 'style!css?modules&importLoaders=1!postcss!sass?sourceMap',
     }, {
       test: /\.js$/,
       loader: 'babel',
-      exclude: /node_modules/
+      exclude: /node_modules/,
     }, {
       test: /icons\/.*\.svg$/,
-      loader: 'svg-inline?removeTags=true'
+      loader: 'svg-inline?removeTags=true',
     }, {
       test: /graphics\/.*\.svg$/,
-      loader: 'file'
-    }]
+      loader: 'file',
+    }],
   },
   plugins: [
     new webpack.DefinePlugin({
       __BACKEND_ADDR__: JSON.stringify(process.env.BACKEND_ADDR || ''),
       __SEGMENT_TOKEN__: '"M96lXuD90ZxkbQEQG716aySwBLllabOn"',
       __SMOOCH_TOKEN__: '"505tvtkv5udrd4kc5dbpppa6x"',
-      __ENABLE_SEGMENT__: true
+      __ENABLE_SEGMENT__: true,
     }),
     new HtmlWebpackPlugin({
       favicon: 'static/favicon.png',
-      template: 'src/index.html'
+      template: 'src/index.html',
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.optimize.DedupePlugin(),
@@ -51,25 +51,25 @@ module.exports = {
       compress: {
         unused: true,
         dead_code: true,
-        warnings: false
+        warnings: false,
       }
-    })
+    }),
   ],
   postcss: [
     cssnano({
       autoprefixer: {
         add: true,
         remove: true,
-        browsers: ['last 2 versions']
+        browsers: ['last 2 versions'],
       },
       discardComments: {
-        removeAll: true
+        removeAll: true,
       },
       safe: true,
     })
   ],
   resolve: {
     root: [path.resolve('./src'), path.resolve('node_modules')],
-    extensions: ['', '.js']
+    extensions: ['', '.js'],
   }
 }

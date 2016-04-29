@@ -44,9 +44,14 @@ export default class ProjectSettingsOverlay extends React.Component {
       Relay.Store.commitUpdate(new DeleteProjectMutation({
         projectId: this.props.project.id,
         userId: this.props.viewer.user.id,
-      }))
-
-      this.context.router.replace(`/${this.props.params.projectName}`)
+      }), {
+        onSuccess: () => {
+          // TODO replace hard reload
+          // was added because deleting the last project caused
+          // a relay issue
+          window.location.pathname = '/'
+        },
+      })
     }
   }
 
