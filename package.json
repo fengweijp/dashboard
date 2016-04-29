@@ -7,7 +7,7 @@
     "test": "npm run lint"
   },
   "react-relay-schema": {
-    "env": "SCHEMA_ENDPOINT"
+    "env": "DASHBOARD_SCHEMA_ENDPOINT"
   },
   "dependencies": {
     "graphiql": "^0.7.0",
