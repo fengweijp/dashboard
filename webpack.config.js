@@ -35,7 +35,10 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      __BACKEND_ADDR__: '"http://localhost:60000"'
+      __BACKEND_ADDR__: '"http://localhost:60000"',
+      __SEGMENT_TOKEN__: '"M96lXuD90ZxkbQEQG716aySwBLllabOn"',
+      __SMOOCH_TOKEN__: '"505tvtkv5udrd4kc5dbpppa6x"',
+      __ENABLE_SEGMENT__: false
     }),
     new HtmlWebpackPlugin({
       favicon: 'static/favicon.png',
