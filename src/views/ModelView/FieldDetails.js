@@ -53,8 +53,8 @@ class FieldDetails extends React.Component {
       return
     }
 
-    const isUnique = findDOMNode(this.refs.unique).checked
     const defaultValue = findDOMNode(this.refs.defaultValue).value
+    const isUnique = findDOMNode(this.refs.unique).checked
     const description = findDOMNode(this.refs.description).value
 
     Relay.Store.commitUpdate(new UpdateFieldMutation({
@@ -63,7 +63,11 @@ class FieldDetails extends React.Component {
       defaultValue,
       description,
     }), {
-      onSuccess: this.props.close,
+      onSuccess: () => {
+        analytics.track('models/fields: save field')
+
+        this.props.close()
+      },
     })
 
     this.setState({ loading: true })
@@ -100,7 +104,11 @@ class FieldDetails extends React.Component {
       allowUpdate,
       allowDelete,
     }), {
-      onSuccess: ::this._resetNewPermission,
+      onSuccess: () => {
+        analytics.track('models/fields: created permission')
+
+        this._resetNewPermission()
+      },
     })
   }
 
@@ -109,7 +117,11 @@ class FieldDetails extends React.Component {
       Relay.Store.commitUpdate(new DeletePermissionMutation({
         fieldId: this.props.field.id,
         permissionId: permission.id,
-      }))
+      }), {
+        onSuccess: () => {
+          analytics.track('models/fields: deleted permission')
+        },
+      })
     }
   }
 

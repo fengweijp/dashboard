@@ -45,6 +45,12 @@ export class DataTab extends React.Component {
     this._reloadData()
   }
 
+  componentDidMount () {
+    analytics.track('models/data: viewed', {
+      model: this.props.params.modelName,
+    })
+  }
+
   _setSortOrder (field) {
     const order = this.state.sortBy.fieldName === field.fieldName
       ? (this.state.sortBy.order === 'ASC' ? 'DESC' : 'ASC')
@@ -96,6 +102,11 @@ export class DataTab extends React.Component {
       .then(() => {
         const items = this.state.items.filter((i) => i.id !== item.id)
         this.setState({ items, loading: false })
+
+        analytics.track('models/data: deleted item', {
+          project: this.props.params.projectName,
+          model: this.props.params.modelName,
+        })
       })
   }
 
@@ -116,7 +127,7 @@ export class DataTab extends React.Component {
       return
     }
 
-    this.setState({savingFieldId: fieldId})
+    this.setState({ savingFieldId: fieldId })
     const inputString = this._parseValueForField(field, value)
     const mutation = `
       {
@@ -132,7 +143,16 @@ export class DataTab extends React.Component {
     this._lokka.mutate(mutation)
       .then(() => {
         item[field.fieldName] = isScalar(field.typeIdentifier) ? value : {id: value}
-        this.setState({editingFieldId: null, savingFieldId: null})
+        this.setState({
+          editingFieldId: null,
+          savingFieldId: null,
+        })
+
+        analytics.track('models/data: updated item', {
+          project: this.props.params.projectName,
+          model: this.props.params.modelName,
+          field: field.fieldName,
+        })
       })
   }
 
@@ -172,6 +192,11 @@ export class DataTab extends React.Component {
     this._lokka.mutate(mutation)
       .then(::this._reloadData)
       .then(() => {
+        analytics.track('models/data: created item', {
+          project: this.props.params.projectName,
+          model: this.props.params.modelName,
+        })
+
         // getting-started onboarding step
         if (this.props.modelName === 'Todo' && (
            this.context.gettingStartedState.isActive('STEP6_ADD_DATA_ITEM_1') ||

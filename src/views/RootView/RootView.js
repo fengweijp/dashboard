@@ -34,7 +34,8 @@ class GettingStartedState {
   }
 
   isActive (step) {
-    return this.step !== 'STEP10_DONE' && (step ? this.step === step : true)
+    const isCurrentStep = step ? this.step === step : true
+    return isCurrentStep && this.step !== 'STEP10_DONE' && this.step !== 'STEP11_SKIPPED'
   }
 
   update (step) {
@@ -57,18 +58,24 @@ class GettingStartedState {
       case 'STEP8_GOTO_GETTING_STARTED': this.progress = 3; break
       case 'STEP9_WAITING_FOR_REQUESTS': this.progress = 3; break
       case 'STEP10_DONE': this.progress = 4; break
+      case 'STEP11_SKIPPED': this.progress = 0; break
     }
   }
 
   skip () {
     Relay.Store.commitUpdate(new UpdateUserMutation({
       userId: this._userId,
-      gettingStartedStatus: 'STEP10_DONE',
-    }))
+      gettingStartedStatus: 'STEP11_SKIPPED',
+    }), {
+      onSuccess: () => {
+        analytics.track('getting-started: skipped')
+      },
+    })
   }
 
   nextStep () {
-    const currentStepIndex = GettingStartedState.steps.indexOf(this.step)
+    const currentStep = this.step
+    const currentStepIndex = GettingStartedState.steps.indexOf(currentStep)
     const nextStep = GettingStartedState.steps[currentStepIndex + 1]
 
     return new Promise((resolve, reject) => {
@@ -76,7 +83,10 @@ class GettingStartedState {
         userId: this._userId,
         gettingStartedStatus: nextStep,
       }), {
-        onSuccess: resolve,
+        onSuccess: (result) => {
+          analytics.track(`getting-started: finished ${currentStep}`)
+          resolve(result)
+        },
         onFailure: reject,
       })
     })
@@ -101,6 +111,13 @@ export class RootView extends React.Component {
 
   constructor (props) {
     super(props)
+
+    if (this.props.isLoggedin) {
+      analytics.identify(this.props.user.id, {
+        name: this.props.user.name,
+        email: this.props.user.email,
+      })
+    }
 
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this)
 
@@ -150,7 +167,13 @@ export class RootView extends React.Component {
       Relay.Store.commitUpdate(new AddProjectMutation({
         projectName,
         userId: this.props.viewer.user.id,
-      }))
+      }), {
+        onSuccess: () => {
+          analytics.track('sidenav: created project', {
+            project: projectName,
+          })
+        },
+      })
     }
   }
 
@@ -226,6 +249,8 @@ export default Relay.createContainer(MappedRootView, {
         }
         user {
           id
+          email
+          name
           gettingStartedStatus
           projects(first: 100) {
             edges {

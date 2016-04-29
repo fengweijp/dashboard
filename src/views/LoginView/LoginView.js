@@ -22,6 +22,10 @@ class LoginView extends React.Component {
     }
   }
 
+  componentDidMount () {
+    analytics.track('login: viewed')
+  }
+
   _login () {
     this.setState({ loading: true })
 
@@ -33,12 +37,18 @@ class LoginView extends React.Component {
       saveToken(response.signinUser.token)
       updateNetworkLayer()
       this.setState({ loading: false })
-      location.reload()
+
+      analytics.track('login: logged in', location.reload)
     }
     const onFailure = () => {
       this.setState({ loading: false })
+
+      analytics.track('login: login failed')
     }
-    Relay.Store.commitUpdate(new LoginMutation(payload), { onSuccess, onFailure })
+    Relay.Store.commitUpdate(new LoginMutation(payload), {
+      onSuccess,
+      onFailure,
+    })
   }
 
   _listenForEnter (e) {

@@ -7,6 +7,10 @@ import { updateNetworkLayer } from './utils/relay.js'
 
 updateNetworkLayer()
 
+browserHistory.listen(() => {
+  analytics.page()
+})
+
 ReactDOM.render(
   <RelayRouter
     forceFetch

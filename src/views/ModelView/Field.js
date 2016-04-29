@@ -12,6 +12,7 @@ class Field extends React.Component {
     toggleShowDetails: PropTypes.func.isRequired,
     field: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
+    modelId: PropTypes.string.isRequired,
   };
 
   _toggleDetails () {
@@ -26,9 +27,16 @@ class Field extends React.Component {
     if (window.confirm(`Do you really want to delete "${this.props.field.fieldName}"?`)) {
       Relay.Store.commitUpdate(new DeleteFieldMutation({
         fieldId: this.props.field.id,
-        projectId: this.props.params.projectId,
-        modelId: this.props.params.modelId,
-      }))
+        modelId: this.props.modelId,
+      }), {
+        onSuccess: () => {
+          analytics.track('models/fields: deleted field', {
+            project: this.props.params.projectName,
+            model: this.props.params.modelName,
+            field: this.props.field.fieldName,
+          })
+        },
+      })
     }
   }
 

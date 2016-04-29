@@ -23,8 +23,10 @@ export default class Header extends React.Component {
   }
 
   _logout () {
-    window.localStorage.clear()
-    window.location.pathname = '/'
+    analytics.track('header: logout', () => {
+      window.localStorage.clear()
+      window.location.pathname = '/'
+    })
   }
 
   _selectProjectId () {
@@ -34,6 +36,8 @@ export default class Header extends React.Component {
     range.setEndAfter(projectId)
     window.getSelection().removeAllRanges()
     window.getSelection().addRange(range)
+
+    analytics.track('header: projectid copied')
   }
 
   render () {

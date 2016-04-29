@@ -65,16 +65,23 @@ export default class NewFieldLine extends React.Component {
       defaultValue,
     }), {
       onSuccess: (response) => {
+        analytics.track('models/fields: created field', {
+          project: this.props.params.projectName,
+          model: this.props.params.modelName,
+          field: fieldName,
+        })
+
         this.props.callback(response.addField.fieldEdge.node)
         this._reset()
 
-        // getting-started onboarding step
-        if (
-           (this.context.gettingStartedState.isActive('STEP3_CREATE_TEXT_FIELD') &&
-            fieldName === 'text' && typeIdentifier === 'String') ||
-          (this.context.gettingStartedState.isActive('STEP4_CREATE_COMPLETED_FIELD') &&
-           fieldName === 'complete' && typeIdentifier === 'Boolean')
-        ) {
+        // getting-started onboarding steps
+        const isStep3 = this.context.gettingStartedState.isActive('STEP3_CREATE_TEXT_FIELD')
+        if (isStep3 && fieldName === 'text' && typeIdentifier === 'String') {
+          this.context.gettingStartedState.nextStep()
+        }
+
+        const isStep4 = this.context.gettingStartedState.isActive('STEP4_CREATE_COMPLETED_FIELD')
+        if (isStep4 && fieldName === 'complete' && typeIdentifier === 'Boolean') {
           this.context.gettingStartedState.nextStep()
         }
       },
