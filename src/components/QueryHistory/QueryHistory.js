@@ -3,6 +3,10 @@ import { getQueries } from 'utils/QueryHistoryStorage'
 import classes from './QueryHistory.scss'
 
 function stringify (obj) {
+  if (!obj) {
+    return ''
+  }
+
   const pairs = Object.keys(obj).map((key) => (
     `${key}: ${JSON.stringify(obj[key])}`
   ))

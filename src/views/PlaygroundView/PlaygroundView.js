@@ -20,15 +20,9 @@ const DASHBOARD_ADMIN = {
 }
 
 const DEFAULT_QUERY = `{
-  viewer {
-    allUsers {
-      edges {
-        node {
-          id
-          email
-        }
-      }
-    }
+  allUsers {
+    id
+    email
   }
 }`
 
@@ -53,7 +47,7 @@ class PlaygroundView extends React.Component {
       historyVisible: false,
       query: undefined,
       variables: undefined,
-      selectedEndpoint: window.localStorage.getItem('SELECTED_ENDPOINT') || Object.keys(endpoints)[0],
+      selectedEndpoint: window.localStorage.getItem('SELECTED_ENDPOINT') || endpoints.SIMPLE,
       selectedUserId: DASHBOARD_ADMIN.id,
       selectedUserToken: null,
     }
@@ -215,7 +209,7 @@ class PlaygroundView extends React.Component {
           key={this.state.selectedEndpoint}
           fetcher={fetcher}
           query={this.state.query || DEFAULT_QUERY}
-          variables={this.state.variables}
+          variables={this.state.variables || ''}
           />
       </div>
     )
