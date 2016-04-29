@@ -6,12 +6,10 @@ export default function Icon ({
   color = '',
   width = 16,
   height = 16,
-  className = '',
 }) {
   return (
     <svg
       {...props}
-      className={className}
       width={width}
       height={height}
       fill={color}

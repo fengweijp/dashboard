@@ -63,7 +63,21 @@
     color: #fff;
     text-align: center;
     padding: 9px;
+    padding-right: 30px;
     border-right: 1px solid #fff;
+    cursor: pointer;
+
+    svg {
+      float: right;
+      width: 12px;
+      height: 12px;
+      margin-right: -20px;
+      margin-top: 3px;
+    }
+
+    svg.reverse {
+      transform: rotate(180deg);
+    }
   }
 
   td.padding {

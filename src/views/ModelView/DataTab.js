@@ -37,11 +37,20 @@ export class DataTab extends React.Component {
       loading: true,
       editingFieldId: null,
       savingFieldId: null,
+      sortBy: { fieldName: 'id', order: 'ASC' },
     }
   }
 
   componentWillMount () {
     this._reloadData()
+  }
+
+  _setSortOrder (field) {
+    const order = this.state.sortBy.fieldName === field.fieldName
+      ? (this.state.sortBy.order === 'ASC' ? 'DESC' : 'ASC')
+      : 'ASC'
+
+    this.setState({sortBy: {fieldName: field.fieldName, order}}, this._reloadData)
   }
 
   _reloadData () {
@@ -54,7 +63,7 @@ export class DataTab extends React.Component {
     const query = `
       {
         viewer {
-          all${this.props.modelName}s {
+          all${this.props.modelName}s(orderBy: ${this.state.sortBy.fieldName}_${this.state.sortBy.order}) {
             edges {
               node {
                 ${fieldNames}
@@ -194,7 +203,14 @@ export class DataTab extends React.Component {
           <thead>
             <tr>
               {this.props.fields.map((field) => (
-                <th key={field.id}>{field.fieldName}</th>
+                <th key={field.id} onClick={() => this._setSortOrder(field)}>
+                  {field.fieldName}
+                  {this.state.sortBy.fieldName === field.fieldName && <Icon
+                    src={require('assets/icons/arrow.svg')}
+                    color='#70738C'
+                    className={this.state.sortBy.order === 'DESC' ? classes.reverse : ''}
+                    />}
+                </th>
               ))}
               <th></th>
             </tr>
