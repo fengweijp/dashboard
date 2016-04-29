@@ -29,9 +29,17 @@ export default class FieldsTab extends React.Component {
     }
   }
 
+  componentDidMount () {
+    analytics.track('models/fields: viewed', {
+      model: this.props.params.modelName,
+    })
+  }
+
   _toggleFieldDetails (field) {
     const toggledFieldId = this.state.toggledFieldId === field.id ? null : field.id
     this.setState({ toggledFieldId })
+
+    analytics.track(`models/fields: ${toggledFieldId ? 'opened' : 'closed'} field details`)
   }
 
   render () {
@@ -79,6 +87,7 @@ export default class FieldsTab extends React.Component {
               key={field.id}
               field={field}
               params={this.props.params}
+              modelId={this.props.modelId}
             />
           ))}
         </table>

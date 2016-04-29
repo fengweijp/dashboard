@@ -31,9 +31,16 @@ class ModelView extends React.Component {
       Relay.Store.commitUpdate(new DeleteModelMutation({
         projectId: this.props.projectId,
         modelId: this.props.modelId,
-      }))
+      }), {
+        onSuccess: () => {
+          analytics.track('models: deleted model', {
+            project: this.props.params.projectName,
+            model: this.props.params.modelName,
+          })
 
-      this.context.router.replace(`/${this.props.params.projectName}/models`)
+          this.context.router.replace(`/${this.props.params.projectName}/models`)
+        },
+      })
     }
   }
 

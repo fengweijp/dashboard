@@ -44,6 +44,11 @@ export class SideNav extends React.Component {
         projectId: this.props.project.id,
       }), {
         onSuccess: (response) => {
+          analytics.track('sidenav: created model', {
+            project: this.props.params.projectName,
+            model: modelName,
+          })
+
           // getting-started onboarding step
           if (modelName === 'Todo' && this.context.gettingStartedState.isActive('STEP2_CREATE_TODO_MODEL')) {
             this.context.gettingStartedState.nextStep().then(redirect)

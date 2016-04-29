@@ -35,6 +35,7 @@ const DEFAULT_QUERY = `{
 class PlaygroundView extends React.Component {
   static propTypes = {
     projectId: PropTypes.string.isRequired,
+    params: PropTypes.object.isRequired,
   };
 
   constructor (props) {
@@ -81,6 +82,12 @@ class PlaygroundView extends React.Component {
       })
   }
 
+  componentDidMount () {
+    analytics.track('playground: viewed', {
+      project: this.props.params.projectName,
+    })
+  }
+
   _onHistoryQuerySelect (query) {
     if (query) {
       this.setState({
@@ -96,10 +103,14 @@ class PlaygroundView extends React.Component {
     const selectedEndpoint = e.target.value
     this.setState({ selectedEndpoint })
     window.localStorage.setItem('SELECTED_ENDPOINT', selectedEndpoint)
+
+    analytics.track('playground: endpoint changed', {
+      project: this.props.params.projectName,
+      endpoint: selectedEndpoint,
+    })
   }
 
   _changeUser (e) {
-    console.log(e.target.value)
     const selectedUserId = e.target.value
 
     if (selectedUserId === DASHBOARD_ADMIN.id) {
@@ -111,6 +122,11 @@ class PlaygroundView extends React.Component {
       }), {
         onSuccess: (response) => {
           this.setState({selectedUserId, selectedUserToken: response.signinClientUser.token})
+
+          analytics.track('playground: user changed', {
+            project: this.props.params.projectName,
+            userId: selectedUserId,
+          })
         },
         onFailure: (transaction) => {
           alert(transaction.getError())
@@ -132,8 +148,14 @@ class PlaygroundView extends React.Component {
         body: JSON.stringify(graphQLParams),
       })
       .then((response) => {
-        // save query for query history
+        // exclude IntrospectionQuery
         if (response.ok && !graphQLParams.query.includes('IntrospectionQuery')) {
+          analytics.track('playground: run', {
+            project: this.props.params.projectName,
+            endpoint: this.state.selectedEndpoint,
+          })
+
+          // save query for query history
           const query = {
             query: graphQLParams.query,
             variables: graphQLParams.variables,
@@ -202,6 +224,7 @@ class PlaygroundView extends React.Component {
 
 const MappedPlaygroundView = mapProps({
   projectId: (props) => props.viewer.project.id,
+  params: (props) => props.params,
 })(PlaygroundView)
 
 export default Relay.createContainer(MappedPlaygroundView, {

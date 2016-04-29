@@ -35,6 +35,12 @@ export default class ProjectSelection extends React.Component {
     this.props.add()
   }
 
+  _onSelectProject () {
+    this._toggle()
+
+    analytics.track('sidenav: selected project')
+  }
+
   render () {
     return (
       <div className={classes.root}>
@@ -62,7 +68,7 @@ export default class ProjectSelection extends React.Component {
               <Link
                 key={project.name}
                 className={classes.listElement}
-                onClick={::this._toggle}
+                onClick={::this._onSelectProject}
                 to={`/${project.name}`}
                 activeClassName={classes.listElementActive}
                 >

@@ -50,6 +50,13 @@ class GettingStartedView extends React.Component {
     }
   }
 
+  componentDidMount () {
+    analytics.track('getting-started: viewed', {
+      project: this.props.params.projectName,
+      step: this.context.gettingStartedState.step,
+    })
+  }
+
   _getStarted () {
     if (this.context.gettingStartedState.isActive('STEP1_OVERVIEW')) {
       this.context.gettingStartedState.nextStep()
