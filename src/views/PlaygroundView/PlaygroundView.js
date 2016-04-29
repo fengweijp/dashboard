@@ -47,7 +47,7 @@ class PlaygroundView extends React.Component {
       historyVisible: false,
       query: undefined,
       variables: undefined,
-      selectedEndpoint: window.localStorage.getItem('SELECTED_ENDPOINT') || endpoints.SIMPLE,
+      selectedEndpoint: window.localStorage.getItem('SELECTED_ENDPOINT') || 'SIMPLE',
       selectedUserId: DASHBOARD_ADMIN.id,
       selectedUserToken: null,
     }
