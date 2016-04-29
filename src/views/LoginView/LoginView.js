@@ -36,9 +36,10 @@ class LoginView extends React.Component {
     const onSuccess = (response) => {
       saveToken(response.signinUser.token)
       updateNetworkLayer()
-      this.setState({ loading: false })
 
-      analytics.track('login: logged in', location.reload)
+      analytics.track('login: logged in', () => {
+        location.reload()
+      })
     }
     const onFailure = () => {
       this.setState({ loading: false })
