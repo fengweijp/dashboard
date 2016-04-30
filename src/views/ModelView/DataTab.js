@@ -116,13 +116,37 @@ export class DataTab extends React.Component {
     }
   }
 
+  _isValidValue (field, value) {
+    if (value === '' && !field.isRequired) {
+      return true
+    }
+    if (field.isList) {
+      if (value[0] !== '[' || value[value.length-1] !== ']') {
+        return false
+      } else {
+        value = value.substring(1, value.length - 1)
+      }
+    }
+
+    let invalidValue = false;
+    (field.isList ? value.split(',').map((x) => x.trim()) : [value]).forEach((value) => {
+      if (!isValidValueForType(value, isScalar(field.typeIdentifier) ? field.typeIdentifier : 'GraphQLID')) {
+        invalidValue = true
+        return
+      }
+    })
+
+    return !invalidValue
+  }
+
   _updateField (item, field, fieldId, value) {
     if (value === '') {
       // todo: this should set to null but currently null is not supported by our api
       this.setState({editingFieldId: null, savingFieldId: null})
       return
     }
-    if (!isValidValueForType(value, isScalar(field.typeIdentifier) ? field.typeIdentifier : 'GraphQLID')) {
+
+    if (!this._isValidValue(field, value)) {
       alert(`'${value}' is not a valid value for field ${field.fieldName}`)
       return
     }
@@ -142,7 +166,12 @@ export class DataTab extends React.Component {
     `
     this._lokka.mutate(mutation)
       .then(() => {
-        item[field.fieldName] = isScalar(field.typeIdentifier) ? value : {id: value}
+        item[field.fieldName] = isScalar(field.typeIdentifier)
+        ? (field.isList
+          ? value.substring(1, value.length-1).split(',')
+            .map((x) => field.typeIdentifier === 'String' ? x.trim().substring(1, x.trim().length-1) : x)
+          : value)
+        : {id: value}
         this.setState({
           editingFieldId: null,
           savingFieldId: null,
@@ -161,25 +190,45 @@ export class DataTab extends React.Component {
       // todo: this should set to null but currently null is not supported by our api
       return ''
     }
-    const key = field.fieldName
-    switch (field.typeIdentifier) {
-      case 'String': return `${key}: "${rawValue}"`
-      case 'Int': return `${key}: ${parseInt(rawValue, 10)}`
-      case 'Float': return `${key}: ${parseFloat(rawValue)}`
-      case 'Boolean': return `${key}: ${rawValue === 'true'}`
-      case 'Enum' : return `${key}: ${rawValue}`
-      default: return `${key}Id: "${rawValue}"`
+    const key = isScalar(field.typeIdentifier) ? field.fieldName : `${field.fieldName}Id`
+
+    const parseSingle = (rawValue) => {
+      switch (field.typeIdentifier) {
+        case 'String': return `"${rawValue}"`
+        case 'Int': return parseInt(rawValue, 10)
+        case 'Float': return parseFloat(rawValue)
+        case 'Boolean': return `${rawValue === 'true'}`
+        case 'Enum' : return rawValue
+        default: return `"${rawValue}"`
+      }
+    }
+
+    if (field.isList) {
+      return `${key}: ${rawValue}`
+    } else {
+      return `${key}: ${parseSingle(rawValue)}`
     }
   }
 
   _add () {
-    this.setState({ loading: true })
-    const inputString = this.props.fields
+    const fieldValues = this.props.fields
       .filter((field) => field.fieldName !== 'id')
       .map((field) => {
         const rawValue = findDOMNode(this.refs[field.id]).value
-        return this._parseValueForField(field, rawValue)
+        const parsedValue = this._parseValueForField(field, rawValue)
+
+        return {field, rawValue, parsedValue}
       })
+
+    const invalidFields = fieldValues.filter(({field, rawValue}) => !this._isValidValue(field, rawValue))
+    if (invalidFields.length !== 0) {
+      alert(`'${invalidFields[0].rawValue}' is not a valid value for field ${invalidFields[0].field.fieldName}`)
+      return
+    }
+
+    const inputString = fieldValues.map(({parsedValue}) => parsedValue)
+
+    this.setState({ loading: true })
     const mutation = `
       {
         create${this.props.modelName}(input: {
@@ -246,20 +295,10 @@ export class DataTab extends React.Component {
               <td>ID (generated)</td>
               {this.props.fields.filter((f) => f.fieldName !== 'id').map((field) => {
                 let element
-                switch (field.typeIdentifier) {
-                  case 'Int':
-                    element = (
-                      <input
-                        onKeyUp={::this._listenForEnter}
-                        ref={field.id}
-                        placeholder={field.fieldName}
-                        type='number'
-                      />
-                    )
-                    break
+                switch (field.isList ? 'String' : field.typeIdentifier) {
                   case 'Boolean':
                     element = (
-                      <select defaultValue='false' ref={field.id}>
+                      <select defaultValue='false' ref={field.id} key={field.id}>
                         <option value='true'>true</option>
                         <option value='false'>false</option>
                       </select>
@@ -267,9 +306,9 @@ export class DataTab extends React.Component {
                     break
                   case 'Enum':
                     element = (
-                      <select defaultValue={field.defaultValue} ref={field.id}>
+                      <select defaultValue={field.defaultValue} ref={field.id} key={field.id}>
                         {field.enumValues.map((value) =>
-                          <option value={value}>{value}</option>
+                          <option key={value} value={value}>{value}</option>
                         )}
                       </select>
                     )
@@ -320,7 +359,11 @@ export class DataTab extends React.Component {
                     ? item[field.fieldName] || field.defaultValue || null
                     : (item[`${field.fieldName}`] !== null ? item[`${field.fieldName}`].id : null)
                   if (fieldValue !== null) {
-                    str = fieldValue.toString()
+                    str = field.isList
+                    ? `[${field.typeIdentifier === 'String'
+                      ? fieldValue.toString().split(',').reduce((acc, e, i) => acc + `${i !== 0 ? ',': ''} "${e}"`, '')
+                      : fieldValue.toString()}]`
+                    : fieldValue.toString()
                     if (str.length > 50) {
                       str = str.substr(0, 47) + '...'
                     }
@@ -328,19 +371,19 @@ export class DataTab extends React.Component {
                   const fieldId = `${item.id}:${field.id}`
                   if (this.state.editingFieldId === fieldId) {
                     return <td key={fieldId}>
-                      {field.typeIdentifier === 'Boolean'
+                      {!field.isList && field.typeIdentifier === 'Boolean'
                       ? <select onChange={(e) => this._updateField(item, field, fieldId, e.target.value)}
                         onBlur={(e) => this._updateField(item, field, fieldId, e.target.value)}
                         autoFocus defaultValue={str}>
                         <option value={'true'}>true</option>
                         <option value={'false'}>false</option>
                       </select>
-                      : field.typeIdentifier === 'Enum'
+                      : !field.isList && field.typeIdentifier === 'Enum'
                       ? <select defaultValue={str}
                         onChange={(e) => this._updateField(item, field, fieldId, e.target.value)}
                         onBlur={(e) => this._updateField(item, field, fieldId, e.target.value)}>
                         {field.enumValues.map((value) =>
-                          <option value={value}>{value}</option>
+                          <option key={value} value={value}>{value}</option>
                         )}
                       </select>
                       : <input autoFocus type='text' defaultValue={str}
