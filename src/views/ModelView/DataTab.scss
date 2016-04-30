@@ -10,7 +10,8 @@
 .filterContainer {
   position: absolute;
   top: 80px;
-  left: 550px;
+  left: 530px;
+  right: 60px;
   z-index: 10000;
 
   input {
@@ -18,7 +19,7 @@
     background: #fff;
     border: 0;
     border-radius: 5px;
-    padding: 14px 17px;
+    padding: 11px 17px;
     margin: 5px 0;
     font-size: 14px;
 

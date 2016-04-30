@@ -38,6 +38,7 @@ export class DataTab extends React.Component {
       editingFieldId: null,
       savingFieldId: null,
       sortBy: { fieldName: 'id', order: 'ASC' },
+      filter: '',
     }
   }
 
@@ -66,10 +67,11 @@ export class DataTab extends React.Component {
         ? field.fieldName
         : `${field.fieldName} { id }`)
       .join(',')
+    const filter = this.state.filter !== '' ? `filter: {${this.state.filter}},` : ''
     const query = `
       {
         viewer {
-          all${this.props.modelName}s(orderBy: ${this.state.sortBy.fieldName}_${this.state.sortBy.order}) {
+          all${this.props.modelName}s(${filter} orderBy: ${this.state.sortBy.fieldName}_${this.state.sortBy.order}) {
             edges {
               node {
                 ${fieldNames}
@@ -257,21 +259,33 @@ export class DataTab extends React.Component {
       })
   }
 
+  _filterOnEnter (e) {
+    if (e.keyCode === 13) {
+      this.setState({filter: e.target.value}, () => this._reloadData())
+    }
+  }
+
+  _filterOnBlur (e) {
+    if (this.state.filter !== e.target.value) {
+      this.setState({filter: e.target.value}, () => this._reloadData())
+    }
+  }
+
   _listenForEnter (e) {
     if (e.keyCode === 13) {
       this._add()
     }
   }
 
-  render () {
-    if (this.state.loading) {
-      return (
-        <div style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-          <Loading type='bubbles' delay={0} color='#8989B1' />
-        </div>
-      )
-    }
+  renderLoading () {
+    return (
+      <div style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+        <Loading type='bubbles' delay={0} color='#8989B1' />
+      </div>
+    )
+  }
 
+  renderContent () {
     return (
       <div className={classes.root}>
         <table className={classes.table}>
@@ -403,6 +417,23 @@ export class DataTab extends React.Component {
             ))}
           </tbody>
         </table>
+      </div>
+    )
+  }
+
+  render () {
+    return (
+      <div>
+        <div className={classes.filterContainer}>
+          <input
+            ref='filter'
+            type='text'
+            placeholder='filter'
+            onKeyUp={::this._filterOnEnter}
+            onBlur={::this._filterOnBlur}
+            />
+        </div>
+        {this.state.loading ? this.renderLoading() : this.renderContent()}
       </div>
     )
   }
