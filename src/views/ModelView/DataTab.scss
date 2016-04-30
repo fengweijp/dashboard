@@ -7,6 +7,27 @@
   overflow: scroll;
 }
 
+.filterContainer {
+  position: absolute;
+  top: 80px;
+  left: 550px;
+  z-index: 10000;
+
+  input {
+    width: 100%;
+    background: #fff;
+    border: 0;
+    border-radius: 5px;
+    padding: 14px 17px;
+    margin: 5px 0;
+    font-size: 14px;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
 .addRow {
   td {
     padding: 0 !important;
