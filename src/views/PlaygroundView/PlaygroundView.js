@@ -45,7 +45,7 @@ class PlaygroundView extends React.Component {
     this.state = {
       users: [DASHBOARD_ADMIN],
       historyVisible: false,
-      query: undefined,
+      query: window.localStorage.getItem(`used-playground-${this.props.projectId}`) ? undefined : DEFAULT_QUERY,
       variables: undefined,
       selectedEndpoint: window.localStorage.getItem('SELECTED_ENDPOINT') || 'SIMPLE',
       selectedUserId: DASHBOARD_ADMIN.id,
@@ -129,6 +129,10 @@ class PlaygroundView extends React.Component {
     }
   }
 
+  _rememberPlaygroundUsed () {
+    window.localStorage.setItem(`used-playground-${this.props.projectId}`, true)
+  }
+
   render () {
     const token = this.state.selectedUserToken || window.localStorage.getItem('token')
     const fetcher = (graphQLParams) => (
@@ -208,8 +212,9 @@ class PlaygroundView extends React.Component {
         <GraphiQL
           key={this.state.selectedEndpoint}
           fetcher={fetcher}
-          query={this.state.query || DEFAULT_QUERY}
+          query={this.state.query}
           variables={this.state.variables || ''}
+          onEditQuery={::this._rememberPlaygroundUsed}
           />
       </div>
     )
