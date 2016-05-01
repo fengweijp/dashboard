@@ -123,6 +123,9 @@ export class DataTab extends React.Component {
       return true
     }
     if (field.isList) {
+      if (value === '[]') {
+        return true
+      }
       if (value[0] !== '[' || value[value.length-1] !== ']') {
         return false
       } else {
@@ -141,9 +144,31 @@ export class DataTab extends React.Component {
     return !invalidValue
   }
 
+  _updateFieldOnEnter (e, item, field, fieldId, value) {
+    if (e.keyCode === 13) {
+      this._updateField(item, field, fieldId, value)
+    }
+  }
+
   _updateField (item, field, fieldId, value) {
     if (value === '') {
       // todo: this should set to null but currently null is not supported by our api
+      this.setState({editingFieldId: null, savingFieldId: null})
+      return
+    }
+
+    const newDisplayValue = isScalar(field.typeIdentifier)
+    ? (field.isList
+      ? value.substring(1, value.length-1).split(',')
+        .map((x) => field.typeIdentifier === 'String' ? x.trim().substring(1, x.trim().length-1) : x)
+      : value)
+    : {id: value}
+
+    const fieldHasChanged =
+      (item[field.fieldName] == null ? item[field.fieldName] : item[field.fieldName].toString()) !==
+      newDisplayValue.toString()
+
+    if (!fieldHasChanged) {
       this.setState({editingFieldId: null, savingFieldId: null})
       return
     }
@@ -168,12 +193,7 @@ export class DataTab extends React.Component {
     `
     this._lokka.mutate(mutation)
       .then(() => {
-        item[field.fieldName] = isScalar(field.typeIdentifier)
-        ? (field.isList
-          ? value.substring(1, value.length-1).split(',')
-            .map((x) => field.typeIdentifier === 'String' ? x.trim().substring(1, x.trim().length-1) : x)
-          : value)
-        : {id: value}
+        item[field.fieldName] = newDisplayValue
         this.setState({
           editingFieldId: null,
           savingFieldId: null,
@@ -277,6 +297,16 @@ export class DataTab extends React.Component {
     }
   }
 
+  valueOrDefault (value, field) {
+    if (value !== null && value !== undefined) {
+      return value
+    }
+    if (field.defaultValue !== undefined) {
+      return field.defaultValue
+    }
+    return null
+  }
+
   renderLoading () {
     return (
       <div style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
@@ -370,7 +400,7 @@ export class DataTab extends React.Component {
                 {this.props.fields.map((field) => {
                   let str = 'null'
                   const fieldValue = isScalar(field.typeIdentifier)
-                    ? item[field.fieldName] || field.defaultValue || null
+                    ? this.valueOrDefault(item[field.fieldName], field)
                     : (item[`${field.fieldName}`] !== null ? item[`${field.fieldName}`].id : null)
                   if (fieldValue !== null) {
                     str = field.isList
@@ -401,6 +431,7 @@ export class DataTab extends React.Component {
                         )}
                       </select>
                       : <input autoFocus type='text' defaultValue={str}
+                        onKeyUp={(e) => this._updateFieldOnEnter(e, item, field, fieldId, e.target.value)}
                         onBlur={(e) => this._updateField(item, field, fieldId, e.target.value)} />}
                     </td>
                   } else {
