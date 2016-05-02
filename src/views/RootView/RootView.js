@@ -27,6 +27,7 @@ class GettingStartedState {
     'STEP8_GOTO_GETTING_STARTED',
     'STEP9_WAITING_FOR_REQUESTS',
     'STEP10_DONE',
+    'STEP11_SKIPPED',
   ]
 
   constructor ({ step, userId }) {
@@ -64,13 +65,16 @@ class GettingStartedState {
   }
 
   skip () {
-    Relay.Store.commitUpdate(new UpdateUserMutation({
-      userId: this._userId,
-      gettingStartedStatus: 'STEP11_SKIPPED',
-    }), {
-      onSuccess: () => {
-        analytics.track('getting-started: skipped')
-      },
+    return new Promise((resolve) => {
+      Relay.Store.commitUpdate(new UpdateUserMutation({
+        userId: this._userId,
+        gettingStartedStatus: 'STEP11_SKIPPED',
+      }), {
+        onSuccess: () => {
+          analytics.track('getting-started: skipped')
+          resolve()
+        },
+      })
     })
   }
 
