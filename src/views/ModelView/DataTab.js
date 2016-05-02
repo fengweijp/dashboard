@@ -94,8 +94,9 @@ export class DataTab extends React.Component {
     return this._lokka.query(query)
     .then((results) => {
       const edges = results.viewer[`all${this.props.modelName}s`].edges
-      const lastCursor = edges.length !== 0 ? edges[edges.length-1].cursor : null
-      this.setState({lastCursor})
+      if (edges.length !== 0) {
+        this.setState({lastCursor: edges[edges.length-1].cursor})
+      }
       return results
     })
   }
@@ -478,7 +479,7 @@ export class DataTab extends React.Component {
           </tbody>
         </table>
         {this.state.loading && (
-          <div style={{width: '100%', height: 50, marginTop: -20, display: 'flex',
+          <div style={{width: '100%', height: 50, marginTop: -70, display: 'flex',
             alignItems: 'center', justifyContent: 'center'}}>
             <Loading type='bubbles' delay={0} color='#8989B1' />
           </div>
