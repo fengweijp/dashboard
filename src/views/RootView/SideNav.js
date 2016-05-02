@@ -63,7 +63,9 @@ export class SideNav extends React.Component {
   _skipGettingStarted () {
     if (window.confirm('Do you really want skip the getting started tour?')) {
       this.context.gettingStartedState.skip()
-      this.context.router.replace(`/${this.props.params.projectName}/models`)
+        .then(() => {
+          this.context.router.replace(`/${this.props.params.projectName}/models`)
+        })
     }
   }
 
@@ -100,6 +102,8 @@ export class SideNav extends React.Component {
         return classes.gettingStartedStepDisabled
       }
     }
+
+    console.log(gettingStartedIsActive);
 
     return (
       <div className={classes.root}>

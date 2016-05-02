@@ -66,6 +66,9 @@ class GettingStartedView extends React.Component {
   _skipGettingStarted () {
     if (window.confirm('Do you really want skip the getting started tour?')) {
       this.context.gettingStartedState.skip()
+        .then(() => {
+          this.context.router.replace(`/${this.props.params.projectName}/models`)
+        })
     }
   }
 
