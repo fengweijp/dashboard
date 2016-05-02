@@ -39,6 +39,8 @@ export class DataTab extends React.Component {
       savingFieldId: null,
       sortBy: { fieldName: 'id', order: 'ASC' },
       filter: '',
+      lastCursor: null,
+      lastLoadedCursor: null,
     }
   }
 
@@ -52,6 +54,12 @@ export class DataTab extends React.Component {
     })
   }
 
+  _handleScroll (e) {
+    if (e.target.scrollHeight - (e.target.scrollTop + e.target.offsetHeight) < 50) {
+      this._loadNextPage()
+    }
+  }
+
   _setSortOrder (field) {
     const order = this.state.sortBy.fieldName === field.fieldName
       ? (this.state.sortBy.order === 'ASC' ? 'DESC' : 'ASC')
@@ -60,32 +68,61 @@ export class DataTab extends React.Component {
     this.setState({sortBy: {fieldName: field.fieldName, order}}, this._reloadData)
   }
 
-  _reloadData () {
-    this.setState({ loading: true })
+  _loadData (afterCursor) {
     const fieldNames = this.props.fields
       .map((field) => isScalar(field.typeIdentifier)
         ? field.fieldName
         : `${field.fieldName} { id }`)
       .join(',')
-    const filter = this.state.filter !== '' ? `filter: {${this.state.filter}},` : ''
+    const filter = this.state.filter !== '' ? `filter: {${this.state.filter}}, ` : ''
+    const after = afterCursor !== null ? `after: "${afterCursor}", ` : ''
+    const orderBy = `orderBy: ${this.state.sortBy.fieldName}_${this.state.sortBy.order}`
     const query = `
       {
         viewer {
-          all${this.props.modelName}s(${filter} orderBy: ${this.state.sortBy.fieldName}_${this.state.sortBy.order}) {
+          all${this.props.modelName}s(first: 50, ${after}${filter}${orderBy}) {
             edges {
               node {
                 ${fieldNames}
               }
+              cursor
             }
           }
         }
       }
     `
     return this._lokka.query(query)
-      .then((results) => {
-        const items = results.viewer[`all${this.props.modelName}s`].edges.map((edge) => edge.node)
-        this.setState({ items, loading: false })
-      })
+    .then((results) => {
+      const edges = results.viewer[`all${this.props.modelName}s`].edges
+      const lastCursor = edges.length !== 0 ? edges[edges.length-1].cursor : null
+      this.setState({lastCursor})
+      return results
+    })
+  }
+
+  _loadNextPage () {
+    if (this.state.lastLoadedCursor !== null && this.state.lastCursor === this.state.lastLoadedCursor) {
+      return
+    }
+    this.setState({ loading: true })
+    this._loadData(this.state.lastCursor)
+    .then((results) => {
+      const items = results.viewer[`all${this.props.modelName}s`].edges.map((edge) => edge.node)
+      this.setState({ items: this.state.items.concat(items), loading: false })
+    })
+    this.setState({lastLoadedCursor: this.state.lastCursor})
+  }
+
+  _reloadData () {
+    if (this.refs.scrollContainer) {
+      this.refs.scrollContainer.scrollTop = 0
+    }
+    this.setState({ loading: true })
+    this._loadData()
+    .then((results) => {
+      const items = results.viewer[`all${this.props.modelName}s`].edges.map((edge) => edge.node)
+      this.setState({ items, loading: false })
+    })
   }
 
   _deleteItem (item) {
@@ -281,13 +318,13 @@ export class DataTab extends React.Component {
 
   _filterOnEnter (e) {
     if (e.keyCode === 13) {
-      this.setState({filter: e.target.value}, () => this._reloadData())
+      this.setState({filter: e.target.value, items: [], loading: true}, () => this._reloadData())
     }
   }
 
   _filterOnBlur (e) {
     if (this.state.filter !== e.target.value) {
-      this.setState({filter: e.target.value}, () => this._reloadData())
+      this.setState({filter: e.target.value, items: [], loading: true}, () => this._reloadData())
     }
   }
 
@@ -307,17 +344,9 @@ export class DataTab extends React.Component {
     return null
   }
 
-  renderLoading () {
-    return (
-      <div style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-        <Loading type='bubbles' delay={0} color='#8989B1' />
-      </div>
-    )
-  }
-
   renderContent () {
     return (
-      <div className={classes.root}>
+      <div ref='scrollContainer' onScroll={::this._handleScroll} className={classes.root}>
         <table className={classes.table}>
           <thead>
             <tr>
@@ -448,6 +477,12 @@ export class DataTab extends React.Component {
             ))}
           </tbody>
         </table>
+        {this.state.loading && (
+          <div style={{width: '100%', height: 50, marginTop: -20, display: 'flex',
+            alignItems: 'center', justifyContent: 'center'}}>
+            <Loading type='bubbles' delay={0} color='#8989B1' />
+          </div>
+        )}
       </div>
     )
   }
@@ -464,7 +499,7 @@ export class DataTab extends React.Component {
             onBlur={::this._filterOnBlur}
             />
         </div>
-        {this.state.loading ? this.renderLoading() : this.renderContent()}
+        {this.renderContent()}
       </div>
     )
   }
