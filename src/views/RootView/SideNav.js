@@ -103,8 +103,6 @@ export class SideNav extends React.Component {
       }
     }
 
-    console.log(gettingStartedIsActive);
-
     return (
       <div className={classes.root}>
         <div className={classes.list}>
