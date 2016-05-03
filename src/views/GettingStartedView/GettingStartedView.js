@@ -218,7 +218,7 @@ class GettingStartedView extends React.Component {
                   className={classes.field}
                   ref='commands'
                 >
-                  npm install<br />npm start
+                  npm install<br />npm start<br /><span className={classes.comment}># open localhost:3000</span>
                 </div>
               </div>
               <div className={classes.step3}>
