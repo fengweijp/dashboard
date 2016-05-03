@@ -72,6 +72,10 @@ class GettingStartedView extends React.Component {
     }
   }
 
+  _onClose () {
+    analytics.track('getting-started: closed')
+  }
+
   _selectCommands () {
     const commands = findDOMNode(this.refs.commands)
     const range = document.createRange()
@@ -139,6 +143,7 @@ class GettingStartedView extends React.Component {
             <div className={classes.buttons}>
               <Link
                 to={`/${this.props.params.projectName}/models`}
+                onClick={this._onClose}
                 className={`${classes.button} ${classes.grey}`}
                 style={{width: 170}}
               >
@@ -213,7 +218,7 @@ class GettingStartedView extends React.Component {
                   className={classes.field}
                   ref='commands'
                 >
-                  npm install<br />npm start
+                  npm install<br />npm start<br /><span className={classes.comment}># open localhost:3000</span>
                 </div>
               </div>
               <div className={classes.step3}>

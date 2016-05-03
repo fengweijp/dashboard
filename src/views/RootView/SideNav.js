@@ -163,16 +163,20 @@ export class SideNav extends React.Component {
             <span>Models</span>
           </Link>
           {this.props.models &&
-            this.props.models.map((model) => (
-              <Link
-                key={model.name}
-                to={`/${this.props.params.projectName}/models/${model.name}`}
-                className={classes.listElement}
-                activeClassName={classes.listElementActive}
-                >
-                {model.name}
-              </Link>
-            ))
+            this.props.models.map((model) => {
+              const tab = model.itemCount === 0 ? 'fields' : 'data'
+              const modelUrl = `/${this.props.params.projectName}/models/${model.name}/${tab}`
+              return (
+                <Link
+                  key={model.name}
+                  to={modelUrl}
+                  className={classes.listElement}
+                  activeClassName={classes.listElementActive}
+                  >
+                  {model.name}
+                </Link>
+              )
+            })
           }
           <div className={classes.add} onClick={::this._addModel}>
             <Tether
@@ -239,6 +243,7 @@ export default Relay.createContainer(MappedSideNav, {
             node {
               id
               name
+              itemCount
             }
           }
         }
