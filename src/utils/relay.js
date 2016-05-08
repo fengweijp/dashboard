@@ -1,3 +1,4 @@
+import cookies from 'js-cookie'
 import { injectNetworkLayer, DefaultNetworkLayer } from 'react-relay'
 
 export function updateNetworkLayer () {
@@ -14,4 +15,5 @@ export function updateNetworkLayer () {
 
 export function saveToken (token) {
   window.localStorage.setItem('token', token)
+
 }

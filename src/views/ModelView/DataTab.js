@@ -392,7 +392,7 @@ export class DataTab extends React.Component {
                       <input
                         onKeyUp={::this._listenForEnter}
                         ref={field.id}
-                        placeholder={field.fieldName}
+                        placeholder={field.defaultValue !== null ? field.defaultValue : field.fieldName}
                         type='text'
                       />
                     )
@@ -535,6 +535,7 @@ export default Relay.createContainer(MappedDataTab, {
                 typeIdentifier
                 isList
                 enumValues
+                defaultValue
               }
             }
           }
