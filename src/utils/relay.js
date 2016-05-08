@@ -14,5 +14,10 @@ export function updateNetworkLayer () {
 }
 
 export function saveToken (token) {
-  cookies.set('graphcool_token', token, { expires: 90 })
+  const domain = location.hostname.split('.').slice(-2).join('.')
+
+  cookies.set('graphcool_token', token, {
+    domain,
+    expires: 90,
+  })
 }
