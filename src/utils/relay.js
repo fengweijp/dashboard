@@ -1,8 +1,8 @@
-import cookies from 'js-cookie'
 import { injectNetworkLayer, DefaultNetworkLayer } from 'react-relay'
+import * as cookiestore from 'utils/cookiestore'
 
 export function updateNetworkLayer () {
-  const token = cookies.get('graphcool_token')
+  const token = cookiestore.get('graphcool_token')
   const headers = token ? {
     'Authorization': `Bearer ${token}`,
     'X-GraphCool-Source': 'dashboard:relay',
@@ -11,18 +11,4 @@ export function updateNetworkLayer () {
   const layer = new DefaultNetworkLayer(api, { headers, retryDelays: [] })
 
   injectNetworkLayer(layer)
-}
-
-export function saveToken (token, userId) {
-  const domain = location.hostname.split('.').slice(-2).join('.')
-
-  cookies.set('graphcool_token', token, {
-    domain,
-    expires: 90,
-  })
-
-  cookies.set('graphcool_user_id', userId, {
-    domain,
-    expires: 90,
-  })
 }

@@ -7,7 +7,7 @@ import GraphiQL from 'graphiql'
 import { saveQuery } from 'utils/QueryHistoryStorage'
 import QueryHistory from 'components/QueryHistory/QueryHistory'
 import Icon from 'components/Icon/Icon'
-import cookies from 'js-cookie'
+import * as cookiestore from 'utils/cookiestore'
 import endpoints from 'utils/endpoints'
 import classes from './PlaygroundView.scss'
 import LoginClientUserMutation from 'mutations/LoginClientUserMutation'
@@ -37,7 +37,7 @@ class PlaygroundView extends React.Component {
     super(props)
 
     const clientEndpoint = `${__BACKEND_ADDR__}/graphql/${this.props.projectId}`
-    const token = cookies.get('graphcool_token')
+    const token = cookiestore.get('graphcool_token')
     const headers = { Authorization: `Bearer ${token}`, 'X-GraphCool-Source': 'dashboard:playground' }
     const transport = new Transport(clientEndpoint, { headers })
 

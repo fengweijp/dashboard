@@ -2,7 +2,8 @@ import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
 import Loading from 'react-loading'
 import { findDOMNode } from 'react-dom'
-import { saveToken, updateNetworkLayer } from 'utils/relay'
+import { updateNetworkLayer } from 'utils/relay'
+import * as cookiestore from 'utils/cookiestore'
 import mapProps from 'map-props'
 import LoginMutation from 'mutations/LoginMutation'
 import Icon from 'components/Icon/Icon'
@@ -34,7 +35,8 @@ class LoginView extends React.Component {
 
     const payload = { email, password, viewer: this.props.viewer }
     const onSuccess = (response) => {
-      saveToken(response.signinUser.token, response.signinUser.viewer.user.id)
+      cookiestore.set('graphcool_token', response.signinUser.token)
+      cookiestore.set('graphcool_user_id', response.signinUser.viewer.user.id)
       updateNetworkLayer()
 
       analytics.track('login: logged in', () => {

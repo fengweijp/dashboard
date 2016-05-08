@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react'
 import { findDOMNode } from 'react-dom'
 import Icon from 'components/Icon/Icon'
-import cookies from 'js-cookie'
 import classes from './Header.scss'
+import * as cookiestore from 'utils/cookiestore'
 
 export default class Header extends React.Component {
 
@@ -26,8 +26,8 @@ export default class Header extends React.Component {
   _logout () {
     analytics.track('header: logout', () => {
       analytics.reset()
-      cookies.remove('graphcool_token')
-      cookies.remove('graphcool_user_id')
+      cookiestore.remove('graphcool_token')
+      cookiestore.remove('graphcool_user_id')
       window.localStorage.clear()
       window.location.pathname = '/'
     })
