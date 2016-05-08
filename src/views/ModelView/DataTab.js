@@ -7,6 +7,7 @@ import { Transport } from 'lokka-transport-http'
 import { isScalar, isValidValueForType } from 'utils/graphql'
 import Tether from 'components/Tether/Tether'
 import Icon from 'components/Icon/Icon'
+import cookies from 'js-cookie'
 import Loading from 'react-loading'
 import classes from './DataTab.scss'
 
@@ -26,7 +27,7 @@ export class DataTab extends React.Component {
     super(props)
 
     const clientEndpoint = `${__BACKEND_ADDR__}/graphql/${this.props.projectId}`
-    const token = window.localStorage.getItem('token')
+    const token = cookies.get('graphcool_token')
     const headers = { Authorization: `Bearer ${token}`, 'X-GraphCool-Source': 'dashboard:data-tab' }
     const transport = new Transport(clientEndpoint, { headers })
 

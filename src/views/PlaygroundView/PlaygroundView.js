@@ -7,6 +7,7 @@ import GraphiQL from 'graphiql'
 import { saveQuery } from 'utils/QueryHistoryStorage'
 import QueryHistory from 'components/QueryHistory/QueryHistory'
 import Icon from 'components/Icon/Icon'
+import cookies from 'js-cookie'
 import endpoints from 'utils/endpoints'
 import classes from './PlaygroundView.scss'
 import LoginClientUserMutation from 'mutations/LoginClientUserMutation'
@@ -36,7 +37,7 @@ class PlaygroundView extends React.Component {
     super(props)
 
     const clientEndpoint = `${__BACKEND_ADDR__}/graphql/${this.props.projectId}`
-    const token = window.localStorage.getItem('token')
+    const token = cookies.get('graphcool_token')
     const headers = { Authorization: `Bearer ${token}`, 'X-GraphCool-Source': 'dashboard:playground' }
     const transport = new Transport(clientEndpoint, { headers })
 
@@ -49,7 +50,7 @@ class PlaygroundView extends React.Component {
       variables: undefined,
       selectedEndpoint: window.localStorage.getItem('SELECTED_ENDPOINT') || 'SIMPLE',
       selectedUserId: DASHBOARD_ADMIN.id,
-      selectedUserToken: null,
+      selectedUserToken: token,
     }
   }
 
@@ -115,7 +116,10 @@ class PlaygroundView extends React.Component {
         projectId: this.props.projectId,
       }), {
         onSuccess: (response) => {
-          this.setState({selectedUserId, selectedUserToken: response.signinClientUser.token})
+          this.setState({
+            selectedUserId,
+            selectedUserToken: response.signinClientUser.token,
+          })
 
           analytics.track('playground: user changed', {
             project: this.props.params.projectName,
@@ -134,13 +138,12 @@ class PlaygroundView extends React.Component {
   }
 
   render () {
-    const token = this.state.selectedUserToken || window.localStorage.getItem('token')
     const fetcher = (graphQLParams) => (
       fetch(`${__BACKEND_ADDR__}/${endpoints[this.state.selectedEndpoint].alias}/${this.props.projectId}`, {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${this.state.selectedUserToken}`,
           'X-GraphCool-Source': 'dashboard:playground',
         },
         body: JSON.stringify(graphQLParams),

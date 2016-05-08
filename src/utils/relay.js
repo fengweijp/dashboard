@@ -2,7 +2,7 @@ import cookies from 'js-cookie'
 import { injectNetworkLayer, DefaultNetworkLayer } from 'react-relay'
 
 export function updateNetworkLayer () {
-  const token = window.localStorage.getItem('token')
+  const token = cookies.get('graphcool_token')
   const headers = token ? {
     'Authorization': `Bearer ${token}`,
     'X-GraphCool-Source': 'dashboard:relay',
@@ -14,6 +14,5 @@ export function updateNetworkLayer () {
 }
 
 export function saveToken (token) {
-  window.localStorage.setItem('token', token)
-
+  cookies.set('graphcool_token', token, { expires: 90 })
 }
