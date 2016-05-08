@@ -34,7 +34,7 @@ class LoginView extends React.Component {
 
     const payload = { email, password, viewer: this.props.viewer }
     const onSuccess = (response) => {
-      saveToken(response.signinUser.token)
+      saveToken(response.signinUser.token, response.signinUser.viewer.user.id)
       updateNetworkLayer()
 
       analytics.track('login: logged in', () => {

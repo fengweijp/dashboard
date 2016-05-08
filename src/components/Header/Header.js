@@ -27,6 +27,7 @@ export default class Header extends React.Component {
     analytics.track('header: logout', () => {
       analytics.reset()
       cookies.remove('graphcool_token')
+      cookies.remove('graphcool_user_id')
       window.localStorage.clear()
       window.location.pathname = '/'
     })
