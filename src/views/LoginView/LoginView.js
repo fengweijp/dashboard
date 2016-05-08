@@ -44,7 +44,7 @@ class LoginView extends React.Component {
     const onFailure = () => {
       this.setState({ loading: false })
 
-      analytics.track('login: login failed')
+      analytics.track('login: login failed', { email })
     }
     Relay.Store.commitUpdate(new LoginMutation(payload), {
       onSuccess,

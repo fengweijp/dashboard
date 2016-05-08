@@ -65,15 +65,13 @@ class GettingStartedState {
   }
 
   skip () {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       Relay.Store.commitUpdate(new UpdateUserMutation({
         userId: this._userId,
         gettingStartedStatus: 'STEP11_SKIPPED',
       }), {
-        onSuccess: () => {
-          analytics.track('getting-started: skipped')
-          resolve()
-        },
+        onSuccess: resolve,
+        onFailure: reject,
       })
     })
   }
@@ -88,10 +86,7 @@ class GettingStartedState {
         userId: this._userId,
         gettingStartedStatus: nextStep,
       }), {
-        onSuccess: (result) => {
-          analytics.track(`getting-started: finished ${currentStep}`)
-          resolve(result)
-        },
+        onSuccess: resolve,
         onFailure: reject,
       })
     })
@@ -121,6 +116,8 @@ export class RootView extends React.Component {
       analytics.identify(this.props.user.id, {
         name: this.props.user.name,
         email: this.props.user.email,
+        'Getting Started Status': this.props.user.gettingStartedStatus,
+        'Product': 'Dashboard',
       })
 
       Smooch.init({
@@ -130,6 +127,10 @@ export class RootView extends React.Component {
         customText: {
           headerText: 'Can I help you? 🙌',
         },
+      })
+    } else {
+      analytics.identify({
+        'Product': 'Dashboard',
       })
     }
 
@@ -154,8 +155,19 @@ export class RootView extends React.Component {
   }
 
   componentDidUpdate (prevProps) {
-    if (this.props.user.gettingStartedStatus !== prevProps.user.gettingStartedStatus) {
+    const newStatus = this.props.user.gettingStartedStatus
+    const prevStatus = prevProps.user.gettingStartedStatus
+    if (newStatus !== prevStatus) {
       this._updateForceFetching()
+
+      if (newStatus === 'STEP11_SKIPPED') {
+        analytics.track(`getting-started: skipped at ${prevStatus}`)
+      } else {
+        analytics.track(`getting-started: finished ${prevStatus}`)
+      }
+      analytics.identify(this.props.user.id, {
+        'Getting Started Status': this.props.user.gettingStartedStatus,
+      })
     }
   }
 

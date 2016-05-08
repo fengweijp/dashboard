@@ -36,9 +36,8 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       __BACKEND_ADDR__: '"https://api.graph.cool"',
-      __SEGMENT_TOKEN__: '"M96lXuD90ZxkbQEQG716aySwBLllabOn"',
+      __SEGMENT_TOKEN__: '"mxShPAuQCvtbX7K1u5xcmFeqz9X7S7HN"',
       __SMOOCH_TOKEN__: '"505tvtkv5udrd4kc5dbpppa6x"',
-      __ENABLE_SEGMENT__: false,
     }),
     new HtmlWebpackPlugin({
       favicon: 'static/favicon.png',

@@ -39,7 +39,6 @@ module.exports = {
       __BACKEND_ADDR__: JSON.stringify(process.env.BACKEND_ADDR || ''),
       __SEGMENT_TOKEN__: '"M96lXuD90ZxkbQEQG716aySwBLllabOn"',
       __SMOOCH_TOKEN__: '"505tvtkv5udrd4kc5dbpppa6x"',
-      __ENABLE_SEGMENT__: true,
       'process.env': {
         'NODE_ENV': JSON.stringify('production')
       },

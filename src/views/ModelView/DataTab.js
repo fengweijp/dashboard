@@ -421,8 +421,8 @@ export class DataTab extends React.Component {
                   <td key={field.id}>{element}</td>
                 )
               })}
-              <td className={classes.addButton}>
-                <span onClick={::this._add}>Add item</span>
+              <td onClick={::this._add} className={classes.addButton}>
+                <span>Add item</span>
               </td>
             </tr>
             {this.state.items.map((item) => (

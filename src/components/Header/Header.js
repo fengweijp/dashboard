@@ -24,6 +24,7 @@ export default class Header extends React.Component {
 
   _logout () {
     analytics.track('header: logout', () => {
+      analytics.reset()
       window.localStorage.clear()
       window.location.pathname = '/'
     })
