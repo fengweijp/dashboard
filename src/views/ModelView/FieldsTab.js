@@ -12,7 +12,7 @@ export default class FieldsTab extends React.Component {
     fields: PropTypes.array.isRequired,
     allModels: PropTypes.array.isRequired,
     projectId: PropTypes.string.isRequired,
-    modelId: PropTypes.string.isRequired,
+    model: PropTypes.object.isRequired,
   };
 
   static contextTypes = {
@@ -71,7 +71,8 @@ export default class FieldsTab extends React.Component {
               params={this.props.params}
               callback={newFieldCallback}
               projectId={this.props.projectId}
-              modelId={this.props.modelId}
+              modelId={this.props.model.id}
+              defaultRequired={this.props.model.itemCount > 0}
             />
             <tr className={classes.spacer}>
               <td />
@@ -87,7 +88,7 @@ export default class FieldsTab extends React.Component {
               key={field.id}
               field={field}
               params={this.props.params}
-              modelId={this.props.modelId}
+              modelId={this.props.model.id}
             />
           ))}
         </table>
@@ -100,7 +101,7 @@ const MappedFieldsTab = mapProps({
   params: (props) => props.params,
   allModels: (props) => props.viewer.project.models.edges.map((edge) => edge.node),
   fields: (props) => props.viewer.model.fields.edges.map((edge) => edge.node),
-  modelId: (props) => props.viewer.model.id,
+  model: (props) => props.viewer.model,
   projectId: (props) => props.viewer.project.id,
 })(FieldsTab)
 
@@ -115,6 +116,7 @@ export default Relay.createContainer(MappedFieldsTab, {
         model: modelByName(projectName: $projectName, modelName: $modelName) {
           id
           name
+          itemCount
           fields(first: 100) {
             edges {
               node {

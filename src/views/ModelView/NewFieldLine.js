@@ -26,6 +26,7 @@ export default class NewFieldLine extends React.Component {
     callback: PropTypes.func.isRequired,
     projectId: PropTypes.string.isRequired,
     modelId: PropTypes.string.isRequired,
+    defaultRequired: PropTypes.bool.isRequired,
   };
 
   static contextTypes = {
@@ -111,7 +112,7 @@ export default class NewFieldLine extends React.Component {
   }
 
   _onCheckRequired (e) {
-    if (e.target.checked && this.state.defaultValue === null) {
+    if (this.props.defaultRequired && e.target.checked && this.state.defaultValue === null) {
       const defaultValue = window.prompt('Please enter a default value')
       if (defaultValue) {
         this.setState({ defaultValue })
