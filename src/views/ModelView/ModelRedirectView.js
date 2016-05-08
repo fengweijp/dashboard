@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
 import mapProps from 'map-props'
 
-export class ModelRedirectView extends React.Component {
+class ModelRedirectView extends React.Component {
   static propTypes = {
     params: PropTypes.object.isRequired,
     modelName: PropTypes.string.isRequired,

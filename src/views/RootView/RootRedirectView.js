@@ -5,7 +5,7 @@ import AddProjectMutation from 'mutations/AddProjectMutation'
 import LoginView from 'views/LoginView/LoginView'
 import classes from './RootRedirectView.scss'
 
-export class RootRedirectView extends React.Component {
+class RootRedirectView extends React.Component {
   static propTypes = {
     viewer: PropTypes.object.isRequired,
     projectName: PropTypes.string,
