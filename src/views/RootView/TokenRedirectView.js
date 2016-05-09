@@ -1,5 +1,6 @@
 import React from 'react'
-import { saveToken, updateNetworkLayer } from 'utils/relay'
+import { updateNetworkLayer } from 'utils/relay'
+import * as cookiestore from 'utils/cookiestore'
 
 function getQueryVariable (variable) {
   const query = window.location.search.substring(1)
@@ -18,7 +19,7 @@ export default class TokenRedirectView extends React.Component {
     const token = getQueryVariable('token')
     if (token) {
       window.localStorage.clear()
-      saveToken(token)
+      cookiestore.set('graphcool_token', token)
       updateNetworkLayer()
       window.location.href = window.location.origin
     }
