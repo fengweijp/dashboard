@@ -107,6 +107,28 @@
     width: 210px;
   }
 
+  .selection {
+    width: 670px;
+
+    .selectExample {
+      margin: 0 13px;
+      display: inline-block;
+      padding: 17px 30px;
+      font-size: 19px;
+      font-weight: 500;
+      border-radius: 5px;
+      cursor: pointer;
+      color: $accent;
+      background: #fff;
+      border: 1px solid $accent;
+
+      &.selected {
+        color: #fff;
+        background: $accent;
+      }
+    }
+  }
+
   .instructions {
     width: 100%;
     display: flex;
@@ -226,4 +248,3 @@
 /*cursor: default;*/
 /*}*/
 /*}*/
-

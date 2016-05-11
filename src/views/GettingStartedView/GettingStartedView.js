@@ -32,6 +32,21 @@ class Script extends React.Component {
   }
 }
 
+const examples = {
+  RELAY: {
+    path: 'react-relay-todo-example',
+    description: 'React + Relay',
+  },
+  LOKKA: {
+    path: 'react-lokka-todo-example',
+    description: 'React + Lokka',
+  },
+  APOLLO: {
+    path: 'react-apollo-todo-example',
+    description: 'React + Apollo',
+  },
+}
+
 class GettingStartedView extends React.Component {
   static propTypes = {
     params: PropTypes.object.isRequired,
@@ -42,6 +57,13 @@ class GettingStartedView extends React.Component {
   static contextTypes = {
     gettingStartedState: PropTypes.object.isRequired,
     router: PropTypes.object.isRequired,
+  }
+
+  constructor (props) {
+    super(props)
+    this.state = {
+      selectedExample: examples.RELAY,
+    }
   }
 
   componentWillMount () {
@@ -61,6 +83,10 @@ class GettingStartedView extends React.Component {
     if (this.context.gettingStartedState.isActive('STEP1_OVERVIEW')) {
       this.context.gettingStartedState.nextStep()
     }
+  }
+
+  _selectExample (example) {
+    this.state.selectedExample = example
   }
 
   _skipGettingStarted () {
@@ -88,8 +114,9 @@ class GettingStartedView extends React.Component {
     const { progress } = this.context.gettingStartedState
     const overlayActive = progress === 0 || progress === 4
     const firstName = this.props.user.name.split(' ')[0]
-    const exampleRepo = 'react-relay-todo-example'
-    const downloadUrl = `${__BACKEND_ADDR__}/resources/examples/${exampleRepo}?projectId=${this.props.projectId}`
+    const downloadUrl = (example) => (
+      `${__BACKEND_ADDR__}/resources/examples/${example.path}?projectId=${this.props.projectId}`
+    )
 
     return (
       <div className={classes.root}>
@@ -193,17 +220,37 @@ class GettingStartedView extends React.Component {
                 Awesome. You’re done setting up the backend.
               </p>
               <p>
-                Now it’s time to test the backend from an actual app. We already prepared an example for you.
+                Now it’s time to test the backend from an actual app. Choose your own example below!
               </p>
             </div>
             <div className={classes.image}>
               <img src={require('assets/graphics/getting-started-3.svg')} />
             </div>
+            <div className={classes.selection}>
+              <div
+                className={`${classes.selectExample} ${this.state.selectedExample === examples.RELAY ? classes.selected : ''}`}
+                onClick={() => this._selectExample(examples.RELAY)}
+              >
+                {examples.RELAY.description}
+              </div>
+              <div
+                className={`${classes.selectExample} ${this.state.selectedExample === examples.LOKKA ? classes.selected : ''}`}
+                onClick={() => this._selectExample(examples.LOKKA)}
+              >
+                {examples.LOKKA.description}
+              </div>
+              <div
+                className={`${classes.selectExample} ${this.state.selectedExample === examples.APOLLO ? classes.selected : ''}`}
+                onClick={() => this._selectExample(examples.APOLLO)}
+              >
+                {examples.APOLLO.description}
+              </div>
+            </div>
             <div className={classes.instructions}>
               <div className={classes.step1}>
                 <h3>1. Download example app</h3>
                 <a
-                  href={downloadUrl}
+                  href={downloadUrl(this.state.selectedExample)}
                   className={`${classes.download} ${classes.button} ${classes.green}`}
                 >
                   Download example
