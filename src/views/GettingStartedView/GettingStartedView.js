@@ -228,19 +228,28 @@ class GettingStartedView extends React.Component {
             </div>
             <div className={classes.selection}>
               <div
-                className={`${classes.selectExample} ${this.state.selectedExample === examples.RELAY ? classes.selected : ''}`}
+                className={`
+                  ${classes.selectExample}
+                  ${this.state.selectedExample === examples.RELAY ? classes.selected : ''}`
+                }
                 onClick={() => this._selectExample(examples.RELAY)}
               >
                 {examples.RELAY.description}
               </div>
               <div
-                className={`${classes.selectExample} ${this.state.selectedExample === examples.LOKKA ? classes.selected : ''}`}
+                className={`
+                  ${classes.selectExample}
+                  ${this.state.selectedExample === examples.LOKKA ? classes.selected : ''}`
+                }
                 onClick={() => this._selectExample(examples.LOKKA)}
               >
                 {examples.LOKKA.description}
               </div>
               <div
-                className={`${classes.selectExample} ${this.state.selectedExample === examples.APOLLO ? classes.selected : ''}`}
+                className={`
+                  ${classes.selectExample}
+                  ${this.state.selectedExample === examples.APOLLO ? classes.selected : ''}`
+                }
                 onClick={() => this._selectExample(examples.APOLLO)}
               >
                 {examples.APOLLO.description}
