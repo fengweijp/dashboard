@@ -238,7 +238,7 @@ export default Relay.createContainer(MappedSideNav, {
         id
         name
         webhookUrl
-        models(first: 10) {
+        models(first: 100) {
           edges {
             node {
               id
