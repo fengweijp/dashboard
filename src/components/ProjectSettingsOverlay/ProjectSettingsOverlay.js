@@ -24,14 +24,14 @@ export default class ProjectSettingsOverlay extends React.Component {
     super(props)
 
     this._onClickResetProjectData = ::this._onClickResetProjectData
-    this._onClickResetProjectSchema = ::this._onClickResetProjectSchema
+    this._onClickResetCompleteProject= ::this._onClickResetCompleteProject
     this._onClickDeleteProject = ::this._onClickDeleteProject
     this._save = ::this._save
   }
 
-  _onClickResetProjectSchema () {
-    if (window.confirm('Do you really want to delete all data and models of this project?')) {
-      Relay.Store.commitUpdate(new ResetProjectSchemaMutation({
+  _onClickResetProjectData () {
+    if (window.confirm('Do you really want to reset the project data?')) {
+      Relay.Store.commitUpdate(new ResetProjectDataMutation({
         projectId: this.props.project.id,
       }), {
         onSuccess: () => {
@@ -41,9 +41,9 @@ export default class ProjectSettingsOverlay extends React.Component {
     }
   }
 
-  _onClickResetProjectData () {
-    if (window.confirm('Do you really want to reset all data of this project?')) {
-      Relay.Store.commitUpdate(new ResetProjectDataMutation({
+  _onClickResetCompleteProject () {
+    if (window.confirm('Do you really want to reset the project data and models? ')) {
+      Relay.Store.commitUpdate(new ResetProjectSchemaMutation({
         projectId: this.props.project.id,
       }), {
         onSuccess: () => {
@@ -92,8 +92,13 @@ export default class ProjectSettingsOverlay extends React.Component {
             placeholder='Webhook url' defaultValue={this.props.project.webhookUrl} />
 
           <div className={classes.section}>
-            <div className={classes.reset} onClick={this._onClickResetProjectData}>Reset Data</div>
-            <div className={classes.delete} onClick={this._onClickResetProjectSchema}>Delete Schema</div>
+            <div className={classes.reset} onClick={this._onClickResetProjectData}>Reset Project Data</div>
+            <div
+              className={classes.delete}
+              onClick={this._onClickResetCompleteProject}
+            >
+              Reset Project Data and Models
+            </div>
             <div className={classes.delete} onClick={this._onClickDeleteProject}>Delete Project</div>
           </div>
           <div onClick={::this.props.hide} className={classes.buttonCancel}>Cancel</div>
