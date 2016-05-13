@@ -8,7 +8,6 @@ export default class Header extends React.Component {
 
   static propTypes = {
     user: PropTypes.object.isRequired,
-    projectId: PropTypes.string.isRequired,
   }
 
   constructor (props) {
@@ -33,29 +32,11 @@ export default class Header extends React.Component {
     })
   }
 
-  _selectProjectId () {
-    const projectId = findDOMNode(this.refs.projectId)
-    const range = document.createRange()
-    range.setStartBefore(projectId)
-    range.setEndAfter(projectId)
-    window.getSelection().removeAllRanges()
-    window.getSelection().addRange(range)
-
-    analytics.track('header: projectid copied')
-  }
-
   render () {
     return (
       <div className={classes.root}>
-        <div className={classes.left} title='Project Id'>
-          <div onClick={::this._selectProjectId} className={classes.copyWrapper}>
-            <span className={classes.projectId} ref='projectId'>
-              {this.props.projectId}
-            </span>
-            <span className={classes.label}>
-              Copy Project Id
-            </span>
-          </div>
+        <div className={classes.left}>
+          <a target='_blank' href='http://docs.graph.cool'>Docs</a>
         </div>
         {this.state.userDropdownVisible &&
           <div className={classes.userDropdown} onClick={::this._logout}>

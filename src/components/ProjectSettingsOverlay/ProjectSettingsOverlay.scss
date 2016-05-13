@@ -48,6 +48,35 @@
   }
 }
 
+.copy {
+  color: #70738C;
+  display: flex;
+  justify-content: center;
+  margin: 20px 0 0;
+
+  .copyWrapper {
+    background: #fff;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+
+  .label {
+    font-size: 12px;
+    text-transform: uppercase;
+    padding: 7px 10px;
+    background: $accent;
+    color: #fff;
+  }
+
+  .projectId {
+    display: inline-block;
+    font-size: 10px;
+    background: #e6e6f6;
+    padding: 7px 12px;
+    font-family: Consolas, Inconsolata, 'Droid Sans Mono', Monaco, monospace;
+  }
+}
+
 .section {
   padding: 15px 0;
 }

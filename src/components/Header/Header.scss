@@ -8,30 +8,9 @@
 
 .left {
   width: 80%;
-  color: #70738C;
   display: flex;
   align-items: center;
-  padding-left: 12px;
-
-  .copyWrapper {
-    background: #fff;
-    cursor: pointer;
-    margin-left: 10px;
-  }
-
-  .label {
-    font-size: 12px;
-    text-transform: uppercase;
-    padding: 0 10px 0 12px;
-  }
-
-  .projectId {
-    display: inline-block;
-    font-size: 11px;
-    background: #e6e6f6;
-    padding: 7px 12px;
-    font-family: Consolas, Inconsolata, 'Droid Sans Mono', Monaco, monospace;
-  }
+  margin-left: 40px;
 }
 
 .right {

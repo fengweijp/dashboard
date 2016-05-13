@@ -81,11 +81,32 @@ export default class ProjectSettingsOverlay extends React.Component {
     })
   }
 
+  _selectProjectId () {
+    const projectId = findDOMNode(this.refs.projectId)
+    const range = document.createRange()
+    range.setStartBefore(projectId)
+    range.setEndAfter(projectId)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+
+    analytics.track('header: projectid copied')
+  }
+
   render () {
     return (
       <div className={classes.background}>
         <div className={classes.container}>
           <div className={classes.head}>Project settings</div>
+          <div className={classes.copy} title='Project Id'>
+            <div onClick={::this._selectProjectId} className={classes.copyWrapper}>
+              <span className={classes.projectId} ref='projectId'>
+                {this.props.project.id}
+              </span>
+              <span className={classes.label}>
+                Project Id
+              </span>
+            </div>
+          </div>
           <input ref='projectName' className={classes.input}
             type='text' placeholder='Name' defaultValue={this.props.project.name} />
           <input ref='projectWebhookUrl' className={classes.input} type='text'
