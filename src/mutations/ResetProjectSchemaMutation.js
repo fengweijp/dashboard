@@ -1,6 +1,6 @@
 import Relay from 'react-relay'
 
-export default class ResetProjectMutation extends Relay.Mutation {
+export default class ResetProjectSchemaMutation extends Relay.Mutation {
 
   getMutation () {
     return Relay.QL`mutation{resetProjectSchema}`

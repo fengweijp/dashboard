@@ -4,7 +4,8 @@ import { findDOMNode } from 'react-dom'
 import classes from './ProjectSettingsOverlay.scss'
 import UpdateProjectMutation from 'mutations/UpdateProjectMutation'
 import DeleteProjectMutation from 'mutations/DeleteProjectMutation'
-import ResetProjectMutation from 'mutations/ResetProjectMutation'
+import ResetProjectSchemaMutation from 'mutations/ResetProjectSchemaMutation'
+import ResetProjectDataMutation from 'mutations/ResetProjectDataMutation'
 
 export default class ProjectSettingsOverlay extends React.Component {
 
@@ -22,14 +23,15 @@ export default class ProjectSettingsOverlay extends React.Component {
   constructor (props) {
     super(props)
 
-    this._onClickReset = ::this._onClickReset
-    this._onClickDelete = ::this._onClickDelete
+    this._onClickResetProjectData = ::this._onClickResetProjectData
+    this._onClickResetProjectSchema = ::this._onClickResetProjectSchema
+    this._onClickDeleteProject = ::this._onClickDeleteProject
     this._save = ::this._save
   }
 
-  _onClickReset () {
-    if (window.confirm('Do you really want to reset all data of this project?')) {
-      Relay.Store.commitUpdate(new ResetProjectMutation({
+  _onClickResetProjectSchema () {
+    if (window.confirm('Do you really want to delete all data and models of this project?')) {
+      Relay.Store.commitUpdate(new ResetProjectSchemaMutation({
         projectId: this.props.project.id,
       }), {
         onSuccess: () => {
@@ -39,7 +41,19 @@ export default class ProjectSettingsOverlay extends React.Component {
     }
   }
 
-  _onClickDelete () {
+  _onClickResetProjectData () {
+    if (window.confirm('Do you really want to reset all data of this project?')) {
+      Relay.Store.commitUpdate(new ResetProjectDataMutation({
+        projectId: this.props.project.id,
+      }), {
+        onSuccess: () => {
+          this.context.router.replace(`/${this.props.params.projectName}/playground`)
+        },
+      })
+    }
+  }
+
+  _onClickDeleteProject () {
     if (window.confirm('Do you really want to delete this project?')) {
       Relay.Store.commitUpdate(new DeleteProjectMutation({
         projectId: this.props.project.id,
@@ -78,8 +92,9 @@ export default class ProjectSettingsOverlay extends React.Component {
             placeholder='Webhook url' defaultValue={this.props.project.webhookUrl} />
 
           <div className={classes.section}>
-            <div className={classes.reset} onClick={this._onClickReset}>Reset Data</div>
-            <div className={classes.delete} onClick={this._onClickDelete}>Delete Project</div>
+            <div className={classes.reset} onClick={this._onClickResetProjectData}>Reset Data</div>
+            <div className={classes.delete} onClick={this._onClickResetProjectSchema}>Delete Schema</div>
+            <div className={classes.delete} onClick={this._onClickDeleteProject}>Delete Project</div>
           </div>
           <div onClick={::this.props.hide} className={classes.buttonCancel}>Cancel</div>
           <div onClick={this._save} className={classes.buttonSubmit}>Save</div>
