@@ -32,6 +32,21 @@ export class SideNav extends React.Component {
     }
   }
 
+  _sortModels (models, sortOrder) {
+    return models.sort(function (a, b, order = sortOrder) {
+      const nameA = a.name.toLowerCase()
+      const nameB = b.name.toLowerCase()
+      const modifier = sortOrder === 'ASC' ? 1 : -1
+      if (nameA < nameB) {
+        return modifier * -1
+      }
+      if (nameA > nameB) {
+        return modifier * 1
+      }
+      return 0
+    })
+  }
+
   _addModel () {
     const modelName = window.prompt('Model name')
     const redirect = () => {
@@ -163,7 +178,7 @@ export class SideNav extends React.Component {
             <span>Models</span>
           </Link>
           {this.props.models &&
-            this.props.models.map((model) => {
+            this._sortModels(this.props.models, 'ASC').map((model) => {
               const tab = model.itemCount === 0 ? 'fields' : 'data'
               const modelUrl = `/${this.props.params.projectName}/models/${model.name}/${tab}`
               return (

@@ -26,12 +26,28 @@ export default class FieldsTab extends React.Component {
 
     this.state = {
       toggledFieldId: null,
+      sortOrder: 'ASC',
     }
   }
 
   componentDidMount () {
     analytics.track('models/fields: viewed', {
       model: this.props.params.modelName,
+    })
+  }
+
+  _sortFields (fields, sortOrder) {
+    return fields.sort(function (a, b, order = sortOrder) {
+      const nameA = a.fieldName.toLowerCase()
+      const nameB = b.fieldName.toLowerCase()
+      const modifier = sortOrder === 'ASC' ? 1 : -1
+      if (nameA < nameB) {
+        return modifier * -1
+      }
+      if (nameA > nameB) {
+        return modifier * 1
+      }
+      return 0
     })
   }
 
@@ -81,7 +97,7 @@ export default class FieldsTab extends React.Component {
               <td />
             </tr>
           </tbody>
-          {this.props.fields.map((field) => (
+          {this._sortFields(this.props.fields, this.state.sortOrder).map((field) => (
             <Field
               showDetails={this.state.toggledFieldId === field.id}
               toggleShowDetails={() => this._toggleFieldDetails(field)}
@@ -121,6 +137,7 @@ export default Relay.createContainer(MappedFieldsTab, {
             edges {
               node {
                 id
+                fieldName
                 ${Field.getFragment('field')}
               }
             }
