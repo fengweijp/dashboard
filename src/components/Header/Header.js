@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react'
-import { findDOMNode } from 'react-dom'
 import Icon from 'components/Icon/Icon'
 import classes from './Header.scss'
 import * as cookiestore from 'utils/cookiestore'
