@@ -14,6 +14,7 @@ const types = {
   'Float': 'Float',
   'Boolean': 'Boolean',
   'String': 'String',
+  'DateTime': 'DateTime',
   'GraphQLID': 'ID',
   'Enum': 'Enum',
 }
