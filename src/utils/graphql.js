@@ -1,10 +1,20 @@
+import moment from 'moment'
+
 export function isScalar (typeIdentifier) {
-  const scalarTypes = ['String', 'Int', 'Float', 'Boolean', 'GraphQLID', 'Enum', 'Password']
+  const scalarTypes = ['String', 'Int', 'Float', 'Boolean', 'GraphQLID', 'Enum', 'Password', 'DateTime']
   return scalarTypes.includes(typeIdentifier)
 }
 
 export function isValidName (name: string): boolean {
   return /^[_a-zA-Z][_a-zA-Z0-9]*$/.test(name)
+}
+
+export function isValidDateTime (dateTime: string): boolean {
+  return (
+    // returns whether the string conforms to ISO8601
+    // 2015 is a valid ISO 8601, so is 2015-12-31T23:00:00Z
+    moment(dateTime).isValid()
+  )
 }
 
 export function parseValue (value: string, typeIdentifier: string): any {
@@ -17,6 +27,7 @@ export function parseValue (value: string, typeIdentifier: string): any {
     GraphQLID: () => value,
     Password: () => value,
     Enum: () => isValidName(value) ? value : null,
+    DateTime: () => isValidDateTime(value) ? value : null,
   }[typeIdentifier]()
 }
 
