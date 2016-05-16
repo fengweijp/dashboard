@@ -59,11 +59,14 @@ export default class ProjectSelection extends React.Component {
             <Icon
               src={require('assets/icons/arrow.svg')}
               color='#fff'
+              width={11}
+              height={6}
               />
           </div>
         </div>
         {this.state.expanded &&
           <div className={classes.overlay}>
+            <div className={classes.listHead}>All Projects</div>
             {this.props.projects.map((project) => (
               <Link
                 key={project.name}

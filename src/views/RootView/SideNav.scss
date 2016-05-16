@@ -3,27 +3,39 @@
 .root {
   width: 100%;
   height: 100%;
-  background: $blue-grey;
+  background: $grey5;
   position: relative;
+  color: #fff;
+
+  a {
+    color: #fff;
+  }
 }
 
-.list {
+.container {
   overflow: scroll;
   height: 100%;
-  padding-bottom: 62px;
+}
+
+.listBlock {
+  margin: 0 0 10px;
+  padding: 27px 0;
+
+  &.active {
+    background: rgba(255, 255, 255, 0.05);
+  }
 }
 
 .head {
   font-size: 12px;
-  font-weight: 500;
-  color: $blue-grey-dark;
-  padding: 29px 26px 23px;
+  font-weight: 400;
+  padding: 0 26px;
   display: flex;
   align-items: center;
   text-transform: uppercase;
 
   svg {
-    fill: $blue-grey-dark;
+    fill: $grey2;
   }
 
   span {
@@ -31,52 +43,66 @@
   }
 }
 
+.list {
+  padding: 33px 0;
+}
+
 .listElement {
   width: 100%;
-  height: 35px;
-  display: block;
+  height: 33px;
+  display: flex;
   font-size: 14px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: 0 0 0 70px;
-  color: #3F4253;
+  padding: 0 26px 0 70px;
+  font-weight: 300;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.09);
+  }
 
   &.listElementActive {
-    font-weight: 500;
-    background: #E3E3F3;
-    color: $accent;
-    border-right: 6px solid $accent;
+    font-weight: 400;
+    background: rgba(255, 255, 255, 0.09);
+    padding-left: 66px;
+    border-left: 4px solid $accent;
+  }
+
+  .itemCount {
+    color: $grey4;
+    font-weight: 400;
   }
 }
 
 .gettingStarted {
-  background: #E5E5F8;
-  padding: 20px 70px;
+  background: #238F50;
+  padding: 30px 0;
   font-size: 14px;
+
+  .gettingStartedList {
+    padding: 20px 70px 0;
+  }
 
   .gettingStartedStepDisabled, .gettingStartedStepActive, .gettingStartedStepDone {
     margin: 11px 0;
-
-    a {
-      color: #626477;
-    }
   }
 
   .gettingStartedStepDisabled a {
-    color: #CBCBE2;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: default;
   }
 
   .gettingStartedStepActive a {
-    font-weight: 500;
+    font-weight: 600;
   }
 
   .gettingStartedStepDone a {
-    color: $accent;
     text-decoration: line-through;
   }
 
   .gettingStartedSkip {
-    background: $blue-grey;
+    background: rgba(255, 255, 255, 0.1);
     padding: 9px 12px;
     text-align: center;
     text-transform: uppercase;
@@ -86,38 +112,43 @@
     cursor: pointer;
 
     &:hover {
-      background: #E87C7C;
-      color: #fff;
+      background: #fff;
+      color: $accent;
     }
   }
 }
 
 .add {
-  width: 100%;
-  margin: 12px 0;
-  padding: 0 0 0 70px;
-  font-size: 14px;
-  color: $blue-grey-dark;
+  margin: 0 0 0 70px;
+  font-size: 12px;
+  font-weight: 600;
   cursor: pointer;
+  text-transform: uppercase;
+  border: 1px solid #fff;
+  border-radius: 4px;
+  padding: 9px 19px;
+  display: inline-block;
+
+  &:hover {
+    background: #363E3E;
+  }
 }
 
 .foot {
   position: absolute;
-  background: #E5E5F8;
-  border-top: 1px solid #E1E1F3;
   width: 100%;
   height: 62px;
   bottom: 0;
   display: flex;
   align-items: center;
   cursor: pointer;
+  background: $grey6;
 
   &:hover {
-    background: #E1E1F3;
+    background: #363E3E;
   }
 
   span {
-    color: #9292B2;
     text-transform: uppercase;
     font-size: 13px;
     font-weight: 500;
@@ -125,5 +156,6 @@
 
   svg {
     margin: 0 25px 0 26px;
+    fill: #A3A6A7;
   }
 }

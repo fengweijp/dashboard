@@ -53,20 +53,13 @@ export default class Header extends React.Component {
             </div>
           </div>
         }
-        <div className={classes.right}>
-          <div onClick={::this._toggleRightOverlay}>
-            <div className={classes.label}>
-              {this.props.user.name}
-            </div>
-            <div
-              className={`${classes.arrow} ${this.state.userDropdownVisible ? classes.up : ''}`}
-            >
-              <Icon
-                src={require('assets/icons/arrow.svg')}
-                color='#70738C'
-                />
-            </div>
-          </div>
+        <div className={classes.right} onClick={::this._toggleRightOverlay}>
+          {this.props.user.name}
+          <Icon
+            width={11}
+            height={6}
+            src={require('assets/icons/arrow.svg')}
+          />
         </div>
       </div>
     )

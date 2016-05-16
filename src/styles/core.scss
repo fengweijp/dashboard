@@ -1,13 +1,21 @@
+@import '~styles/variables';
+
 :global {
   @import '~normalize.css';
-  @import url(https://fonts.googleapis.com/css?family=Open+Sans:100,400,500);
+  @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,600);
 
   html,
   body {
     background: #fff;
     height: 100%;
     font-family: 'Open Sans', sans-serif;
-    color: #626477;
+    color: $grey5;
+    font-weight: 400;
+
+    // enable font smoothing
+    font-smooth: always;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   a {
@@ -21,6 +29,6 @@
   }
 
   strong {
-    font-weight: 500;
+    font-weight: 600;
   }
 }
