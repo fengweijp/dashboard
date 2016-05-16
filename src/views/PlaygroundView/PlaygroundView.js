@@ -212,13 +212,15 @@ class PlaygroundView extends React.Component {
             </select>
           </div>
         </div>
-        <GraphiQL
-          key={this.state.selectedEndpoint}
-          fetcher={fetcher}
-          query={this.state.query}
-          variables={this.state.variables || ''}
-          onEditQuery={::this._rememberPlaygroundUsed}
-          />
+        <div className={classes.graphiql}>
+          <GraphiQL
+            key={this.state.selectedEndpoint}
+            fetcher={fetcher}
+            query={this.state.query}
+            variables={this.state.variables || ''}
+            onEditQuery={::this._rememberPlaygroundUsed}
+            />
+        </div>
       </div>
     )
   }

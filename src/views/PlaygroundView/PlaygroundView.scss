@@ -17,6 +17,7 @@
 .head {
   display: flex;
   font-size: 15px;
+  height: 40px;
 }
 
 .endpoint {
@@ -46,4 +47,8 @@
   justify-content: flex-end;
   padding: 6px 15px;
   color: #ccc;
+}
+
+.graphiql {
+  height: calc(100% - 40px);
 }
