@@ -6,7 +6,7 @@ import NewFieldLine from './NewFieldLine'
 import Field from './Field'
 import classes from './FieldsTab.scss'
 
-export default class FieldsTab extends React.Component {
+class FieldsTab extends React.Component {
   static propTypes = {
     params: PropTypes.object.isRequired,
     fields: PropTypes.array.isRequired,

@@ -11,6 +11,8 @@ import FieldsTab from 'views/ModelView/FieldsTab'
 import DataTab from 'views/ModelView/DataTab'
 import PlaygroundView from 'views/PlaygroundView/PlaygroundView'
 import GettingStartedView from 'views/GettingStartedView/GettingStartedView'
+import AccountView from 'views/AccountView/AccountView'
+import SettingsTab from 'views/AccountView/SettingsTab'
 
 // TODO https://github.com/relay-tools/react-router-relay/issues/156
 class RedirectOnMount extends React.Component {
@@ -69,6 +71,10 @@ export default (
     <IndexRoute component={RootRedirectView} queries={ViewerQuery} render={render} />
     <Route path='token' component={TokenRedirectView} />
     <Route path=':projectName' component={RootView} queries={ViewerQuery} render={render}>
+      <Route path='account' component={AccountView}>
+        <Route path='settings' component={SettingsTab} queries={ViewerQuery} render={render} />
+        <IndexRedirect to='settings' />
+      </Route>
       <Route path='models'>
         <IndexRoute component={ModelRedirectView} queries={ViewerQuery} render={render} />
         <Route path=':modelName' component={ModelView} queries={ViewerQuery} render={render}>

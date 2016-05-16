@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { Link } from 'react-router'
 import Icon from 'components/Icon/Icon'
 import classes from './Header.scss'
 import * as cookiestore from 'utils/cookiestore'
@@ -7,6 +8,7 @@ export default class Header extends React.Component {
 
   static propTypes = {
     user: PropTypes.object.isRequired,
+    params: PropTypes.object.isRequired,
   }
 
   constructor (props) {
@@ -19,10 +21,6 @@ export default class Header extends React.Component {
 
   _toggleRightOverlay () {
     this.setState({ userDropdownVisible: !this.state.userDropdownVisible })
-  }
-
-  _openProfile () {
-    console.log('Profile view!')
   }
 
   _logout () {
@@ -43,9 +41,13 @@ export default class Header extends React.Component {
         </div>
         {this.state.userDropdownVisible &&
           <div className={classes.userDropdown}>
-            <div className={classes.element} onClick={::this._openProfile}>
-              Profile
-            </div>
+            <Link
+              to={`/${this.props.params.projectName}/account`}
+              className={classes.element}
+              onClick={::this._toggleRightOverlay}
+            >
+              Account
+            </Link>
             <div className={classes.element} onClick={::this._logout}>
               Logout
             </div>
