@@ -19,11 +19,24 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  cursor: pointer;
   font-size: 16px;
+  margin-right: 40px;
 
-  svg {
-    margin: 0 22px;
+  .arrow {
+    display: block;
+    position: absolute;
+    right: 20px;
+    height: 20px;
+    cursor: pointer;
+    top: calc(50% - 10px);
+
+    &.up {
+      transform: rotate(180deg);
+    }
+  }
+
+  .label {
+    cursor: pointer
   }
 }
 
@@ -35,4 +48,8 @@
   right: 22px;
   z-index: 9;
   cursor: pointer;
+
+  .element {
+
+  }
 }

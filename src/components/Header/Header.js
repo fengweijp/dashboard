@@ -21,6 +21,10 @@ export default class Header extends React.Component {
     this.setState({ userDropdownVisible: !this.state.userDropdownVisible })
   }
 
+  _openProfile () {
+    console.log('Profile view!')
+  }
+
   _logout () {
     analytics.track('header: logout', () => {
       analytics.reset()
@@ -38,16 +42,29 @@ export default class Header extends React.Component {
           <a target='_blank' href='http://docs.graph.cool'>Docs</a>
         </div>
         {this.state.userDropdownVisible &&
-          <div className={classes.userDropdown} onClick={::this._logout}>
-            Logout
+          <div className={classes.userDropdown}>
+            <div className={classes.element} onClick={::this._openProfile}>
+              Profile
+            </div>
+            <div className={classes.element} onClick={::this._logout}>
+              Logout
+            </div>
           </div>
         }
-        <div className={classes.right} onClick={::this._toggleRightOverlay}>
-          {this.props.user.name}
-          <Icon
-            src={require('assets/icons/arrow.svg')}
-            color='#70738C'
-            />
+        <div className={classes.right}>
+          <div onClick={::this._toggleRightOverlay}>
+            <div className={classes.label}>
+              {this.props.user.name}
+            </div>
+            <div
+              className={`${classes.arrow} ${this.state.userDropdownVisible ? classes.up : ''}`}
+            >
+              <Icon
+                src={require('assets/icons/arrow.svg')}
+                color='#70738C'
+                />
+            </div>
+          </div>
         </div>
       </div>
     )
