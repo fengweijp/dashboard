@@ -1,39 +1,46 @@
 @import '~styles/variables';
 
 .root {
-  margin-left: 40px;
-  margin-top: 44px;
+  padding: 20px 40px;
 
   .category {
-    margin-top: 16px;
+    margin-top: 25px;
+    width: 400px;
 
     .title {
-      font-weight: bold;
+      font-weight: 600;
+      font-size: 14px;
+      color: $grey5;
     }
 
     .field {
-      padding-left: 11px;
-      margin-top: 11px;
-      width: 400px;
-      border: 1px solid #ccc;
+      width: 100%;
+      padding: 9px 18px;
+      margin-top: 12px;
+      border: 1px solid $grey3;
       border-radius: 4px;
-      box-sizing: border-box;
+      font-size: 14px;
+      color: $grey5;
     }
   }
 
   .saveChanges {
-    margin: 0 0 0 70px;
+    margin: 37px 0 0;
     color: #fff;
     background: $accent;
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     text-transform: uppercase;
-    border: 1px solid #fff;
+    border: 1px solid $accent;
     border-radius: 4px;
     padding: 9px 19px;
     display: inline-block;
-  }
 
+    &:hover {
+      background: #fff;
+      color: $accent;
+    }
+  }
 
 }

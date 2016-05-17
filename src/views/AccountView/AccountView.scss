@@ -5,30 +5,38 @@
   overflow: hidden;
 
   .head {
-    height: 100px;
-    background: $blue-grey;
-    border-top: 1px solid $blue-grey-dark;
-    border-bottom: 1px solid $blue-grey-dark;
+    height: 102px;
+    background: $grey1;
+    border-top: 1px solid $grey2;
+    border-bottom: 1px solid $grey2;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
 
     .title {
-      padding-top: 22px;
-      margin-left: 40px;
-      font-weight: bold;
+      margin: 19px 0 0 40px;
+      font-weight: 600;
+      font-size: 20px;
+      color: $grey5;
     }
 
     .tabs {
       display: flex;
+      margin-left: 40px;
     }
 
     .tab {
-      color: $grey3;
-      margin-top: 22px;
-      margin-left: 40px;
+      color: $grey4;
+      margin-right: 25px;
+      padding-bottom: 15px;
+      font-weight: 300;
+      font-size: 13px;
+      text-transform: uppercase;
     }
 
     .tabActive {
       color: $accent;
-      border-bottom: 4px solid $accent;
+      border-bottom: 3px solid $accent;
     }
   }
 }
