@@ -73,6 +73,7 @@ export default (
     <Route path=':projectName' component={RootView} queries={ViewerQuery} render={render}>
       <Route path='account' component={AccountView}>
         <Route path='settings' component={SettingsTab} queries={ViewerQuery} render={render} />
+        {/* <Route path='usage' component={SettingsTab} queries={ViewerQuery} render={render} /> */}
         <IndexRedirect to='settings' />
       </Route>
       <Route path='models'>

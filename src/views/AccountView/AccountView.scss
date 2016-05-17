@@ -5,25 +5,30 @@
   overflow: hidden;
 
   .head {
-    height: 66px;
+    height: 100px;
     background: $blue-grey;
-    border-color: $blue-grey-dark;
-    border: 1px;
+    border-top: 1px solid $blue-grey-dark;
+    border-bottom: 1px solid $blue-grey-dark;
 
     .title {
+      padding-top: 22px;
       margin-left: 40px;
       font-weight: bold;
+    }
+
+    .tabs {
+      display: flex;
     }
 
     .tab {
       color: $grey3;
       margin-top: 22px;
       margin-left: 40px;
-
-      .tabActive {
-        color: accent;
-      }
     }
 
+    .tabActive {
+      color: $accent;
+      border-bottom: 4px solid $accent;
+    }
   }
 }

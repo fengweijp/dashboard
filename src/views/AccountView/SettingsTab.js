@@ -9,6 +9,18 @@ class SettingsTab extends React.Component {
     user: PropTypes.object.isRequired,
   };
 
+  _saveChanges () {
+    console.log('Save changes')
+  }
+
+  _onChangeName () {
+    console.log('change name')
+  }
+
+  _onChangeEmail () {
+    console.log('change email')
+  }
+
   render () {
     return (
       <div className={classes.root}>
@@ -16,13 +28,48 @@ class SettingsTab extends React.Component {
           <div className={classes.title}>
             Name
           </div>
-          <input type='text' placeholder='Your name' value={this.props.user.name} className={classes.field} />
+          <input
+            type='text'
+            placeholder='Your name'
+            defaultValue={this.props.user.name}
+            className={classes.field}
+            onChange={::this._onChangeName}
+          />
         </div>
         <div className={classes.category}>
           <div className={classes.title}>
             Email
           </div>
-          <input type='text' placeholder='Your email' value={this.props.user.email} className={classes.field} />
+          <input
+            type='text'
+            placeholder='Your email'
+            defaultValue={this.props.user.email}
+            className={classes.field}
+            onChange={::this._onChangeEmail}
+          />
+        </div>
+        <div className={classes.category}>
+          <div className={classes.title}>
+            Change password
+          </div>
+          <input
+            type='password'
+            placeholder='Enter current password'
+            className={classes.field}
+          />
+          <input
+            type='password'
+            placeholder='Choose new password'
+            className={classes.field}
+          />
+          <input
+            type='password'
+            placeholder='Repeat new password'
+            className={classes.field}
+          />
+        </div>
+        <div className={classes.saveChanges} onClick={::this._saveChanges}>
+          Save changes
         </div>
       </div>
     )

@@ -15,7 +15,7 @@ export default class AccountView extends React.Component {
           <div className={classes.title}>
             Account
           </div>
-          <div>
+          <div className={classes.tabs}>
             <Link
               to={`/${this.props.params.projectName}/account/settings`}
               className={classes.tab}
