@@ -12,7 +12,9 @@ export default class AccountView extends React.Component {
     return (
       <div className={classes.root}>
         <div className={classes.head}>
-          Account
+          <div className={classes.title}>
+            Account
+          </div>
           <div>
             <Link
               to={`/${this.props.params.projectName}/account/settings`}

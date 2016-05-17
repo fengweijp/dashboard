@@ -1,0 +1,29 @@
+@import '~styles/variables';
+
+.root {
+  height: 100%;
+  overflow: hidden;
+
+  .head {
+    height: 66px;
+    background: $blue-grey;
+    border-color: $blue-grey-dark;
+    border: 1px;
+
+    .title {
+      margin-left: 40px;
+      font-weight: bold;
+    }
+
+    .tab {
+      color: $grey3;
+      margin-top: 22px;
+      margin-left: 40px;
+
+      .tabActive {
+        color: accent;
+      }
+    }
+
+  }
+}
