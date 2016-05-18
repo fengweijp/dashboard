@@ -26,6 +26,10 @@ export default class UpdateUserMutation extends Relay.Mutation {
   getVariables () {
     return {
       gettingStartedStatus: this.props.gettingStartedStatus,
+      name: this.props.name,
+      email: this.props.email,
+      oldPassword: this.props.oldPassword,
+      newPassword: this.props.newPassword,
     }
   }
 
@@ -34,6 +38,10 @@ export default class UpdateUserMutation extends Relay.Mutation {
       user: {
         id: this.props.userId,
         gettingStartedStatus: this.props.gettingStartedStatus,
+        name: this.props.name,
+        email: this.props.email,
+        oldPassword: this.props.oldPassword,
+        newPassword: this.props.newPassword,
       },
     }
   }
