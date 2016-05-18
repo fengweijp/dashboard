@@ -1,0 +1,100 @@
+@import '~styles/variables';
+@import '~styles/mixins';
+
+.row {
+  border-bottom: 1px solid $grey2;
+  padding: 24px 40px;
+  display: flex;
+
+  &:hover {
+    background: $grey1;
+
+    .addDescription {
+      visibility: visible;
+
+      &:hover {
+        color: $grey4;
+      }
+    }
+  }
+}
+
+.fieldName, .type, .description, .constraints, .permissions {
+  display: flex;
+  align-items: center;
+  padding-right: 20px;
+}
+
+.fieldName {
+  width: 166px;
+  font-family: Monaco, monospace;
+  font-size: 14px;
+}
+
+.type {
+  width: 173px;
+  font-family: Monaco, monospace;
+  color: $grey4;
+  font-size: 12px;
+  flex-shrink: 0;
+
+  span {
+    background: $grey1;
+    padding: 7px 8px;
+  }
+}
+
+.description {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 300;
+  color: $grey4;
+
+  .descriptionText {
+    padding: 20px 30px 20px 0;
+    margin: -20px -30px -20px 0;
+  }
+
+  .addDescription {
+    visibility: hidden;
+    font-weight: 600;
+    cursor: pointer;
+    color: $grey3;
+    padding: 20px 30px 20px 0;
+    margin: -20px -30px -20px 0;
+  }
+
+  input {
+    border: 0;
+    background: none;
+    width: 100%;
+    padding: 10px 0;
+    margin: -10px 0;
+
+    @include placeholder {
+      color: $grey4;
+    }
+
+    &:focus {
+      outline: 0;
+    }
+  }
+}
+
+.constraints {
+  width: 208px;
+}
+
+.permissions {
+  width: 208px;
+
+  span {
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: 300;
+    color: $grey4;
+    border: 1px solid $grey3;
+    border-radius: 4px;
+    padding: 3px 6px;
+  }
+}

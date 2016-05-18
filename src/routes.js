@@ -5,9 +5,10 @@ import Loading from 'react-loading'
 import RootView from 'views/RootView/RootView'
 import RootRedirectView from 'views/RootView/RootRedirectView'
 import TokenRedirectView from 'views/RootView/TokenRedirectView'
+import FieldsView from 'views/FieldsView/FieldsView'
 import ModelView from 'views/ModelView/ModelView'
 import ModelRedirectView from 'views/ModelView/ModelRedirectView'
-import FieldsTab from 'views/ModelView/FieldsTab'
+// import FieldsTab from 'views/ModelView/FieldsTab'
 import DataTab from 'views/ModelView/DataTab'
 import PlaygroundView from 'views/PlaygroundView/PlaygroundView'
 import GettingStartedView from 'views/GettingStartedView/GettingStartedView'
@@ -78,8 +79,8 @@ export default (
       </Route>
       <Route path='models'>
         <IndexRoute component={ModelRedirectView} queries={ViewerQuery} render={render} />
+        <Route path=':modelName/fields' component={FieldsView} queries={ViewerQuery} render={render} />
         <Route path=':modelName' component={ModelView} queries={ViewerQuery} render={render}>
-          <Route path='fields' component={FieldsTab} queries={ViewerQuery} render={render} />
           <Route path='data' component={DataTab} queries={ViewerQuery} render={render} />
           <IndexRedirect to='fields' />
         </Route>

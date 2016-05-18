@@ -47,7 +47,8 @@ export default class ProjectSelection extends React.Component {
         <div className={classes.head} onClick={::this._toggle}>
           <div className={classes.logo}>
             <Icon
-              width={30} height={35}
+              width={30}
+              height={35}
               src={require('assets/icons/logo.svg')}
               color='#fff'
               />
@@ -57,10 +58,10 @@ export default class ProjectSelection extends React.Component {
           </span>
           <div className={`${classes.arrow} ${this.state.expanded ? classes.up : ''}`}>
             <Icon
-              src={require('assets/icons/arrow.svg')}
-              color='#fff'
               width={11}
               height={6}
+              src={require('assets/icons/arrow.svg')}
+              color='#fff'
               />
           </div>
         </div>

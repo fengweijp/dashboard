@@ -1,42 +1,37 @@
 @import '~styles/variables';
 
-.root {
-  height: 100%;
-  overflow: hidden;
+.head {
+  height: 102px;
+  background: $grey1;
+  border-top: 1px solid $grey2;
+  border-bottom: 1px solid $grey2;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
 
-  .head {
-    height: 102px;
-    background: $grey1;
-    border-top: 1px solid $grey2;
-    border-bottom: 1px solid $grey2;
+  .title {
+    margin: 19px 0 0 40px;
+    font-weight: 600;
+    font-size: 20px;
+    color: $grey5;
+  }
+
+  .tabs {
     display: flex;
-    justify-content: space-between;
-    flex-direction: column;
+    margin-left: 40px;
+  }
 
-    .title {
-      margin: 19px 0 0 40px;
-      font-weight: 600;
-      font-size: 20px;
-      color: $grey5;
-    }
+  .tab {
+    color: $grey4;
+    margin-right: 25px;
+    padding-bottom: 15px;
+    font-weight: 300;
+    font-size: 13px;
+    text-transform: uppercase;
+  }
 
-    .tabs {
-      display: flex;
-      margin-left: 40px;
-    }
-
-    .tab {
-      color: $grey4;
-      margin-right: 25px;
-      padding-bottom: 15px;
-      font-weight: 300;
-      font-size: 13px;
-      text-transform: uppercase;
-    }
-
-    .tabActive {
-      color: $accent;
-      border-bottom: 3px solid $accent;
-    }
+  .tabActive {
+    color: $accent;
+    border-bottom: 3px solid $accent;
   }
 }
