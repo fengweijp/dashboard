@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
+import UpdateUserMutation from '../../mutations/UpdateUserMutation'
 import mapProps from 'map-props'
 import classes from './SettingsTab.scss'
 
@@ -7,18 +8,42 @@ class SettingsTab extends React.Component {
   static propTypes = {
     params: PropTypes.object.isRequired,
     user: PropTypes.object.isRequired,
-  };
+  }
 
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      email: props.user.email,
+      name: props.user.name,
+      password: props.user.password,
+      emailError: false,
+      nameError: false,
+      passwordError: false,
+    }
+
+    console.log(this.state)
+  }
   _saveChanges () {
-    console.log('Save changes')
+    Relay.Store.commitUpdate(new UpdateUserMutation({
+      email: this.state.email,
+      name: this.state.name,
+    }), {
+      onSuccess: () => {
+        alert('Changes were saved!')
+      },
+      onFailure: (transaction) => {
+        alert(transaction.getError())
+      },
+    })
   }
 
-  _onChangeName () {
-    console.log('change name')
+  _onChangeName (event) {
+    this.state.name = event.target.value
   }
 
-  _onChangeEmail () {
-    console.log('change email')
+  _onChangeEmail (event) {
+    this.state.email = event.target.value
   }
 
   render () {
@@ -33,7 +58,7 @@ class SettingsTab extends React.Component {
             placeholder='Your name'
             defaultValue={this.props.user.name}
             className={classes.field}
-            onChange={::this._onChangeName}
+            onBlur={::this._onChangeName}
           />
         </div>
         <div className={classes.category}>
@@ -45,7 +70,7 @@ class SettingsTab extends React.Component {
             placeholder='Your email'
             defaultValue={this.props.user.email}
             className={classes.field}
-            onChange={::this._onChangeEmail}
+            onBlur={::this._onChangeEmail}
           />
         </div>
         <div className={classes.category}>
