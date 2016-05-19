@@ -1,14 +1,14 @@
 import Relay from 'react-relay'
 
-export default class UpdateUserMutation extends Relay.Mutation {
+export default class UpdatePasswordMutation extends Relay.Mutation {
 
   getMutation () {
-    return Relay.QL`mutation{updateUser}`
+    return Relay.QL`mutation{updatePassword}`
   }
 
   getFatQuery () {
     return Relay.QL`
-      fragment on UpdateUserPayload {
+      fragment on UpdatePasswordPayload {
         user
       }
     `
@@ -25,9 +25,8 @@ export default class UpdateUserMutation extends Relay.Mutation {
 
   getVariables () {
     return {
-      gettingStartedStatus: this.props.gettingStartedStatus,
-      name: this.props.name,
-      email: this.props.email,
+      oldPassword: this.props.oldPassword,
+      newPassword: this.props.newPassword,
     }
   }
 
@@ -35,9 +34,8 @@ export default class UpdateUserMutation extends Relay.Mutation {
     return {
       user: {
         id: this.props.userId,
-        gettingStartedStatus: this.props.gettingStartedStatus,
-        name: this.props.name,
-        email: this.props.email,
+        oldPassword: this.props.oldPassword,
+        newPassword: this.props.newPassword,
       },
     }
   }
