@@ -1,16 +1,17 @@
 import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
-import { Route, IndexRoute, IndexRedirect } from 'react-router'
+import { Route, IndexRoute, Redirect, IndexRedirect } from 'react-router'
 import Loading from 'react-loading'
 import RootView from 'views/RootView/RootView'
 import RootRedirectView from 'views/RootView/RootRedirectView'
 import TokenRedirectView from 'views/RootView/TokenRedirectView'
-import FieldsView from 'views/FieldsView/FieldsView'
-import ModelView from 'views/ModelView/ModelView'
-import ModelRedirectView from 'views/ModelView/ModelRedirectView'
+import FieldsView from 'views/models/FieldsView/FieldsView'
+import DataView from 'views/models/DataView/DataView'
+// import ModelView from 'views/ModelView/ModelView'
+import ModelRedirectView from 'views/models/ModelRedirectView'
 // import FieldsTab from 'views/ModelView/FieldsTab'
-import DataTab from 'views/ModelView/DataTab'
-import PlaygroundView from 'views/PlaygroundView/PlaygroundView'
+// import DataTab from 'views/ModelView/DataTab'
+import PlaygroundView from 'views/playground/PlaygroundView/PlaygroundView'
 import GettingStartedView from 'views/GettingStartedView/GettingStartedView'
 import AccountView from 'views/AccountView/AccountView'
 import SettingsTab from 'views/AccountView/SettingsTab'
@@ -80,10 +81,8 @@ export default (
       <Route path='models'>
         <IndexRoute component={ModelRedirectView} queries={ViewerQuery} render={render} />
         <Route path=':modelName/fields' component={FieldsView} queries={ViewerQuery} render={render} />
-        <Route path=':modelName' component={ModelView} queries={ViewerQuery} render={render}>
-          <Route path='data' component={DataTab} queries={ViewerQuery} render={render} />
-          <IndexRedirect to='fields' />
-        </Route>
+        <Route path=':modelName/data' component={DataView} queries={ViewerQuery} render={render} />
+        <Redirect path=':modelName' to=':modelName/fields' />
       </Route>
       <Route path='playground' component={PlaygroundView} queries={ViewerQuery} render={render} />
       <Route path='getting-started' component={GettingStartedView} queries={ViewerQuery} render={render} />

@@ -42,10 +42,6 @@
   @include placeholder {
     color: #dadee2;
   }
-
-  &:focus {
-    outline: none;
-  }
 }
 
 .typeSelect {
@@ -57,10 +53,6 @@
   border: 0;
   font-size: 18px;
   padding: 34px;
-
-  &:focus {
-    outline: none;
-  }
 }
 
 .check {

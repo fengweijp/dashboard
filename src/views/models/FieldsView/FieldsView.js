@@ -1,9 +1,11 @@
 import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
+import { Link } from 'react-router'
 import mapProps from 'map-props'
-import PureRenderMixin from 'react-addons-pure-render-mixin'
 import Field from './Field'
+import FieldPopup from './FieldPopup'
 import Icon from 'components/Icon/Icon'
+import DeleteModelMutation from 'mutations/DeleteModelMutation'
 import classes from './FieldsView.scss'
 
 class FieldsView extends React.Component {
@@ -13,21 +15,16 @@ class FieldsView extends React.Component {
     allModels: PropTypes.array.isRequired,
     projectId: PropTypes.string.isRequired,
     model: PropTypes.object.isRequired,
-  };
+  }
 
   static contextTypes = {
     gettingStartedState: PropTypes.object.isRequired,
-  };
+    router: PropTypes.object.isRequired,
+  }
 
-  constructor (props) {
-    super(props)
-
-    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this)
-
-    this.state = {
-      toggledFieldId: null,
-      sortOrder: 'ASC',
-    }
+  state = {
+    showPopup: false,
+    menuDropdownVisible: false,
   }
 
   componentDidMount () {
@@ -36,31 +33,42 @@ class FieldsView extends React.Component {
     })
   }
 
-  _sortFields (fields, sortOrder) {
-    return fields.sort(function (a, b, order = sortOrder) {
-      const nameA = a.fieldName.toLowerCase()
-      const nameB = b.fieldName.toLowerCase()
-      const modifier = sortOrder === 'ASC' ? 1 : -1
-      if (nameA < nameB) {
-        return modifier * -1
-      }
-      if (nameA > nameB) {
-        return modifier * 1
-      }
-      return 0
-    })
+  _toggleMenuDropdown () {
+    this.setState({ menuDropdownVisible: !this.state.menuDropdownVisible })
   }
 
-  _toggleFieldDetails (field) {
-    const toggledFieldId = this.state.toggledFieldId === field.id ? null : field.id
-    this.setState({ toggledFieldId })
+  _deleteModel () {
+    this._toggleMenuDropdown()
 
-    analytics.track(`models/fields: ${toggledFieldId ? 'opened' : 'closed'} field details`)
+    if (window.confirm('Do you really want to delete this model?')) {
+      Relay.Store.commitUpdate(new DeleteModelMutation({
+        projectId: this.props.projectId,
+        modelId: this.props.model.id,
+      }), {
+        onSuccess: () => {
+          analytics.track('models: deleted model', {
+            project: this.props.params.projectName,
+            model: this.props.params.modelName,
+          })
+
+          this.context.router.replace(`/${this.props.params.projectName}/models`)
+        },
+      })
+    }
   }
 
   render () {
     return (
       <div className={classes.root}>
+        {this.state.showPopup &&
+          <FieldPopup
+            close={() => this.setState({ showPopup: false })}
+            modelId={this.props.model.id}
+            field={null}
+            params={this.props.params}
+            allModels={this.props.allModels}
+          />
+        }
         <div className={classes.head}>
           <div className={classes.headLeft}>
             <div className={classes.title}>
@@ -72,7 +80,10 @@ class FieldsView extends React.Component {
             </div>
           </div>
           <div className={classes.headRight}>
-            <div className={`${classes.button} ${classes.green}`}>
+            <div
+              className={`${classes.button} ${classes.green}`}
+              onClick={() => this.setState({ showPopup: true })}
+            >
               <Icon
                 width={16}
                 height={16}
@@ -80,21 +91,31 @@ class FieldsView extends React.Component {
               />
               <span>Create Field</span>
             </div>
-            <div className={classes.button}>
+            <Link
+              to={`/${this.props.params.projectName}/models/${this.props.params.modelName}/data`}
+              className={classes.button}
+              >
               <Icon
                 width={16}
                 height={16}
                 src={require('assets/icons/data.svg')}
               />
               <span>Show Data</span>
-            </div>
-            <div className={classes.button}>
+            </Link>
+            <div className={classes.button} onClick={::this._toggleMenuDropdown}>
               <Icon
                 width={16}
                 height={16}
                 src={require('assets/icons/more.svg')}
               />
             </div>
+            {this.state.menuDropdownVisible &&
+              <div className={classes.menuDropdown}>
+                <div onClick={::this._deleteModel}>
+                  Delete Model
+                </div>
+              </div>
+            }
           </div>
         </div>
         <div className={classes.table}>
@@ -104,17 +125,19 @@ class FieldsView extends React.Component {
             <div className={classes.description}>Description</div>
             <div className={classes.constraints}>Constraints</div>
             <div className={classes.permissions}>Permissions</div>
+            <div className={classes.controls} />
           </div>
-          {this._sortFields(this.props.fields, this.state.sortOrder).map((field) => (
-            <Field
-              showDetails={this.state.toggledFieldId === field.id}
-              toggleShowDetails={() => this._toggleFieldDetails(field)}
-              key={field.id}
-              field={field}
-              params={this.props.params}
-              modelId={this.props.model.id}
-            />
-          ))}
+          <div className={classes.tableBody}>
+            {this.props.fields.map((field) => (
+              <Field
+                key={field.id}
+                field={field}
+                params={this.props.params}
+                modelId={this.props.model.id}
+                allModels={this.props.allModels}
+              />
+            ))}
+          </div>
         </div>
       </div>
     )
@@ -124,7 +147,11 @@ class FieldsView extends React.Component {
 const MappedFieldsView = mapProps({
   params: (props) => props.params,
   allModels: (props) => props.viewer.project.models.edges.map((edge) => edge.node),
-  fields: (props) => props.viewer.model.fields.edges.map((edge) => edge.node),
+  fields: (props) => (
+    props.viewer.model.fields.edges
+      .map((edge) => edge.node)
+      .sort((a, b) => a.fieldName.localeCompare(b.fieldName))
+  ),
   model: (props) => props.viewer.model,
   projectId: (props) => props.viewer.project.id,
 })(FieldsView)

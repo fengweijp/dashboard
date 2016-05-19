@@ -27,12 +27,6 @@
       margin: 5px;
     }
   }
-
-  input[type=text], button, select {
-    &:focus {
-      outline: none;
-    }
-  }
 }
 
 .fieldName {

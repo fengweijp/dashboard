@@ -11,15 +11,11 @@ export default class Header extends React.Component {
     params: PropTypes.object.isRequired,
   }
 
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      userDropdownVisible: false,
-    }
+  state = {
+    userDropdownVisible: false,
   }
 
-  _toggleRightOverlay () {
+  _toggleUserDropdown () {
     this.setState({ userDropdownVisible: !this.state.userDropdownVisible })
   }
 
@@ -43,17 +39,16 @@ export default class Header extends React.Component {
           <div className={classes.userDropdown}>
             <Link
               to={`/${this.props.params.projectName}/account`}
-              className={classes.element}
-              onClick={::this._toggleRightOverlay}
+              onClick={::this._toggleUserDropdown}
             >
               Account
             </Link>
-            <div className={classes.element} onClick={::this._logout}>
+            <div onClick={::this._logout}>
               Logout
             </div>
           </div>
         }
-        <div className={classes.right} onClick={::this._toggleRightOverlay}>
+        <div className={classes.right} onClick={::this._toggleUserDropdown}>
           {this.props.user.name}
           <Icon
             width={11}

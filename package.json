@@ -43,6 +43,7 @@
     "babel-preset-react-hmre": "^1.1.1",
     "babel-preset-stage-0": "^6.5.0",
     "babel-runtime": "^6.6.1",
+    "calculate-size": "^0.2.0",
     "css-loader": "^0.23.1",
     "cssnano": "^3.5.2",
     "eslint": "2.9.0",

@@ -1,26 +1,23 @@
 import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
-// import FieldDetails from './FieldDetails'
+import FieldPopup from './FieldPopup'
 import UpdateFieldDescriptionMutation from 'mutations/UpdateFieldDescriptionMutation'
 import DeleteFieldMutation from 'mutations/DeleteFieldMutation'
+import Icon from 'components/Icon/Icon'
 import classes from './Field.scss'
 
 class Field extends React.Component {
 
   static propTypes = {
-    showDetails: PropTypes.bool.isRequired,
-    toggleShowDetails: PropTypes.func.isRequired,
     field: PropTypes.object.isRequired,
+    allModels: PropTypes.array.isRequired,
     params: PropTypes.object.isRequired,
     modelId: PropTypes.string.isRequired,
-  };
+  }
 
   state = {
     editDescription: false,
-  }
-
-  _toggleDetails () {
-    this.props.toggleShowDetails()
+    showPopup: false,
   }
 
   _save () {
@@ -66,13 +63,36 @@ class Field extends React.Component {
     })
   }
 
+  _showPopup () {
+    this.setState({ showPopup: true })
+  }
+
   render () {
     const { field } = this.props
 
+    let type = field.typeIdentifier
+    if (field.isList) {
+      type = `[${type}]`
+    }
+    if (field.isRequired) {
+      type = `${type}!`
+    }
+
     return (
       <div className={classes.row}>
-        <div className={classes.fieldName}>{field.fieldName}</div>
-        <div className={classes.type}><span>{field.typeIdentifier}{field.isRequired ? '!' : ''}</span></div>
+        {this.state.showPopup &&
+          <FieldPopup
+            field={field}
+            close={() => this.setState({ showPopup: false })}
+            params={this.props.params}
+            modelId={this.props.modelId}
+            allModels={this.props.allModels}
+          />
+        }
+        <div className={classes.fieldName} onClick={::this._showPopup}>{field.fieldName}</div>
+        <div className={classes.type} onClick={::this._showPopup}>
+          <span>{type}</span>
+        </div>
         <div className={classes.description}>
           {this.state.editDescription &&
             <input
@@ -107,82 +127,24 @@ class Field extends React.Component {
             <span key={node.id}>{node.userType}</span>
           ))}
         </div>
+        <div className={classes.controls}>
+          <span onClick={::this._showPopup}>
+            <Icon
+              width={20}
+              height={20}
+              src={require('assets/icons/edit.svg')}
+            />
+          </span>
+          <span onClick={::this._delete}>
+            <Icon
+              width={20}
+              height={20}
+              src={require('assets/icons/delete.svg')}
+            />
+          </span>
+        </div>
       </div>
     )
-
-    //    return (
-    //      <tbody
-    //        className={`${this.props.showDetails ? classes.detailsVisible : ''} ${classes.root}`}
-    //      >
-    //        <tr
-    //          key={field.fieldName}
-    //          className={classes.field}
-    //        >
-    //          <td>{field.fieldName}</td>
-    //          <td>
-    //            <span className={classes.type}>
-    //              {field.typeIdentifier}<span className={classes.cardinality}>{field.isList ? 'many' : 'one'}</span>
-    //            </span>
-    //          </td>
-    //          <td className={classes.constraints}>
-    //            {field.isRequired
-    //              ? <span className={classes.constraint}>required</span>
-    //              : ''}
-    //            <div className={classes.permissions}>
-    //              {field.permissions.edges.map(({ node }) => (
-    //                <span
-    //                  key={node.id}
-    //                  data-tip={`${node.userType} ${node.comment ? `(${node.comment})` : ''}`}
-    //                >
-    //                  {node.userType.substr(0, 1)}
-    //                </span>
-    //              ))}
-    //            </div>
-    //          </td>
-    //          <td className={classes.toggle}>
-    //            {this.props.showDetails &&
-    //              <div className={classes.toggleContainer}>
-    //                <div className={classes.grey} onClick={::this._toggleDetails}>
-    //                  <Icon
-    //                    width={24}
-    //                    height={24}
-    //                    src={require('assets/icons/close.svg')}
-    //                  />
-    //                </div>
-    //                <div className={classes.green} onClick={::this._save}>
-    //                  <Icon
-    //                    width={24}
-    //                    height={24}
-    //                    src={require('assets/icons/check.svg')}
-    //                  />
-    //                </div>
-    //              </div>
-    //            }
-    //            {!this.props.showDetails &&
-    //              <div className={classes.toggleContainer}>
-    //                <div className={classes.green} onClick={::this._toggleDetails}>
-    //                  <Icon src={require('assets/icons/edit.svg')} />
-    //                </div>
-    //                <div className={classes.grey} onClick={::this._delete}>
-    //                  <Icon src={require('assets/icons/delete.svg')} />
-    //                </div>
-    //              </div>
-    //            }
-    //          </td>
-    //        </tr>
-    //        {this.props.showDetails &&
-    //          <tr className={classes.details}>
-    //            <td colSpan={4}>
-    //              <FieldDetails
-    //                ref='details'
-    //                field={field}
-    //                close={this.props.toggleShowDetails}
-    //              />
-    //            </td>
-    //          </tr>
-    //        }
-    //      </tbody>
-    //    )
   }
 }
 

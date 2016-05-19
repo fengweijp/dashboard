@@ -1,4 +1,5 @@
 @import '~styles/variables';
+@import '~styles/mixins';
 
 .root {
   width: 100%;
@@ -42,26 +43,7 @@
 }
 
 .userDropdown {
-  position: absolute;
-  background: #fff;
-  padding: 15px 0;
+  @include dropdown;
   top: 56px;
   right: 40px;
-  z-index: 9;
-  border-radius: 4px;
-  box-shadow: 0 0 5px $grey3;
-  display: flex;
-  flex-direction: column;
-
-  .element {
-    font-size: 14px;
-    padding: 10px 30px;
-    color: $grey3;
-    cursor: pointer;
-
-    &:hover {
-      background: $grey1;
-      color: $grey4;
-    }
-  }
 }

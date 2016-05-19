@@ -1,0 +1,21 @@
+@import '~styles/variables';
+
+.root {
+  padding: 15px 20px;
+  box-shadow:
+    1px 0 0 0 $grey2,
+    0 1px 0 0 $grey2,
+    1px 1px 0 0 $grey2, /* Just to fix the corner */
+    1px 0 0 0 $grey2 inset,
+    0 1px 0 0 $grey2 inset;
+
+  font-size: 12px;
+  color: $grey5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &.null {
+    color: $grey3;
+    font-style: italic;
+  }
+}

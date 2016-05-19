@@ -16,6 +16,10 @@
         color: $grey4;
       }
     }
+
+    .controls span {
+      visibility: visible;
+    }
   }
 }
 
@@ -29,6 +33,7 @@
   width: 166px;
   font-family: Monaco, monospace;
   font-size: 14px;
+  cursor: pointer;
 }
 
 .type {
@@ -37,6 +42,7 @@
   color: $grey4;
   font-size: 12px;
   flex-shrink: 0;
+  cursor: pointer;
 
   span {
     background: $grey1;
@@ -74,10 +80,6 @@
     @include placeholder {
       color: $grey4;
     }
-
-    &:focus {
-      outline: 0;
-    }
   }
 }
 
@@ -96,5 +98,28 @@
     border: 1px solid $grey3;
     border-radius: 4px;
     padding: 3px 6px;
+  }
+}
+
+.controls {
+  width: 55px;
+  display: flex;
+  align-items: center;
+
+  span {
+    visibility: hidden;
+    cursor: pointer;
+
+    &:last-child {
+      margin-left: 15px;
+    }
+
+    &:hover svg {
+      fill: $grey4;
+    }
+  }
+
+  svg {
+    fill: $grey3;
   }
 }

@@ -1,0 +1,115 @@
+@import '~styles/variables';
+@import '~styles/mixins';
+
+.root {
+  height: 100%;
+  position: relative;
+}
+
+.head {
+  height: 88px;
+  background: $grey1;
+  border-top: 1px solid $grey2;
+  border-bottom: 1px solid $grey2;
+  padding: 19px 40px;
+  display: flex;
+  align-items: center;
+}
+
+.headLeft {
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+
+  .title {
+    font-weight: 600;
+    font-size: 20px;
+    color: $grey5;
+
+    .itemCount {
+      margin-left: 9px;
+      font-size: 15px;
+      font-weight: 300;
+      color: $grey3;
+    }
+  }
+
+  .titleDescription {
+    font-size: 14px;
+    font-weight: 300;
+    color: $grey4;
+    margin-top: 1px;
+  }
+}
+
+.headRight {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+
+  .button {
+    @include button;
+    margin-left: 10px;
+
+    &.green {
+      border-color: $accent;
+      color: $accent;
+      background: #fff;
+
+      &:hover {
+        background: $accent;
+        color: #fff;
+
+        svg {
+          fill: #fff;
+        }
+      }
+
+      svg {
+        fill: $accent;
+      }
+    }
+  }
+
+  .menuDropdown {
+    @include dropdown;
+    top: 46px;
+    right: 0;
+  }
+}
+
+.loading {
+  top: 214px;
+  left: 0;
+  position: absolute;
+  height: calc(100% - 214px);
+  width: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.table {
+  height: calc(100% - 88px);
+  overflow-x: scroll;
+
+  .tableContainer {
+    height: 100%;
+  }
+
+  .tableHead {
+    margin-top: -1px;
+    height: 127px;
+    display: flex;
+  }
+
+  .tableBody {
+    overflow-y: scroll;
+    height: calc(100% - 126px);
+    padding-bottom: 60px;
+  }
+}

@@ -22,6 +22,15 @@
     text-decoration: none;
   }
 
+  *:focus {
+    outline: none;
+  }
+  
+  input[type='checkbox']:focus {
+    border: 1px solid $accent-blue;
+    box-shadow: 0 0 10px $accent-blue;
+  }
+
   *,
   *:before,
   *:after {

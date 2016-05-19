@@ -32,21 +32,6 @@ export class SideNav extends React.Component {
     }
   }
 
-  _sortModels (models, sortOrder) {
-    return models.sort(function (a, b, order = sortOrder) {
-      const nameA = a.name.toLowerCase()
-      const nameB = b.name.toLowerCase()
-      const modifier = sortOrder === 'ASC' ? 1 : -1
-      if (nameA < nameB) {
-        return modifier * -1
-      }
-      if (nameA > nameB) {
-        return modifier * 1
-      }
-      return 0
-    })
-  }
-
   _addModel () {
     const modelName = window.prompt('Model name')
     const redirect = () => {
@@ -186,7 +171,7 @@ export class SideNav extends React.Component {
             </Link>
             <div className={classes.list}>
               {this.props.models &&
-                this._sortModels(this.props.models, 'ASC').map((model) => {
+                this.props.models.map((model) => {
                   const tab = model.itemCount === 0 ? 'fields' : 'data'
                   const modelUrl = `/${this.props.params.projectName}/models/${model.name}/${tab}`
                   return (
@@ -248,7 +233,9 @@ export class SideNav extends React.Component {
 const MappedSideNav = mapProps({
   params: (props) => props.params,
   project: (props) => props.project,
-  models: (props) => props.project.models.edges.map((edge) => edge.node),
+  models: (props) => props.project.models.edges
+    .map((edge) => edge.node)
+    .sort((a, b) => a.name.localeCompare(b.name)),
 })(SideNav)
 
 export default Relay.createContainer(MappedSideNav, {

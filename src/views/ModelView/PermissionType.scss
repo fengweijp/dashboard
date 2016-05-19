@@ -13,10 +13,6 @@
   select {
     background: none;
     border: 0;
-
-    &:focus {
-      outline: none;
-    }
   }
 
   input[type=checkbox] {
@@ -27,9 +23,5 @@
     margin-left: 20px;
     height: 100%;
     border: none;
-
-    &:focus {
-      outline: none;
-    }
   }
 }

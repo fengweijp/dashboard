@@ -25,7 +25,9 @@ class ModelRedirectView extends React.Component {
 
 const MappedModelRedirectView = mapProps({
   params: (props) => props.params,
-  modelName: (props) => props.viewer.project.models.edges[0].node.name,
+  modelName: (props) => props.viewer.project.models.edges
+    .map(({ node }) => node.name)
+    .sort((a, b) => a.localeCompare(b))[0],
 })(ModelRedirectView)
 
 export default Relay.createContainer(MappedModelRedirectView, {
@@ -33,15 +35,13 @@ export default Relay.createContainer(MappedModelRedirectView, {
     projectName: null, // injected from router
   },
   fragments: {
-    // NOTE name needed because of relay bug
     viewer: () => Relay.QL`
       fragment on Viewer {
         project: projectByName(projectName: $projectName) {
-          models(first: 1) {
+          models(first: 100) {
             edges {
               node {
                 name
-                id
               }
             }
           }

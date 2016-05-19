@@ -1,0 +1,144 @@
+@import '~styles/variables';
+@import '~styles/mixins';
+
+.background {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  width: 600px;
+  background: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.head {
+  height: 81px;
+  color: #fff;
+  background: $accent;
+  padding: 18px 22px;
+
+  .title {
+    font-weight: 600;
+    font-size: 20px;
+  }
+
+  .subtitle {
+    font-weight: 300;
+    font-size: 14px;
+  }
+}
+
+.body {
+  padding: 33px 0;
+
+  .rowBlock {
+    background: $grey1;
+    padding: 10px 0;
+    margin: 10px 0;
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    margin: 0 43px;
+
+    .left {
+      width: 282px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      font-weight: 600;
+      font-size: 16px;
+      color: $grey4;
+
+      svg {
+        margin-left: 9px;
+        fill: $grey2;
+      }
+    }
+
+    .right {
+      width: 205px;
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      font-size: 14px;
+      color: $grey4;
+
+      label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 6px 0;
+
+        input[type='checkbox'] {
+          margin-right: 13px;
+        }
+      }
+
+      input[type='text'] {
+        width: 100%;
+        border: 1px solid $grey3;
+        border-radius: 4px;
+        padding: 12px 19px;
+        font-size: 12px;
+        font-family: Monaco, monospace;
+
+        @include placeholder {
+          color: $grey3;
+        }
+
+        &:focus {
+          border-color: $grey5;
+        }
+      }
+    }
+  }
+}
+
+.foot {
+  height: 81px;
+  padding: 22px;
+  background: $grey1;
+  display: flex;
+  justify-content: flex-end;
+
+  .button {
+    @include button;
+    margin-left: 10px;
+
+    &.disabled {
+      background: $grey2;
+      color: $grey4;
+      cursor: not-allowed;
+      border-color: $grey2;
+
+      &:focus {
+        border-color: $grey4;
+      }
+    }
+
+    &.green {
+      border-color: $accent;
+      background: $accent;
+      color: #fff;
+
+      &:hover, &:focus {
+        color: $accent;
+        background: #fff;
+      }
+    }
+  }
+}

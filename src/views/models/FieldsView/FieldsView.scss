@@ -1,4 +1,9 @@
 @import '~styles/variables';
+@import '~styles/mixins';
+
+.root {
+  height: 100%;
+}
 
 .head {
   height: 88px;
@@ -42,37 +47,11 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  position: relative;
 
   .button {
-    padding: 10px 19px;
-    text-transform: uppercase;
-    font-weight: 600;
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    border: 1px solid $grey4;
-    border-radius: 4px;
+    @include button;
     margin-left: 10px;
-    color: $grey4;
-    cursor: pointer;
-
-    &:hover {
-      background: #fff;
-      color: $grey5;
-      border-color: $grey5;
-
-      svg {
-        fill: $grey5;
-      }
-    }
-
-    span {
-      margin-left: 11px;
-    }
-
-    svg {
-      fill: $grey4;
-    }
 
     &.green {
       border-color: $accent;
@@ -93,9 +72,17 @@
       }
     }
   }
+
+  .menuDropdown {
+    @include dropdown;
+    top: 46px;
+    right: 0;
+  }
 }
 
 .table {
+  height: calc(100% - 88px);
+
   .fieldName, .type, .description, .constraints, .permissions {
     display: flex;
     align-items: center;
@@ -122,12 +109,26 @@
     width: 208px;
   }
 
+  .controls {
+    width: 55px;
+    display: flex;
+    align-items: center;
+  }
+
   .tableHead {
     font-size: 14px;
     font-weight: 600;
     color: $grey4;
     border-bottom: 1px solid $grey2;
-    padding: 24px 40px;
+    padding: 0 40px;
+    height: 68px;
     display: flex;
+    align-items: center;
+  }
+
+  .tableBody {
+    overflow-y: scroll;
+    height: calc(100% - 68px);
+    padding-bottom: 60px;
   }
 }
