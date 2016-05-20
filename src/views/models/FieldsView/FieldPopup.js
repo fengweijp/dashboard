@@ -4,6 +4,7 @@ import TypeSelection from './TypeSelection'
 import Icon from 'components/Icon/Icon'
 import Loading from 'react-loading'
 import AddFieldMutation from 'mutations/AddFieldMutation'
+import UpdateFieldMutation from 'mutations/UpdateFieldMutation'
 import classes from './FieldPopup.scss'
 
 class FieldPopup extends React.Component {
@@ -53,6 +54,14 @@ class FieldPopup extends React.Component {
   }
 
   _submit () {
+    if (this.props.field) {
+      this._update()
+    } else {
+      this._create()
+    }
+  }
+
+  _create () {
     if (!this._isValid()) {
       return
     }
@@ -103,6 +112,46 @@ class FieldPopup extends React.Component {
     })
   }
 
+  _update () {
+    if (!this._isValid()) {
+      return
+    }
+
+    this.setState({ loading: true })
+
+    const {
+      fieldName,
+      typeIdentifier,
+      enumValues,
+      isList,
+      isRequired,
+      defaultValue,
+    } = this.state
+
+    Relay.Store.commitUpdate(new UpdateFieldMutation({
+      fieldId: this.props.field.id,
+      fieldName,
+      typeIdentifier,
+      enumValues,
+      isList,
+      isRequired,
+      defaultValue,
+    }), {
+      onSuccess: (response) => {
+        analytics.track('models/fields: updated field', {
+          project: this.props.params.projectName,
+          model: this.props.params.modelName,
+          field: fieldName,
+        })
+
+        this.props.close()
+      },
+      onFailure: (transaction) => {
+        alert(transaction.getError())
+      },
+    })
+  }
+
   _isValid () {
     return this.state.fieldName !== ''
   }
@@ -122,7 +171,7 @@ class FieldPopup extends React.Component {
         <div className={classes.container} onKeyUp={(e) => e.keyCode === 27 ? this.props.close() : null}>
           <div className={classes.head}>
             <div className={classes.title}>
-              Create a new field
+              {this.props.field ? 'Change field' : 'Create a new field'}
             </div>
             <div className={classes.subtitle}>
               You can change this field later
@@ -219,7 +268,7 @@ class FieldPopup extends React.Component {
               className={`${classes.button} ${this._isValid() ? classes.green : classes.disabled}`}
               onClick={::this._submit}
             >
-              Create Field
+              {this.props.field ? 'Update field' : 'Create field'}
             </button>
           </div>
         </div>

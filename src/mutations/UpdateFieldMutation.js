@@ -26,9 +26,13 @@ export default class UpdateFieldMutation extends Relay.Mutation {
   getVariables () {
     return {
       id: this.props.fieldId,
+      fieldName: this.props.fieldName,
+      typeIdentifier: this.props.typeIdentifier,
+      enumValues: this.props.enumValues,
+      isRequired: this.props.isRequired,
+      isList: this.props.isList,
+      isUnique: false,
       defaultValue: this.props.defaultValue,
-      isUnique: this.props.isUnique,
-      description: this.props.description,
     }
   }
 
@@ -36,9 +40,13 @@ export default class UpdateFieldMutation extends Relay.Mutation {
     return {
       field: {
         id: this.props.fieldId,
+        fieldName: this.props.fieldName,
+        typeIdentifier: this.props.typeIdentifier,
+        enumValues: this.props.enumValues,
+        isRequired: this.props.isRequired,
+        isList: this.props.isList,
+        isUnique: false,
         defaultValue: this.props.defaultValue,
-        isUnique: this.props.isUnique,
-        description: this.props.description,
       },
     }
   }

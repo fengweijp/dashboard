@@ -38,7 +38,7 @@ export default class Tether extends React.Component {
         {step &&
           <div
             className={`${classes.tether} ${isBottom ? classes.bottom : classes.top}`}
-            style={{width: this.props.width}}
+            style={{width: this.props.width, zIndex: 9}}
           >
             {step}
           </div>

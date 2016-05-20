@@ -5,6 +5,7 @@ import mapProps from 'map-props'
 import Field from './Field'
 import FieldPopup from './FieldPopup'
 import Icon from 'components/Icon/Icon'
+import Tether from 'components/Tether/Tether'
 import DeleteModelMutation from 'mutations/DeleteModelMutation'
 import classes from './FieldsView.scss'
 
@@ -58,6 +59,12 @@ class FieldsView extends React.Component {
   }
 
   render () {
+    const dataViewOnClick = () => {
+      if (this.context.gettingStartedState.isActive('STEP5_GOTO_DATA_TAB')) {
+        this.context.gettingStartedState.nextStep()
+      }
+    }
+
     return (
       <div className={classes.root}>
         {this.state.showPopup &&
@@ -76,32 +83,52 @@ class FieldsView extends React.Component {
               <span className={classes.itemCount}>{this.props.model.itemCount} items</span>
             </div>
             <div className={classes.titleDescription}>
-              A book is a collection of words. Sometimes they make sense.
             </div>
           </div>
           <div className={classes.headRight}>
-            <div
-              className={`${classes.button} ${classes.green}`}
-              onClick={() => this.setState({ showPopup: true })}
+            <Tether
+              steps={{
+                STEP3_CREATE_TEXT_FIELD: 'Add a new field called "text" and select type "String".' +
+                ' Then click the "Add Field" button.',
+                STEP4_CREATE_COMPLETED_FIELD: 'Good job! Create another one called "complete" with type "Boolean"',
+              }}
+              offsetX={-5}
+              offsetY={5}
+              width={320}
             >
-              <Icon
-                width={16}
-                height={16}
-                src={require('assets/icons/add.svg')}
-              />
-              <span>Create Field</span>
-            </div>
-            <Link
-              to={`/${this.props.params.projectName}/models/${this.props.params.modelName}/data`}
-              className={classes.button}
+              <div
+                className={`${classes.button} ${classes.green}`}
+                onClick={() => this.setState({ showPopup: true })}
               >
-              <Icon
-                width={16}
-                height={16}
-                src={require('assets/icons/data.svg')}
-              />
-              <span>Show Data</span>
-            </Link>
+                <Icon
+                  width={16}
+                  height={16}
+                  src={require('assets/icons/add.svg')}
+                />
+                <span>Create Field</span>
+              </div>
+            </Tether>
+            <Tether
+              steps={{
+                STEP5_GOTO_DATA_TAB: 'Nice, you\'re done setting up the structure. Let\'s add some data.',
+              }}
+              width={200}
+              offsetX={-5}
+              offsetY={5}
+            >
+              <Link
+                to={`/${this.props.params.projectName}/models/${this.props.params.modelName}/data`}
+                className={classes.button}
+                onClick={dataViewOnClick}
+                >
+                <Icon
+                  width={16}
+                  height={16}
+                  src={require('assets/icons/data.svg')}
+                />
+                <span>Show Data</span>
+              </Link>
+            </Tether>
             <div className={classes.button} onClick={::this._toggleMenuDropdown}>
               <Icon
                 width={16}

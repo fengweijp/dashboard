@@ -9,6 +9,7 @@ import { isScalar } from 'utils/graphql'
 import Icon from 'components/Icon/Icon'
 import * as cookiestore from 'utils/cookiestore'
 import Loading from 'react-loading'
+import Tether from 'components/Tether/Tether'
 import HeaderCell from './HeaderCell'
 import Row from './Row'
 import NewRow from './NewRow'
@@ -150,11 +151,11 @@ class DataView extends React.Component {
 
   _reloadData () {
     this.setState({ loading: true })
-    this._loadData()
-    .then((results) => {
-      const items = results.viewer[`all${this.props.model.name}s`].edges.map((edge) => edge.node)
-      this.setState({ items, loading: false })
-    })
+    return this._loadData()
+      .then((results) => {
+        const items = results.viewer[`all${this.props.model.name}s`].edges.map((edge) => edge.node)
+        this.setState({ items, loading: false })
+      })
   }
 
   _updateFilter (value, field) {
@@ -302,21 +303,31 @@ class DataView extends React.Component {
               <span className={classes.itemCount}>{this.props.model.itemCount} items</span>
             </div>
             <div className={classes.titleDescription}>
-              A book is a collection of words. Sometimes they make sense.
             </div>
           </div>
           <div className={classes.headRight}>
-            <div
-              className={`${classes.button} ${classes.green}`}
-              onClick={() => this.setState({ newRowVisible: true })}
+            <Tether
+              steps={{
+                STEP6_ADD_DATA_ITEM_1: `Add your first Todo item to the database.
+                It doesn\'t matter what you type here.`,
+                STEP7_ADD_DATA_ITEM_2: 'Well done. Let\'s add another one.',
+              }}
+              offsetX={-5}
+              offsetY={5}
+              width={290}
             >
-              <Icon
-                width={16}
-                height={16}
-                src={require('assets/icons/add.svg')}
-              />
-              <span>Add item</span>
-            </div>
+              <div
+                className={`${classes.button} ${classes.green}`}
+                onClick={() => this.setState({ newRowVisible: true })}
+              >
+                <Icon
+                  width={16}
+                  height={16}
+                  src={require('assets/icons/add.svg')}
+                />
+                <span>Add item</span>
+              </div>
+            </Tether>
             <Link
               to={`/${this.props.params.projectName}/models/${this.props.params.modelName}/fields`}
               className={classes.button}

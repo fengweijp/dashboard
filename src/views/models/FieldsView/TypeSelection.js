@@ -58,6 +58,7 @@ export default class TypeSelection extends React.Component {
       case 9: // tab
       case 13: // enter
       case 27: // esc
+        e.stopPropagation()
         return this._close()
       case 40: selectedIndex++; break
       case 38: selectedIndex--; break

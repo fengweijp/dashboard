@@ -167,6 +167,7 @@ export default Relay.createContainer(Field, {
             }
           }
         }
+        ${FieldPopup.getFragment('field')}
       }
     `,
   },
