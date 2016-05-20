@@ -36,6 +36,22 @@ class FieldPopup extends React.Component {
     }
   }
 
+  componentWillMount () {
+    window.addEventListener('keydown', this._listenForKeys, false)
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener('keydown', this._listenForKeys, false)
+  }
+
+  _listenForKeys = (e) => {
+    if (e.keyCode === 13 && e.target === document.body) {
+      this._submit()
+    } else if (e.keyCode === 27 && e.target === document.body) {
+      this.props.close()
+    }
+  }
+
   _submit () {
     if (!this._isValid()) {
       return

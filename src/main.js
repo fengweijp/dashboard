@@ -7,6 +7,8 @@ import routes from './routes.js'
 import { updateNetworkLayer } from './utils/relay.js'
 import loadAnalytics from './utils/analytics.js'
 
+import './utils/polyfils.ts'
+
 loadAnalytics()
 
 updateNetworkLayer()

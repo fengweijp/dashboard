@@ -2,9 +2,9 @@ import React, { PropTypes } from 'react'
 import { findDOMNode } from 'react-dom'
 import Loading from 'react-loading'
 import classnames from 'classnames'
+import { isScalar } from 'utils/graphql'
+import { valueToString, isValidValue, stringToValue } from './utils'
 import classes from './Cell.scss'
-import { isScalar, isValidValueForType } from 'utils/graphql'
-import { valueToString, valueToGQL, stringToValue } from './utils'
 
 export default class Cell extends React.Component {
 
@@ -37,67 +37,28 @@ export default class Cell extends React.Component {
     }
   }
 
-  _isValidValue (value) {
-    let { field } = this.props
-    if (value === '' && !field.isRequired) {
-      return true
-    }
-    if (field.isList) {
-      if (value === '[]') {
-        return true
-      }
-      if (value[0] !== '[' || value[value.length-1] !== ']') {
-        return false
-      } else {
-        value = value.substring(1, value.length - 1)
-      }
-    }
-
-    let invalidValue = (field.isList ? value.split(',').map((x) => x.trim()) : [value]).forEach((value) => {
-      if (!isValidValueForType(value, isScalar(field.typeIdentifier) ? field.typeIdentifier : 'GraphQLID')) {
-        invalidValue = true
-        return
-      }
-    })
-
-    return !invalidValue
-  }
-
   _save (inputValue) {
-    const { field } = this.props
-
-    if (!this._isValidValue(inputValue)) {
-      alert(`'${inputValue}' is not a valid value for field ${field.fieldName}`)
+    if (!isValidValue(inputValue, this.props.field)) {
+      alert(`'${inputValue}' is not a valid value for field ${this.props.field.fieldName}`)
       return
     }
 
-    const value = stringToValue(inputValue, field)
+    const value = stringToValue(inputValue, this.props.field)
 
     if (value === this.state.value) {
-      this.setState({
-        editing: false,
-      })
+      this.setState({ editing: false })
       return
     }
 
-    this.setState({
-      loading: true,
-    })
+    this.setState({ loading: true })
 
-    const key = isScalar(field.typeIdentifier) ? field.fieldName : `${field.fieldName}Id`
-    this.props.update(key, valueToGQL(value, field), (success) => {
+    this.props.update(value, this.props.field, (success) => {
       this.setState({
         editing: false,
         loading: false,
         value: success ? value : this.state.value,
       })
     })
-  }
-
-  _listenForEnter (e) {
-    if (e.keyCode === 13) {
-      this._save(e.target.value)
-    }
   }
 
   _renderContent () {
@@ -109,7 +70,7 @@ export default class Cell extends React.Component {
       )
     }
 
-    const valueString = valueToString(this.state.value, this.props.field)
+    const valueString = valueToString(this.state.value, this.props.field, true)
 
     if (this.state.editing) {
       return (
@@ -118,7 +79,7 @@ export default class Cell extends React.Component {
           type='text'
           ref='input'
           defaultValue={valueString}
-          onKeyDown={::this._listenForEnter}
+          onKeyDown={(e) => e.keyCode === 13 ? this._save(e.target.value) : null}
           onBlur={(e) => this._save(e.target.value)}
         />
       )
@@ -130,18 +91,15 @@ export default class Cell extends React.Component {
   }
 
   render () {
-    const { width } = this.props
-    const { value } = this.state
-
     const rootClassnames = classnames({
       [classes.root]: true,
-      [classes.null]: value === null,
+      [classes.null]: this.props.value === null,
       [classes.editing]: this.state.editing,
     })
 
     return (
       <div
-        style={{ width }}
+        style={{ width: this.props.width }}
         className={rootClassnames}
         onDoubleClick={::this._startEditing}
       >

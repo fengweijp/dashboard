@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
 import { Link } from 'react-router'
-import { findDOMNode } from 'react-dom'
 import mapProps from 'map-props'
 import calculateSize from 'calculate-size'
 import { Lokka } from 'lokka'
@@ -9,18 +8,17 @@ import { Transport } from 'lokka-transport-http'
 import { isScalar } from 'utils/graphql'
 import Icon from 'components/Icon/Icon'
 import * as cookiestore from 'utils/cookiestore'
-import Tether from 'components/Tether/Tether'
 import Loading from 'react-loading'
 import HeaderCell from './HeaderCell'
 import Row from './Row'
-import { valueToString } from './utils'
+import NewRow from './NewRow'
+import { valueToString, toGQL } from './utils'
 import classes from './DataView.scss'
 
-function mapToObject ({ array, key, val }) {
-  return array.reduce((o, v) => {
-    o[key(v)] = val(v)
-    return o
-  }, {})
+function compareFields (a, b) {
+  if (a.fieldName === 'id') return -1
+  if (b.fieldName === 'id') return 1
+  return a.fieldName.localeCompare(b.fieldName)
 }
 
 class DataView extends React.Component {
@@ -50,12 +48,14 @@ class DataView extends React.Component {
       menuDropdownVisible: false,
       items: [],
       loading: true,
-      editingFieldId: null,
-      savingFieldId: null,
-      sortBy: { fieldName: 'id', order: 'ASC' },
+      sortBy: {
+        fieldName: 'id',
+        order: 'ASC',
+      },
       filter: {},
       lastCursor: null,
       lastLoadedCursor: null,
+      newRowVisible: false,
     }
   }
 
@@ -97,12 +97,12 @@ class DataView extends React.Component {
       .map((field) => isScalar(field.typeIdentifier)
         ? field.fieldName
         : `${field.fieldName} { id }`)
-      .join(',')
+      .join(' ')
 
     const filterQuery = Object.keys(this.state.filter)
       .filter((fieldName) => this.state.filter[fieldName] !== null)
       .map((fieldName) => `${fieldName}: ${this.state.filter[fieldName]}`)
-      .join(',')
+      .join(' ')
 
     const filter = filterQuery !== '' ? `filter: { ${filterQuery} }` : ''
     const after = afterCursor !== null ? `after: "${afterCursor}"` : ''
@@ -187,13 +187,12 @@ class DataView extends React.Component {
       })
   }
 
-  _updateItem (key, value, callback, itemId) {
-    const inputString = value ? `${key}: ${value}` : ''
+  _updateItem (value, field, callback, itemId) {
     const mutation = `
       {
         update${this.props.model.name}(input: {
           id: "${itemId}"
-          ${inputString}
+          ${toGQL(value, field)}
           clientMutationId: "lokka-${Math.random().toString(36).substring(7)}"
         }) {
           clientMutationId
@@ -207,29 +206,18 @@ class DataView extends React.Component {
         analytics.track('models/data: updated item', {
           project: this.props.params.projectName,
           model: this.props.params.modelName,
-          field: key,
+          field: field.fieldName,
         })
       })
       .catch(() => callback(false))
   }
 
-  _add () {
-    const fieldValues = this.props.fields
-      .filter((field) => field.fieldName !== 'id')
-      .map((field) => {
-        const rawValue = findDOMNode(this.refs[field.id]).value
-        const parsedValue = this._parseValueForField(field, rawValue)
-
-        return {field, rawValue, parsedValue}
-      })
-
-    const invalidFields = fieldValues.filter(({field, rawValue}) => !this._isValidValue(field, rawValue))
-    if (invalidFields.length !== 0) {
-      alert(`'${invalidFields[0].rawValue}' is not a valid value for field ${invalidFields[0].field.fieldName}`)
-      return
-    }
-
-    const inputString = fieldValues.map(({parsedValue}) => parsedValue)
+  _addItem (fieldValues) {
+    const inputString = fieldValues
+      .mapToArray((fieldName, obj) => obj)
+      .filter(({ value }) => value !== null)
+      .map(({ field, value }) => toGQL(value, field))
+      .join(' ')
 
     this.setState({ loading: true })
     const mutation = `
@@ -245,6 +233,8 @@ class DataView extends React.Component {
     this._lokka.mutate(mutation)
       .then(::this._reloadData)
       .then(() => {
+        this.setState({ newRowVisible: false })
+
         analytics.track('models/data: created item', {
           project: this.props.params.projectName,
           model: this.props.params.modelName,
@@ -258,149 +248,6 @@ class DataView extends React.Component {
           this.context.gettingStartedState.nextStep()
         }
       })
-  }
-
-  renderContent () {
-    return (
-      <div onScroll={::this._handleScroll} className={classes.root}>
-        <table className={classes.table}>
-          <thead>
-            <tr>
-              {this.props.fields.map((field) => (
-                <th key={field.id} onClick={() => this._setSortOrder(field)}>
-                  {field.fieldName}
-                  {this.state.sortBy.fieldName === field.fieldName && <Icon
-                    src={require('assets/icons/arrow.svg')}
-                    color='#70738C'
-                    className={this.state.sortBy.order === 'DESC' ? classes.reverse : ''}
-                    />}
-                </th>
-              ))}
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr id='newDataItem' className={classes.addRow}>
-              <td>ID (generated)</td>
-              {this.props.fields.filter((f) => f.fieldName !== 'id').map((field) => {
-                let element
-                switch (field.isList ? 'String' : field.typeIdentifier) {
-                  case 'Boolean':
-                    element = (
-                      <select defaultValue='false' ref={field.id} key={field.id}>
-                        <option value='true'>true</option>
-                        <option value='false'>false</option>
-                      </select>
-                    )
-                    break
-                  case 'Enum':
-                    element = (
-                      <select defaultValue={field.defaultValue} ref={field.id} key={field.id}>
-                        {field.enumValues.map((value) =>
-                          <option key={value} value={value}>{value}</option>
-                        )}
-                      </select>
-                    )
-                    break
-                  default:
-                    element = (
-                      <input
-                        onKeyUp={::this._listenForEnter}
-                        ref={field.id}
-                        placeholder={field.defaultValue !== null ? field.defaultValue : field.fieldName}
-                        type='text'
-                      />
-                    )
-                    if (
-                      this.props.model.name === 'Todo' &&
-                      field.fieldName === 'text' &&
-                      (this.context.gettingStartedState.isActive('STEP6_ADD_DATA_ITEM_1') ||
-                      this.context.gettingStartedState.isActive('STEP7_ADD_DATA_ITEM_2'))) {
-                      element = (
-                        <Tether
-                          steps={{
-                            STEP6_ADD_DATA_ITEM_1: `Add your first Todo item to the database.
-                            It doesn\'t matter what you type here.`,
-                            STEP7_ADD_DATA_ITEM_2: 'Well done. Let\'s add another one.',
-                          }}
-                          offsetX={-10}
-                          offsetY={5}
-                          width={290}
-                        >
-                          {element}
-                        </Tether>
-                      )
-                    }
-                }
-                return (
-                  <td key={field.id}>{element}</td>
-                )
-              })}
-              <td onClick={::this._add} className={classes.addButton}>
-                <span>Add item</span>
-              </td>
-            </tr>
-            {this.state.items.map((item) => (
-              <tr key={item.id}>
-                {this.props.fields.map((field) => {
-                  let str = 'null'
-                  const fieldValue = isScalar(field.typeIdentifier)
-                    ? this.valueOrDefault(item[field.fieldName], field)
-                    : (item[`${field.fieldName}`] !== null ? item[`${field.fieldName}`].id : null)
-                  if (fieldValue !== null) {
-                    str = field.isList
-                    ? `[${field.typeIdentifier === 'String'
-                      ? fieldValue.toString().split(',').reduce((acc, e, i) => acc + `${i !== 0 ? ',': ''} "${e}"`, '')
-                      : fieldValue.toString()}]`
-                    : fieldValue.toString()
-                    if (str.length > 50) {
-                      str = str.substr(0, 47) + '...'
-                    }
-                  }
-                  const fieldId = `${item.id}:${field.id}`
-                  if (this.state.editingFieldId === fieldId) {
-                    return <td key={fieldId}>
-                      {!field.isList && field.typeIdentifier === 'Boolean'
-                      ? <select onChange={(e) => this._updateField(item, field, fieldId, e.target.value)}
-                        onBlur={(e) => this._updateField(item, field, fieldId, e.target.value)}
-                        autoFocus defaultValue={str}>
-                        <option value={'true'}>true</option>
-                        <option value={'false'}>false</option>
-                      </select>
-                      : !field.isList && field.typeIdentifier === 'Enum'
-                      ? <select defaultValue={str}
-                        onChange={(e) => this._updateField(item, field, fieldId, e.target.value)}
-                        onBlur={(e) => this._updateField(item, field, fieldId, e.target.value)}>
-                        {field.enumValues.map((value) =>
-                          <option key={value} value={value}>{value}</option>
-                        )}
-                      </select>
-                      : <input autoFocus type='text' defaultValue={str}
-                        onKeyUp={(e) => this._updateFieldOnEnter(e, item, field, fieldId, e.target.value)}
-                        onBlur={(e) => this._updateField(item, field, fieldId, e.target.value)} />}
-                    </td>
-                  } else {
-                    return <td className={classes.padding}
-                      onDoubleClick={() => this._startEditing(field, fieldId)} key={fieldId}>{str}</td>
-                  }
-                })}
-                <td>
-                  <span onClick={() => this._deleteItem(item)}>
-                    <Icon src={require('assets/icons/delete.svg')} />
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {this.state.loading && (
-          <div style={{width: '100%', height: 50, marginTop: -70, display: 'flex',
-            alignItems: 'center', justifyContent: 'center'}}>
-            <Loading type='bubbles' delay={0} color='#8989B1' />
-          </div>
-        )}
-      </div>
-    )
   }
 
   _mapToCells = (item, columnWidths) => {
@@ -423,10 +270,9 @@ class DataView extends React.Component {
       fontSize: '12px',
     }
 
-    return mapToObject({
-      array: this.props.fields,
-      key: (field) => field.fieldName,
-      val: (field) => {
+    return this.props.fields.mapToObject(
+      (field) => field.fieldName,
+      (field) => {
         const cellWidths = this.state.items
           .map((item) => item[field.fieldName])
           .map((value) => valueToString(value, field))
@@ -439,8 +285,8 @@ class DataView extends React.Component {
         const upperLimit = 400
 
         return maxWidth > upperLimit ? upperLimit : (maxWidth < lowerLimit ? lowerLimit : maxWidth)
-      },
-    })
+      }
+    )
   }
 
   render () {
@@ -462,7 +308,7 @@ class DataView extends React.Component {
           <div className={classes.headRight}>
             <div
               className={`${classes.button} ${classes.green}`}
-              onClick={() => this.setState({ showPopup: true })}
+              onClick={() => this.setState({ newRowVisible: true })}
             >
               <Icon
                 width={16}
@@ -515,11 +361,20 @@ class DataView extends React.Component {
                 />
               ))}
             </div>
+            {this.state.newRowVisible &&
+              <NewRow
+                fields={this.props.fields}
+                columnWidths={columnWidths}
+                add={(data) => this._addItem(data)}
+              />
+            }
             <div className={classes.tableBody} onScroll={::this._handleScroll}>
-              {this.state.items.map((item, i) => (
+              {this.state.items.map((item) => (
                 <Row
-                  key={i}
-                  cells={this._mapToCells(item, columnWidths)}
+                  key={item.id}
+                  fields={this.props.fields}
+                  columnWidths={columnWidths}
+                  item={item}
                   update={(key, value, callback) => this._updateItem(key, value, callback, item.id)}
                 />
               ))}
@@ -537,7 +392,7 @@ const MappedDataView = mapProps({
     props.viewer.model.fields.edges
       .map((edge) => edge.node)
       .filter((field) => isScalar(field.typeIdentifier) || !field.isList)
-      .sort((a, b) => a.fieldName.localeCompare(b.fieldName))
+      .sort(compareFields)
   ),
   model: (props) => props.viewer.model,
   projectId: (props) => props.viewer.project.id,
@@ -561,6 +416,7 @@ export default Relay.createContainer(MappedDataView, {
                 fieldName
                 typeIdentifier
                 isList
+                isRequired
                 enumValues
                 defaultValue
               }

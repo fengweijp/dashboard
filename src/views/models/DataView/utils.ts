@@ -1,6 +1,14 @@
 import { isScalar, isValidValueForType } from '../../../utils/graphql'
 
-function valueOrDefault (value, field) {
+interface Field {
+  fieldName: string
+  isRequired: boolean
+  isList: boolean
+  typeIdentifier: string
+  defaultValue?: string
+}
+
+function valueOrDefault (value: any, field: Field): any {
   if (value !== null && value !== undefined) {
     return value
   }
@@ -10,13 +18,13 @@ function valueOrDefault (value, field) {
   return null
 }
 
-export function valueToString (value: any, field: any): string {
+export function valueToString (value: any, field: Field, returnNull: boolean): string {
   const fieldValue = isScalar(field.typeIdentifier)
     ? valueOrDefault(value, field)
     : (value !== null ? value.id : null)
 
   if (fieldValue === null) {
-    return 'null'
+    return returnNull ? 'null' : ''
   }
 
   if (field.isList) {
@@ -30,7 +38,7 @@ export function valueToString (value: any, field: any): string {
   }
 }
 
-export function valueToGQL (value, field) {
+function valueToGQL (value: any, field: Field): string {
   if (field.typeIdentifier === 'Enum') {
     return value
   } else {
@@ -38,21 +46,55 @@ export function valueToGQL (value, field) {
   }
 }
 
-export function stringToValue (rawValue: string, field: any) {
+export function toGQL (value: any, field: Field): string {
+  const key = isScalar(field.typeIdentifier) ? field.fieldName : `${field.fieldName}Id`
+  return value ? `${key}: ${valueToGQL(value, field)}` : ''
+}
+
+export function stringToValue (rawValue: string, field: Field): any {
+  const { isList, isRequired, typeIdentifier } = field
   if (rawValue === '') {
     // todo: this should set to null but currently null is not supported by our api
-    return field.isRequired ? '' : null
+    return isRequired && typeIdentifier === 'String' ? '' : null
   }
 
-  if (field.isList) {
+  if (isList) {
     return JSON.parse(rawValue)
   } else {
-    switch (field.typeIdentifier) {
+    switch (typeIdentifier) {
       case 'Int': return parseInt(rawValue, 10)
       case 'Float': return parseFloat(rawValue)
       case 'Boolean': return rawValue.toLowerCase() === 'true'
       default: return rawValue
     }
   }
+}
+
+export function isValidValue (value: string, field: Field): boolean {
+  if (value === '' && !field.isRequired) {
+    return true
+  }
+  if (field.isList) {
+    if (value === '[]') {
+      return true
+    }
+    if (value[0] !== '[' || value[value.length-1] !== ']') {
+      return false
+    } else {
+      value = value.substring(1, value.length - 1)
+    }
+  }
+
+  let invalidValue = false
+  let values = field.isList ? value.split(',').map((x) => x.trim()) : [value]
+
+  values.forEach((value) => {
+    if (!isValidValueForType(value, isScalar(field.typeIdentifier) ? field.typeIdentifier : 'GraphQLID')) {
+      invalidValue = true
+      return
+    }
+  })
+
+  return !invalidValue
 }
 
