@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "target": "es2015",
+    "moduleResolution": "node"
+  },
+  "exclude": [
+    "typings",
+    "node_modules",
+    "dist"
+  ]
+}

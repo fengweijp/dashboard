@@ -9,6 +9,22 @@
   "react-relay-schema": {
     "env": "DASHBOARD_SCHEMA_ENDPOINT"
   },
+  "jest": {
+    "scriptPreprocessor": "<rootDir>/preprocessor.js",
+    "testFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "unmockedModulePathPatterns": [
+      "<rootDir>/node_modules/react/",
+      "<rootDir>/node_modules/react-dom/",
+      "<rootDir>/node_modules/react-addons-test-utils/"
+    ]
+  },
   "dependencies": {
     "classnames": "^2.2.5",
     "graphiql": "^0.7.1",
@@ -65,6 +81,9 @@
     "sass-loader": "^3.2.0",
     "style-loader": "^0.13.1",
     "svg-inline-loader": "^0.4.1",
+    "ts-loader": "^0.8.2",
+    "typescript": "^1.9.0-dev.20160520-1.0",
+    "typings": "^1.0.4",
     "url-loader": "^0.5.7",
     "webpack": "1.13.0",
     "webpack-dev-server": "^1.14.1"

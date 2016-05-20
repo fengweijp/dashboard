@@ -22,6 +22,10 @@ module.exports = {
       loader: 'style!css?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!sass?sourceMap',
       exclude: /node_modules/,
     }, {
+      test: /\.ts$/,
+      loader: 'babel!ts',
+      exclude: /node_modules/,
+    }, {
       test: /\.js$/,
       loader: 'babel',
       exclude: /node_modules/,
@@ -60,6 +64,6 @@ module.exports = {
   ],
   resolve: {
     root: [path.resolve('./src'), path.resolve('node_modules')],
-    extensions: ['', '.js'],
+    extensions: ['', '.js', '.ts'],
   },
 }

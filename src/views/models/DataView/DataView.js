@@ -13,7 +13,7 @@ import Tether from 'components/Tether/Tether'
 import Loading from 'react-loading'
 import HeaderCell from './HeaderCell'
 import Row from './Row'
-import { valueToString } from './Cell'
+import { valueToString } from './utils'
 import classes from './DataView.scss'
 
 function mapToObject ({ array, key, val }) {

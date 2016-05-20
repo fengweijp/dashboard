@@ -23,6 +23,10 @@ module.exports = {
       test: /\.scss/,
       loader: 'style!css?modules&importLoaders=1!postcss!sass?sourceMap',
     }, {
+      test: /\.ts$/,
+      loader: 'babel!ts',
+      exclude: /node_modules/,
+    }, {
       test: /\.js$/,
       loader: 'babel',
       exclude: /node_modules/,
@@ -72,6 +76,6 @@ module.exports = {
   ],
   resolve: {
     root: [path.resolve('./src'), path.resolve('node_modules')],
-    extensions: ['', '.js'],
+    extensions: ['', '.js', '.ts'],
   }
 }
