@@ -4,12 +4,13 @@
     "build": "rm -rf dist && NODE_ENV=production webpack --config webpack.config.build.js && cp -r static/* dist",
     "lint": "eslint src",
     "start": "webpack-dev-server -d --hot --inline --progress --colors --history-api-fallback --host 0.0.0.0 --port 4000",
-    "test": "npm run lint"
+    "test": "npm run lint && jest"
   },
   "react-relay-schema": {
     "env": "DASHBOARD_SCHEMA_ENDPOINT"
   },
   "dependencies": {
+    "classnames": "^2.2.5",
     "graphiql": "^0.7.1",
     "js-cookie": "^2.1.1",
     "lokka": "^1.7.0",
@@ -33,6 +34,7 @@
   "devDependencies": {
     "babel-cli": "^6.8.0",
     "babel-eslint": "^6.0.4",
+    "babel-jest": "^12.0.2",
     "babel-loader": "^6.2.4",
     "babel-plugin-react-relay": "^0.8.1",
     "babel-plugin-transform-react-constant-elements": "^6.8.0",
@@ -57,6 +59,7 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
     "html-webpack-plugin": "^2.16.1",
+    "jest-cli": "^12.0.2",
     "node-sass": "^3.7.0",
     "postcss-loader": "^0.9.1",
     "sass-loader": "^3.2.0",

@@ -13,8 +13,8 @@ import ModelRedirectView from 'views/models/ModelRedirectView'
 // import DataTab from 'views/ModelView/DataTab'
 import PlaygroundView from 'views/playground/PlaygroundView/PlaygroundView'
 import GettingStartedView from 'views/GettingStartedView/GettingStartedView'
-import AccountView from 'views/AccountView/AccountView'
-import SettingsTab from 'views/AccountView/SettingsTab'
+import AccountView from 'views/account/AccountView/AccountView'
+import SettingsTab from 'views/account/AccountView/SettingsTab'
 
 // TODO https://github.com/relay-tools/react-router-relay/issues/156
 class RedirectOnMount extends React.Component {

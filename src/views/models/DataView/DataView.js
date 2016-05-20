@@ -6,14 +6,14 @@ import mapProps from 'map-props'
 import calculateSize from 'calculate-size'
 import { Lokka } from 'lokka'
 import { Transport } from 'lokka-transport-http'
-import { isScalar, isValidValueForType } from 'utils/graphql'
+import { isScalar } from 'utils/graphql'
 import Icon from 'components/Icon/Icon'
 import * as cookiestore from 'utils/cookiestore'
 import Tether from 'components/Tether/Tether'
 import Loading from 'react-loading'
 import HeaderCell from './HeaderCell'
 import Row from './Row'
-import Cell from './Cell'
+import { valueToString } from './Cell'
 import classes from './DataView.scss'
 
 function mapToObject ({ array, key, val }) {
@@ -187,79 +187,13 @@ class DataView extends React.Component {
       })
   }
 
-  _startEditing (field, fieldId) {
-    if (field.fieldName !== 'id' && this.state.editingFieldId === null) {
-      this.setState({editingFieldId: fieldId})
-    }
-  }
-
-  _isValidValue (field, value) {
-    if (value === '' && !field.isRequired) {
-      return true
-    }
-    if (field.isList) {
-      if (value === '[]') {
-        return true
-      }
-      if (value[0] !== '[' || value[value.length-1] !== ']') {
-        return false
-      } else {
-        value = value.substring(1, value.length - 1)
-      }
-    }
-
-    let invalidValue = false;
-    (field.isList ? value.split(',').map((x) => x.trim()) : [value]).forEach((value) => {
-      if (!isValidValueForType(value, isScalar(field.typeIdentifier) ? field.typeIdentifier : 'GraphQLID')) {
-        invalidValue = true
-        return
-      }
-    })
-
-    return !invalidValue
-  }
-
-  _updateFieldOnEnter (e, item, field, fieldId, value) {
-    if (e.keyCode === 13) {
-      this._updateField(item, field, fieldId, value)
-    }
-  }
-
-  _updateField (item, field, fieldId, value) {
-    if (value === '') {
-      // todo: this should set to null but currently null is not supported by our api
-      this.setState({editingFieldId: null, savingFieldId: null})
-      return
-    }
-
-    const newDisplayValue = isScalar(field.typeIdentifier)
-    ? (field.isList
-      ? value.substring(1, value.length-1).split(',')
-        .map((x) => field.typeIdentifier === 'String' ? x.trim().substring(1, x.trim().length-1) : x)
-      : value)
-    : {id: value}
-
-    const fieldHasChanged =
-      (item[field.fieldName] == null ? item[field.fieldName] : item[field.fieldName].toString()) !==
-      newDisplayValue.toString()
-
-    if (!fieldHasChanged) {
-      this.setState({editingFieldId: null, savingFieldId: null})
-      return
-    }
-
-    if (!this._isValidValue(field, value)) {
-      alert(`'${value}' is not a valid value for field ${field.fieldName}`)
-      return
-    }
-
-    this.setState({ savingFieldId: fieldId })
-    const inputString = this._parseValueForField(field, value)
+  _updateItem (key, value, callback, itemId) {
+    const inputString = value ? `${key}: ${value}` : ''
     const mutation = `
       {
         update${this.props.model.name}(input: {
-          id: "${item.id}",
-          ${inputString},
+          id: "${itemId}"
+          ${inputString}
           clientMutationId: "lokka-${Math.random().toString(36).substring(7)}"
         }) {
           clientMutationId
@@ -268,43 +202,15 @@ class DataView extends React.Component {
     `
     this._lokka.mutate(mutation)
       .then(() => {
-        item[field.fieldName] = newDisplayValue
-        this.setState({
-          editingFieldId: null,
-          savingFieldId: null,
-        })
+        callback(true)
 
         analytics.track('models/data: updated item', {
           project: this.props.params.projectName,
           model: this.props.params.modelName,
-          field: field.fieldName,
+          field: key,
         })
       })
-  }
-
-  _parseValueForField (field, rawValue) {
-    if (rawValue === '') {
-      // todo: this should set to null but currently null is not supported by our api
-      return ''
-    }
-    const key = isScalar(field.typeIdentifier) ? field.fieldName : `${field.fieldName}Id`
-
-    const parseSingle = (rawValue) => {
-      switch (field.typeIdentifier) {
-        case 'String': return `"${rawValue}"`
-        case 'Int': return parseInt(rawValue, 10)
-        case 'Float': return parseFloat(rawValue)
-        case 'Boolean': return `${rawValue === 'true'}`
-        case 'Enum' : return rawValue
-        default: return `"${rawValue}"`
-      }
-    }
-
-    if (field.isList) {
-      return `${key}: ${rawValue}`
-    } else {
-      return `${key}: ${parseSingle(rawValue)}`
-    }
+      .catch(() => callback(false))
   }
 
   _add () {
@@ -352,34 +258,6 @@ class DataView extends React.Component {
           this.context.gettingStartedState.nextStep()
         }
       })
-  }
-
-  _filterOnEnter (e) {
-    if (e.keyCode === 13) {
-      this.setState({filter: e.target.value, items: [], loading: true}, () => this._reloadData())
-    }
-  }
-
-  _filterOnBlur (e) {
-    if (this.state.filter !== e.target.value) {
-      this.setState({filter: e.target.value, items: [], loading: true}, () => this._reloadData())
-    }
-  }
-
-  _listenForEnter (e) {
-    if (e.keyCode === 13) {
-      this._add()
-    }
-  }
-
-  valueOrDefault (value, field) {
-    if (value !== null && value !== undefined) {
-      return value
-    }
-    if (field.defaultValue !== undefined) {
-      return field.defaultValue
-    }
-    return null
   }
 
   renderContent () {
@@ -551,7 +429,7 @@ class DataView extends React.Component {
       val: (field) => {
         const cellWidths = this.state.items
           .map((item) => item[field.fieldName])
-          .map((value) => Cell.valueToString(value, field))
+          .map((value) => valueToString(value, field))
           .map((str) => calculateSize(str, cellFontOptions).width + 40)
 
         const headerWidth = calculateSize(`${field.fieldName} ${field.typeIdentifier}`, headerFontOptions).width + 90
@@ -638,9 +516,11 @@ class DataView extends React.Component {
               ))}
             </div>
             <div className={classes.tableBody} onScroll={::this._handleScroll}>
-              {this.state.items.map((item) => (
+              {this.state.items.map((item, i) => (
                 <Row
+                  key={i}
                   cells={this._mapToCells(item, columnWidths)}
+                  update={(key, value, callback) => this._updateItem(key, value, callback, item.id)}
                 />
               ))}
             </div>

@@ -12,6 +12,7 @@ export default class Row extends React.Component {
         width: PropTypes.number.isRequired,
       })
     ).isRequired,
+    update: PropTypes.func.isRequired,
   }
 
   render () {
@@ -19,9 +20,11 @@ export default class Row extends React.Component {
       <div className={classes.root}>
         {this.props.cells.map(({ field, value, width }) => (
           <Cell
+            key={field.id}
             field={field}
             value={value}
             width={width}
+            update={this.props.update}
           />
         ))}
       </div>

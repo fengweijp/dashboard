@@ -1,21 +1,46 @@
 @import '~styles/variables';
+@import '~styles/mixins';
 
 .root {
-  padding: 15px 20px;
-  box-shadow:
-    1px 0 0 0 $grey2,
-    0 1px 0 0 $grey2,
-    1px 1px 0 0 $grey2, /* Just to fix the corner */
-    1px 0 0 0 $grey2 inset,
-    0 1px 0 0 $grey2 inset;
+  @include cellborder($grey2);
+  z-index: 9;
 
   font-size: 12px;
   color: $grey5;
   overflow: hidden;
-  text-overflow: ellipsis;
+
+  span {
+    text-overflow: ellipsis;
+    width: 100%;
+    overflow: hidden;
+    padding: 15px 20px;
+    display: inline-block;
+  }
+
+  input {
+    width: 100%;
+    height: 100%;
+    padding: 15px 20px;
+    background: none;
+    border: 0;
+  }
 
   &.null {
-    color: $grey3;
-    font-style: italic;
+    span {
+      color: $grey3;
+      font-style: italic;
+    }
+  }
+
+  &.editing {
+    @include cellborder($accent-blue);
+    z-index: 10;
+  }
+
+  .loading {
+    transform: scale(0.5);
+    height: 32px;
+    display: flex;
+    justify-content: center;
   }
 }
