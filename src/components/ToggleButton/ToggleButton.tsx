@@ -1,19 +1,19 @@
 import * as React from 'react'
-const classes = require('./ToggleButton.scss')
+const classes: any = require('./ToggleButton.scss')
 
 export enum ToggleSide {
   Left,
   Right,
 }
 
-interface Props extends React.Props<React.DOMComponent<any>> {
+interface Props {
   side: ToggleSide
   leftText: string
   rightText: string
   onUpdateSide: (ToggleSide) => void
 }
 
-class ToggleButton extends React.Component<Props> {
+export default class ToggleButton extends React.Component<Props, {}> {
   render() {
     return (
       <div className={classes.root}>

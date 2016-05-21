@@ -12,14 +12,18 @@ module.exports = {
   },
   module: {
     preLoaders: [{
-      test: /\.json/, // TODO check if still needed
-      loader: 'json',
-    }, {
       test: /\.js$/,
       loader: 'eslint',
       exclude: /node_modules/,
+    }, {
+      test: /\.ts(x?)$/,
+      loader: 'tslint',
+      exclude: /node_modules/,
     }],
     loaders: [{
+      test: /\.json/, // TODO check if still needed
+      loader: 'json',
+    }, {
       test: /\.css/,
       loader: 'style!css',
     }, {

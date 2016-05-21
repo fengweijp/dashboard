@@ -1,38 +1,40 @@
-var hasOwn = {}.hasOwnProperty;
+const hasOwn = {}.hasOwnProperty
 
-declare type ClassValue = string | number | ClassDictionary | ClassArray;
+declare type ClassValue = string | number | ClassDictionary | ClassArray
 
 interface ClassDictionary {
-	[id: string]: boolean;
+  [id: string]: boolean
 }
 
 interface ClassArray extends Array<ClassValue> { }
 
 interface ClassNamesFn {
-	(...classes: ClassValue[]): string;
+  (...classes: ClassValue[]): string
 }
 
 export function classnames (..._classes: ClassValue[]): string {
-  var classes: ClassValue[] = [];
+  let classes: ClassValue[] = []
 
-  for (var i = 0; i < arguments.length; i++) {
-    var arg = arguments[i];
-    if (!arg) continue;
+  for (let i = 0; i < arguments.length; i++) {
+    let arg = arguments[i]
+    if (!arg) {
+      continue
+    }
 
-    var argType = typeof arg;
+    const argType = typeof arg
 
     if (argType === 'string' || argType === 'number') {
-      classes.push(arg);
+      classes.push(arg)
     } else if (Array.isArray(arg)) {
-      classes.push(classNames.apply(null, arg));
+      classes.push(classnames.apply(null, arg))
     } else if (argType === 'object') {
-      for (var key in arg) {
+      for (let key in arg) {
         if (hasOwn.call(arg, key) && arg[key]) {
-          classes.push(key);
+          classes.push(key)
         }
       }
     }
   }
 
-  return classes.join(' ');
+  return classes.join(' ')
 }

@@ -6,9 +6,9 @@ import { classnames } from '../../../utils/classnames'
 import { isScalar } from '../../../utils/graphql'
 import { valueToString, isValidValue, stringToValue } from './utils'
 import { Field } from '../../../types/types'
+import ToggleButton from '../../../components/ToggleButton/ToggleButton'
+import { ToggleSide } from '../../../components/ToggleButton/ToggleButton'
 const classes: any = require('./Cell.scss')
-
-console.log(classnames);
 
 type UpdateCallback = (boolean) => void
 
@@ -117,15 +117,12 @@ export default class Cell extends React.Component<Props, State> {
           )
         case 'Boolean':
           return (
-            <select
-              autoFocus
-              defaultValue={valueString}
-              onBlur={(e) => this._save((e.target as HTMLInputElement).value)}
-              onKeyDown={(e) => e.keyCode === 13 ? this._save((e.target as HTMLInputElement).value) : null}
-            >
-              <option>true</option>
-              <option>false</option>
-            </select>
+            <ToggleButton
+              leftText='false'
+              rightText='true'
+              side={valueString === 'true' ? ToggleSide.Right : ToggleSide.Right}
+              onUpdateSide={(side) => null}
+            />
           )
         case 'Enum':
           return (

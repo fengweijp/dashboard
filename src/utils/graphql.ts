@@ -4,11 +4,11 @@ export function isScalar (typeIdentifier: string): boolean {
   const scalarTypes = [
     'String',
     'Int',
-    'Float', 
-    'Boolean', 
-    'GraphQLID', 
-    'Enum', 
-    'Password', 
+    'Float',
+    'Boolean',
+    'GraphQLID',
+    'Enum',
+    'Password',
     'DateTime',
   ]
   return scalarTypes.indexOf(typeIdentifier) !== -1
@@ -29,7 +29,7 @@ export function parseValue (value: string, typeIdentifier: string): any {
     String: () => value,
     Boolean: () =>
     (value === 'true' || value === 'True') ? true : (value === 'false' || value === 'False') ? false : null,
-    Int: () => isNaN(parseInt(value)) ? null : parseInt(value),
+    Int: () => isNaN(parseInt(value, 10)) ? null : parseInt(value, 10),
     Float: () => isNaN(parseFloat(value)) ? null : parseFloat(value),
     GraphQLID: () => value,
     Password: () => value,

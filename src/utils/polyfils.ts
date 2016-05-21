@@ -1,16 +1,19 @@
 interface Array<T> {
-   mapToObject<U>(keyFn: (T) => string, valFn: (T) => U): Object;
+  mapToObject<U>(keyFn: (T) => string, valFn: (T) => U): Object
 }
 
 Array.prototype.mapToObject = function (keyFn, valFn) {
-  return this.reduce((o, v) => {
-    o[keyFn(v)] = valFn(v)
-    return o
-  }, {})
+  return this.reduce(
+    (o, v) => {
+      o[keyFn(v)] = valFn(v)
+      return o
+    },
+    {}
+  )
 }
 
 interface Object {
-  mapToArray<U, V>(fn: (string, U) => V): [V];
+  mapToArray<U, V>(fn: (str: string, U) => V): [V]
 }
 
 Object.defineProperty(Object.prototype, 'mapToArray', {

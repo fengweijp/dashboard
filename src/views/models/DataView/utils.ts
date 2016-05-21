@@ -75,7 +75,7 @@ export function isValidValue (value: string, field: Field): boolean {
     if (value === '[]') {
       return true
     }
-    if (value[0] !== '[' || value[value.length-1] !== ']') {
+    if (value[0] !== '[' || value[value.length - 1] !== ']') {
       return false
     } else {
       value = value.substring(1, value.length - 1)
