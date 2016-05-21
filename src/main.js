@@ -3,9 +3,9 @@ import Relay from 'react-relay'
 import ReactDOM from 'react-dom'
 import useRelay from 'react-router-relay'
 import { Router, browserHistory, applyRouterMiddleware } from 'react-router'
-import routes from './routes.js'
-import { updateNetworkLayer } from './utils/relay.js'
-import loadAnalytics from './utils/analytics.js'
+import routes from './routes'
+import { updateNetworkLayer } from './utils/relay'
+import loadAnalytics from './utils/analytics'
 
 import './utils/polyfils.ts'
 

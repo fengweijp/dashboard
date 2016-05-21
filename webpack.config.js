@@ -4,7 +4,7 @@ const cssnano = require('cssnano')
 const path = require('path')
 
 module.exports = {
-  entry: './src/main.js',
+  entry: './src/main',
   output: {
     publicPath: '/',
   },
@@ -15,6 +15,9 @@ module.exports = {
       exclude: /node_modules/,
     }],
     loaders: [{
+      test: /\.json/, // TODO check if still needed
+      loader: 'json',
+    }, {
       test: /\.css/,
       loader: 'style!css',
     }, {
@@ -22,7 +25,7 @@ module.exports = {
       loader: 'style!css?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!sass?sourceMap',
       exclude: /node_modules/,
     }, {
-      test: /\.ts$/,
+      test: /\.ts(x?)$/,
       loader: 'babel!ts',
       exclude: /node_modules/,
     }, {
@@ -64,6 +67,6 @@ module.exports = {
   ],
   resolve: {
     root: [path.resolve('./src'), path.resolve('node_modules')],
-    extensions: ['', '.js', '.ts'],
+    extensions: ['', '.js', '.ts', '.tsx'],
   },
 }

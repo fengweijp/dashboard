@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react'
 import classnames from 'classnames'
-import { isScalar } from 'utils/graphql'
 import { valueToString, stringToValue } from './utils'
 import classes from './Cell.scss'
 
@@ -59,24 +58,42 @@ export default class NewCell extends React.Component {
             onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : null}
           />
         )
+      case 'Boolean':
+        return (
+          <select
+            autoFocus={this.props.index === 1}
+            defaultValue={valueString}
+            onChange={(e) => this._updateValue(e.target.value)}
+            onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : null}
+          >
+            <option>true</option>
+            <option>false</option>
+          </select>
+        )
+      case 'Enum':
+        return (
+          <select
+            autoFocus={this.props.index === 1}
+            defaultValue={valueString}
+            onChange={(e) => this._updateValue(e.target.value)}
+            onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : null}
+          >
+            {this.props.field.enumValues.map((enumValue) => (
+              <option key={enumValue}>{enumValue}</option>
+            ))}
+          </select>
+        )
+      default:
+        return (
+          <input
+            autoFocus={this.props.index === 1}
+            type='text'
+            defaultValue={valueString}
+            onChange={(e) => this._updateValue(e.target.value)}
+            onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : null}
+          />
+        )
     }
-
-    if (isScalar(this.props.field.typeIdentifier)) {
-      return (
-        <input
-          autoFocus={this.props.index === 1}
-          type='text'
-          ref='input'
-          defaultValue={valueString}
-          onChange={(e) => this._updateValue(e.target.value)}
-          onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : null}
-        />
-      )
-    }
-
-    return (
-      <span>nope</span>
-    )
   }
 
   render () {

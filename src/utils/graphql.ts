@@ -1,8 +1,17 @@
 import * as moment from 'moment'
 
 export function isScalar (typeIdentifier: string): boolean {
-  const scalarTypes = ['String', 'Int', 'Float', 'Boolean', 'GraphQLID', 'Enum', 'Password', 'DateTime']
-  return scalarTypes.indexOf(typeIdentifier) > -1
+  const scalarTypes = [
+    'String',
+    'Int',
+    'Float', 
+    'Boolean', 
+    'GraphQLID', 
+    'Enum', 
+    'Password', 
+    'DateTime',
+  ]
+  return scalarTypes.indexOf(typeIdentifier) !== -1
 }
 
 export function isValidName (name: string): boolean {

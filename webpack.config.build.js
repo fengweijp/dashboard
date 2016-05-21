@@ -4,7 +4,7 @@ const cssnano = require('cssnano')
 const path = require('path')
 
 module.exports = {
-  entry: './src/main.js',
+  entry: './src/main',
   output: {
     path: './dist',
     filename: 'bundle.[hash].js',
@@ -12,6 +12,9 @@ module.exports = {
   },
   module: {
     preLoaders: [{
+      test: /\.json/, // TODO check if still needed
+      loader: 'json',
+    }, {
       test: /\.js$/,
       loader: 'eslint',
       exclude: /node_modules/,
@@ -23,7 +26,7 @@ module.exports = {
       test: /\.scss/,
       loader: 'style!css?modules&importLoaders=1!postcss!sass?sourceMap',
     }, {
-      test: /\.ts$/,
+      test: /\.ts(x?)$/,
       loader: 'babel!ts',
       exclude: /node_modules/,
     }, {
@@ -76,6 +79,6 @@ module.exports = {
   ],
   resolve: {
     root: [path.resolve('./src'), path.resolve('node_modules')],
-    extensions: ['', '.js', '.ts'],
+    extensions: ['', '.js', '.ts', '.tsx'],
   }
 }

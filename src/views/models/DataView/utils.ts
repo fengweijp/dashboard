@@ -1,12 +1,5 @@
 import { isScalar, isValidValueForType } from '../../../utils/graphql'
-
-interface Field {
-  fieldName: string
-  isRequired: boolean
-  isList: boolean
-  typeIdentifier: string
-  defaultValue?: string
-}
+import { Field } from '../../../types/types'
 
 function valueOrDefault (value: any, field: Field): any {
   if (value !== null && value !== undefined) {
@@ -56,6 +49,10 @@ export function stringToValue (rawValue: string, field: Field): any {
   if (rawValue === '') {
     // todo: this should set to null but currently null is not supported by our api
     return isRequired && typeIdentifier === 'String' ? '' : null
+  }
+
+  if (!isList && !isScalar(typeIdentifier)) {
+    return { id: rawValue }
   }
 
   if (isList) {

@@ -1,12 +1,23 @@
 {
   "compilerOptions": {
+    "jsx": "preserve",
+    "pretty": true,
     "sourceMap": true,
     "target": "es2015",
     "moduleResolution": "node"
   },
   "exclude": [
-    "typings",
+    "typings/globals",
+    "typings/index.d.ts",
     "node_modules",
     "dist"
+  ],
+  "files": [
+    "typings/index.d.ts",
+    "custom.d.ts",
+    "src/utils/graphql.ts",
+    "src/types/types.ts",
+    "src/views/models/DataView/utils.ts",
+    "src/views/models/DataView/Cell.tsx"
   ]
 }
