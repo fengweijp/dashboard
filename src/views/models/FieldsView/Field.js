@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
+import Loading from '../../../components/Loading/Loading'
 import FieldPopup from './FieldPopup'
 import UpdateFieldDescriptionMutation from 'mutations/UpdateFieldDescriptionMutation'
 import DeleteFieldMutation from 'mutations/DeleteFieldMutation'
@@ -17,6 +18,7 @@ class Field extends React.Component {
 
   state = {
     editDescription: false,
+    editDescriptionPending: false,
     showPopup: false,
   }
 
@@ -48,23 +50,72 @@ class Field extends React.Component {
       return
     }
 
+    this.setState({ editDescriptionPending: true })
+
     Relay.Store.commitUpdate(new UpdateFieldDescriptionMutation({
       fieldId: this.props.field.id,
       description,
     }), {
       onFailure: () => {
-        this.setState({ editDescription: false })
+        this.setState({
+          editDescription: false,
+          editDescriptionPending: false,
+        })
       },
       onSuccess: () => {
         analytics.track('models/fields: edited description')
 
-        this.setState({ editDescription: false })
+        this.setState({
+          editDescription: false,
+          editDescriptionPending: false,
+        })
       },
     })
   }
 
   _showPopup () {
     this.setState({ showPopup: true })
+  }
+
+  _renderDescription () {
+    if (this.state.editDescriptionPending) {
+      return (
+        <Loading color='#B9B9C8' />
+      )
+    }
+
+    if (this.state.editDescription) {
+      return (
+        <input
+          autoFocus
+          type='text'
+          placeholder='Description'
+          defaultValue={this.props.field.description}
+          onBlur={::this._saveDescription}
+          onKeyDown={(e) => e.keyCode === 13 ? e.target.blur() : null}
+        />
+      )
+    }
+
+    if (!this.props.field.description) {
+      return (
+        <span
+          className={classes.addDescription}
+          onClick={() => this.setState({ editDescription: true })}
+        >
+          Add description
+        </span>
+      )
+    }
+
+    return (
+      <span
+        className={classes.descriptionText}
+        onClick={() => this.setState({ editDescription: true })}
+      >
+        {this.props.field.description}
+      </span>
+    )
   }
 
   render () {
@@ -94,32 +145,7 @@ class Field extends React.Component {
           <span>{type}</span>
         </div>
         <div className={classes.description}>
-          {this.state.editDescription &&
-            <input
-              autoFocus
-              type='text'
-              placeholder='Description'
-              defaultValue={field.description}
-              onBlur={::this._saveDescription}
-              onKeyDown={(e) => e.keyCode === 13 ? e.target.blur() : null}
-            />
-          }
-          {!this.state.editDescription && field.description &&
-            <span
-              className={classes.descriptionText}
-              onClick={() => this.setState({ editDescription: true })}
-            >
-              {field.description}
-            </span>
-          }
-          {!this.state.editDescription && !field.description &&
-            <span
-              className={classes.addDescription}
-              onClick={() => this.setState({ editDescription: true })}
-            >
-              Add description
-            </span>
-          }
+          {this._renderDescription()}
         </div>
         <div className={classes.constraints}></div>
         <div className={classes.permissions}>
