@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
 import TypeSelection from './TypeSelection'
 import Icon from 'components/Icon/Icon'
-import Loading from 'react-loading'
+import Loading from 'components/Loading/Loading'
 import AddFieldMutation from 'mutations/AddFieldMutation'
 import UpdateFieldMutation from 'mutations/UpdateFieldMutation'
 import classes from './FieldPopup.scss'
@@ -161,7 +161,7 @@ class FieldPopup extends React.Component {
     if (this.state.loading) {
       return (
         <div className={classes.background}>
-          <Loading type='bubbles' delay={0} color='#fff' />
+          <Loading color='#fff' />
         </div>
       )
     }

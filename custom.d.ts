@@ -1,8 +1,3 @@
-declare module 'react-loading' {
-  var _temp: any;
-  export = _temp;
-}
-
 declare module 'react-relay' {
   var _temp: any;
   export = _temp;

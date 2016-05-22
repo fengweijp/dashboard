@@ -3,7 +3,7 @@ import Relay from 'react-relay'
 import mapProps from 'map-props'
 import { Link } from 'react-router'
 import { findDOMNode } from 'react-dom'
-import Loading from 'react-loading'
+import Loading from 'components/Loading/Loading'
 import classes from './GettingStartedView.scss'
 import { Follow } from 'react-twitter-widgets'
 
@@ -283,7 +283,7 @@ class GettingStartedView extends React.Component {
                 </h3>
                 {progress === 3 &&
                   <div className={classes.status}>
-                    <Loading type='bubbles' delay={0} color='#8989B1' />
+                    <Loading color='#8989B1' />
                     &nbsp;&nbsp;Checking status...
                   </div>
                 }

@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
 import { Route, IndexRoute, Redirect, IndexRedirect } from 'react-router'
-import Loading from 'react-loading'
+import Loading from 'components/Loading/Loading'
 import RootView from 'views/RootView/RootView'
 import RootRedirectView from 'views/RootView/RootRedirectView'
 import TokenRedirectView from 'views/RootView/TokenRedirectView'
@@ -62,7 +62,7 @@ const render = ({ error, props, routerProps, element }) => {
 
   return (
     <div style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-      <Loading type='bubbles' delay={0} color='#8989B1' />
+      <Loading color='#8989B1' />
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
-import Loading from 'react-loading'
+import Loading from 'components/Loading/Loading'
 import { findDOMNode } from 'react-dom'
 import { updateNetworkLayer } from 'utils/relay'
 import * as cookiestore from 'utils/cookiestore'
@@ -65,7 +65,7 @@ class LoginView extends React.Component {
       return (
         <div className={classes.root}>
           <div style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-            <Loading type='bubbles' delay={0} color='#fff' />
+            <Loading color='#fff' />
           </div>
         </div>
       )

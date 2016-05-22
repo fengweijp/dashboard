@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { findDOMNode } from 'react-dom'
-import Icon from '../../../components/Icon/Icon'
+import Loading from '../../../components/Loading/Loading'
 import { classnames } from '../../../utils/classnames'
 import { valueToString, isValidValue, stringToValue } from './utils'
 import { Field } from '../../../types/types'
@@ -20,7 +20,6 @@ interface Props {
 interface State {
   editing: boolean
   loading: boolean
-  value: any
 }
 
 export default class Cell extends React.Component<Props, State> {
@@ -36,7 +35,6 @@ export default class Cell extends React.Component<Props, State> {
     this.state = {
       editing: false,
       loading: false,
-      value: props.value,
     }
   }
 
@@ -60,7 +58,7 @@ export default class Cell extends React.Component<Props, State> {
 
     const value = stringToValue(inputValue, this.props.field)
 
-    if (value === this.state.value) {
+    if (value === this.props.value) {
       this.setState({ editing: false } as State)
       return
     }
@@ -71,7 +69,6 @@ export default class Cell extends React.Component<Props, State> {
       this.setState({
         editing: false,
         loading: false,
-        value: success ? value : this.state.value,
       })
     })
   }
@@ -80,17 +77,12 @@ export default class Cell extends React.Component<Props, State> {
     if (this.state.loading) {
       return (
         <div className={classes.loading}>
-          <Icon
-            color='#B9B9C8'
-            width={64}
-            height={32}
-            src={require('assets/icons/loading-bubbles.svg')}
-          />
+          <Loading color='#B9B9C8' />
         </div>
       )
     }
 
-    const valueString = valueToString(this.state.value, this.props.field, true)
+    const valueString = valueToString(this.props.value, this.props.field, true)
 
     if (this.state.editing) {
       switch (this.props.field.typeIdentifier) {
@@ -162,7 +154,7 @@ export default class Cell extends React.Component<Props, State> {
   render () {
     const rootClassnames = classnames({
       [classes.root]: true,
-      [classes.null]: this.state.value === null,
+      [classes.null]: this.props.value === null,
       [classes.editing]: this.state.editing,
     })
 

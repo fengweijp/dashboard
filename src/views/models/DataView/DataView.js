@@ -8,7 +8,7 @@ import { Transport } from 'lokka-transport-http'
 import { isScalar } from 'utils/graphql'
 import Icon from 'components/Icon/Icon'
 import * as cookiestore from 'utils/cookiestore'
-import Loading from 'react-loading'
+import Loading from 'components/Loading/Loading'
 import Tether from 'components/Tether/Tether'
 import HeaderCell from './HeaderCell'
 import Row from './Row'
@@ -188,7 +188,7 @@ class DataView extends React.Component {
       })
   }
 
-  _updateItem (value, field, callback, itemId) {
+  _updateItem (value, field, callback, itemId, index) {
     const mutation = `
       {
         update${this.props.model.name}(input: {
@@ -203,6 +203,11 @@ class DataView extends React.Component {
     this._lokka.mutate(mutation)
       .then(() => {
         callback(true)
+
+        const { items } = this.state
+        items[index][field.fieldName] = value
+
+        this.setState({ items })
 
         analytics.track('models/data: updated item', {
           project: this.props.params.projectName,
@@ -355,7 +360,7 @@ class DataView extends React.Component {
         </div>
         {this.state.loading &&
           <div className={classes.loading}>
-            <Loading type='bubbles' delay={0} color='#fff' />
+            <Loading color='#fff' />
           </div>
         }
         <div className={classes.table}>
@@ -380,13 +385,13 @@ class DataView extends React.Component {
               />
             }
             <div className={classes.tableBody} onScroll={::this._handleScroll}>
-              {this.state.items.map((item) => (
+              {this.state.items.map((item, index) => (
                 <Row
                   key={item.id}
                   fields={this.props.fields}
                   columnWidths={columnWidths}
                   item={item}
-                  update={(key, value, callback) => this._updateItem(key, value, callback, item.id)}
+                  update={(key, value, callback) => this._updateItem(key, value, callback, item.id, index)}
                 />
               ))}
             </div>
