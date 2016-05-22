@@ -50,6 +50,7 @@ export default class ToggleButton extends React.Component<Props, {}> {
         </span>
         <span
           className={`${classes.sliderContainer} ${this.props.side === ToggleSide.Right ? classes.active : ''}`}
+          onClick={() => this._toggle()}
         >
           <span className={classes.slider}></span>
         </span>
