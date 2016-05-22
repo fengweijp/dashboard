@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "build": "rm -rf dist && NODE_ENV=production webpack --config webpack.config.build.js && cp -r static/* dist",
-    "lint": "eslint src",
+    "lint": "eslint src && tslint src/**/*.ts{,x}",
     "start": "webpack-dev-server -d --hot --inline --progress --colors --history-api-fallback --host 0.0.0.0 --port 4000",
     "test": "npm run lint && jest"
   },
@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
+    "calculate-size": "^0.2.0",
     "graphiql": "^0.7.1",
     "js-cookie": "^2.1.1",
     "lokka": "^1.7.0",
@@ -60,7 +61,6 @@
     "babel-preset-react-hmre": "^1.1.1",
     "babel-preset-stage-0": "^6.5.0",
     "babel-runtime": "^6.9.0",
-    "calculate-size": "^0.2.0",
     "css-loader": "^0.23.1",
     "cssnano": "^3.6.2",
     "eslint": "2.10.2",

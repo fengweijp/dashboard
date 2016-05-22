@@ -100,7 +100,7 @@ describe('stringToValue', () => {
       isList: true,
       typeIdentifier: 'Int',
     }
-    expect(stringToValue('[1,3]', field)).toEqual([1,3])
+    expect(stringToValue('[1,3]', field)).toEqual([1, 3])
   })
 
   it('parses relation id', () => {
