@@ -18,6 +18,7 @@ export default class NewCell extends React.Component {
 
     this.state = {
       value: null,
+      focus: false,
     }
   }
 
@@ -30,7 +31,7 @@ export default class NewCell extends React.Component {
   _renderContent () {
     if (this.props.field.fieldName === 'id') {
       return (
-        <span>Id will be generated</span>
+        <span className={classes.value}>Id will be generated</span>
       )
     }
 
@@ -45,6 +46,8 @@ export default class NewCell extends React.Component {
             defaultValue={valueString}
             onChange={(e) => this._updateValue(e.target.value)}
             onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : null}
+            onFocus={() => this.setState({ focus: true })}
+            onBlur={() => this.setState({ focus: false })}
           />
         )
       case 'Float':
@@ -56,6 +59,8 @@ export default class NewCell extends React.Component {
             defaultValue={valueString}
             onChange={(e) => this._updateValue(e.target.value)}
             onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : null}
+            onFocus={() => this.setState({ focus: true })}
+            onBlur={() => this.setState({ focus: false })}
           />
         )
       case 'Boolean':
@@ -65,7 +70,10 @@ export default class NewCell extends React.Component {
             defaultValue={valueString}
             onChange={(e) => this._updateValue(e.target.value)}
             onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : null}
+            onFocus={() => this.setState({ focus: true })}
+            onBlur={() => this.setState({ focus: false })}
           >
+            <option disabled={this.state.focus} />
             <option>true</option>
             <option>false</option>
           </select>
@@ -77,7 +85,10 @@ export default class NewCell extends React.Component {
             defaultValue={valueString}
             onChange={(e) => this._updateValue(e.target.value)}
             onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : null}
+            onFocus={() => this.setState({ focus: true })}
+            onBlur={() => this.setState({ focus: false })}
           >
+            <option disabled={this.state.focus} />
             {this.props.field.enumValues.map((enumValue) => (
               <option key={enumValue}>{enumValue}</option>
             ))}
@@ -91,6 +102,8 @@ export default class NewCell extends React.Component {
             defaultValue={valueString}
             onChange={(e) => this._updateValue(e.target.value)}
             onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : null}
+            onFocus={() => this.setState({ focus: true })}
+            onBlur={() => this.setState({ focus: false })}
           />
         )
     }
@@ -100,6 +113,7 @@ export default class NewCell extends React.Component {
     const rootClassnames = classnames({
       [classes.root]: true,
       [classes.null]: this.props.field.fieldName === 'id',
+      [classes.editing]: this.state.focus,
       [classes.invalid]: (
         (this.props.field.isRequired && this.state.value === null) &&
         this.props.field.fieldName !== 'id'

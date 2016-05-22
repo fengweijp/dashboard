@@ -1,11 +1,15 @@
 import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
 import TypeSelection from './TypeSelection'
+import TagsInput from 'react-tagsinput'
 import Icon from 'components/Icon/Icon'
 import Loading from 'components/Loading/Loading'
 import AddFieldMutation from 'mutations/AddFieldMutation'
 import UpdateFieldMutation from 'mutations/UpdateFieldMutation'
+import { isScalar } from 'utils/graphql'
 import classes from './FieldPopup.scss'
+
+import 'react-tagsinput/react-tagsinput.css'
 
 class FieldPopup extends React.Component {
 
@@ -34,6 +38,7 @@ class FieldPopup extends React.Component {
       isList: field.isList || false,
       enumValues: field.enumValues || [],
       defaultValue: field.fieldName || null,
+      backRelation: false,
     }
   }
 
@@ -156,8 +161,11 @@ class FieldPopup extends React.Component {
     return this.state.fieldName !== ''
   }
 
+  _updateEnumValues (enumValues) {
+    this.setState({ enumValues })
+  }
+
   render () {
-    // const { field } = this.props
     if (this.state.loading) {
       return (
         <div className={classes.background}>
@@ -189,7 +197,7 @@ class FieldPopup extends React.Component {
               </div>
               <div className={classes.right}>
                 <input
-                  autoFocus
+                  autoFocus={this.props.field === null}
                   type='text'
                   placeholder='Fieldname'
                   defaultValue={this.state.fieldName}
@@ -215,6 +223,22 @@ class FieldPopup extends React.Component {
                 />
               </div>
             </div>
+            {this.state.typeIdentifier === 'Enum' &&
+              <div className={classes.row}>
+                <div className={classes.enumLeft}>
+                  Enum Values
+                </div>
+                <div className={classes.enumRight}>
+                  <TagsInput
+                    onlyUnique
+                    addOnBlur
+                    addKeys={[9, 13, 32]}
+                    value={this.state.enumValues}
+                    onChange={::this._updateEnumValues}
+                  />
+                </div>
+              </div>
+            }
             <div className={classes.rowBlock}>
               <div className={classes.row}>
                 <div className={classes.left}>
@@ -259,6 +283,81 @@ class FieldPopup extends React.Component {
                 </div>
               </div>
             </div>
+            {!isScalar(this.state.typeIdentifier) &&
+              <div>
+                Reverse Relation From Picture
+                <Icon
+                  width={20}
+                  height={20}
+                  src={require('assets/icons/info.svg')}
+                />
+                {this.state.backRelation &&
+                  <div className={`${classes.rowBlock} ${classes.blue}`}>
+                    <div className={classes.row}>
+                      <div className={classes.left}>
+                        Choose a name for your field
+                        <Icon
+                          width={20}
+                          height={20}
+                          src={require('assets/icons/info.svg')}
+                        />
+                      </div>
+                      <div className={classes.right}>
+                        <input
+                          type='text'
+                          placeholder='Fieldname'
+                          defaultValue={this.state.fieldName}
+                          onChange={(e) => this.setState({ fieldName: e.target.value })}
+                          onKeyUp={(e) => e.keyCode === 13 ? this._submit() : null}
+                        />
+                      </div>
+                    </div>
+                    <div className={classes.row}>
+                      <div className={classes.left}>
+                        Is this field required?
+                        <Icon
+                          width={20}
+                          height={20}
+                          src={require('assets/icons/info.svg')}
+                        />
+                      </div>
+                      <div className={classes.right}>
+                        <label>
+                          <input
+                            type='checkbox'
+                            defaultChecked={this.state.isRequired}
+                            onChange={(e) => this.setState({ isRequired: e.target.value })}
+                            onKeyUp={(e) => e.keyCode === 13 ? this._submit() : null}
+                          />
+                          Required
+                        </label>
+                      </div>
+                    </div>
+                    <div className={classes.row}>
+                      <div className={classes.left}>
+                        Store multiple values
+                        <Icon
+                          width={20}
+                          height={20}
+                          src={require('assets/icons/info.svg')}
+                        />
+                      </div>
+                      <div className={classes.right}>
+                        <label>
+                          <input
+                            type='checkbox'
+                            defaultChecked={this.state.isList}
+                            onChange={(e) => this.setState({ isList: e.target.value })}
+                            onKeyUp={(e) => e.keyCode === 13 ? this._submit() : null}
+                          />
+                          List
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
           </div>
           <div className={classes.foot}>
             <div className={classes.button} onClick={this.props.close}>

@@ -26,14 +26,14 @@ export default class TypeSelection extends React.Component {
   }
 
   componentWillUnmount () {
-    window.removeEventListener('keydown', this._listenForKeys, false)
+    window.removeEventListener('keydown', this._listenForKeys, true)
   }
 
   componentWillUpdate (nextProps, nextState) {
     if (!this.state.open && nextState.open) {
-      window.addEventListener('keydown', this._listenForKeys, false)
+      window.addEventListener('keydown', this._listenForKeys, true)
     } else if (this.state.open && !nextState.open) {
-      window.removeEventListener('keydown', this._listenForKeys, false)
+      window.removeEventListener('keydown', this._listenForKeys, true)
     }
   }
 

@@ -43,8 +43,12 @@
 
   .rowBlock {
     background: $grey1;
-    padding: 10px 0;
+    padding: 20px 0;
     margin: 10px 0;
+
+    &.blue {
+      background: $blue2;
+    }
   }
 
   .row {
@@ -53,6 +57,24 @@
     justify-content: space-between;
     padding: 10px 0;
     margin: 0 43px;
+
+    .enumLeft {
+      width: 120px;
+      display: flex;
+      justify-content: flex-end;
+      font-weight: 600;
+      font-size: 16px;
+      color: $grey4;
+    }
+
+    .enumRight {
+      width: 380px;
+
+      & > div {
+        border: 1px solid $grey3;
+        border-radius: 4px;
+      }
+    }
 
     .left {
       width: 282px;
@@ -95,6 +117,7 @@
         padding: 12px 19px;
         font-size: 12px;
         font-family: Monaco, monospace;
+        background: none;
 
         @include placeholder {
           color: $grey3;

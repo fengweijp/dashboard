@@ -53,6 +53,7 @@ export default class Cell extends React.Component<Props, State> {
   _save (inputValue: string) {
     if (!isValidValue(inputValue, this.props.field)) {
       alert(`'${inputValue}' is not a valid value for field ${this.props.field.fieldName}`)
+      this.setState({ editing: false } as State)
       return
     }
 
@@ -65,7 +66,7 @@ export default class Cell extends React.Component<Props, State> {
 
     this.setState({ loading: true } as State)
 
-    this.props.update(value, this.props.field, (success) => {
+    this.props.update(value, this.props.field, () => {
       this.setState({
         editing: false,
         loading: false,
