@@ -10,7 +10,7 @@
   display: flex;
   flex: 1;
 
-  span {
+  .value {
     text-overflow: ellipsis;
     width: 100%;
     overflow: hidden;
@@ -36,7 +36,7 @@
   }
 
   &.null {
-    span {
+    .value {
       color: $grey3;
       font-style: italic;
     }
@@ -53,9 +53,13 @@
   }
 
   .loading {
-    transform: scale(0.5);
-    height: 32px;
+    width: 100%;
     display: flex;
     justify-content: center;
+    align-items: center;
+
+    svg {
+      fill: $grey3;
+    }
   }
 }

@@ -32,16 +32,20 @@ export function valueToString (value: any, field: Field, returnNull: boolean): s
 }
 
 function valueToGQL (value: any, field: Field): string {
+  if (!isScalar(field.typeIdentifier)) {
+    return `"${value.id}"`
+  }
+
   if (field.typeIdentifier === 'Enum') {
     return value
-  } else {
-    return JSON.stringify(value)
   }
+
+  return JSON.stringify(value)
 }
 
 export function toGQL (value: any, field: Field): string {
   const key = isScalar(field.typeIdentifier) ? field.fieldName : `${field.fieldName}Id`
-  return value ? `${key}: ${valueToGQL(value, field)}` : ''
+  return value !== null ? `${key}: ${valueToGQL(value, field)}` : ''
 }
 
 export function stringToValue (rawValue: string, field: Field): any {

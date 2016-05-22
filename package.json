@@ -36,6 +36,7 @@
     "normalize.css": "^4.1.1",
     "react": "^15.1.0",
     "react-addons-pure-render-mixin": "^15.1.0",
+    "react-click-outside": "github:tj/react-click-outside",
     "react-dom": "^15.1.0",
     "react-loading": "0.0.9",
     "react-relay": "^0.8.1",

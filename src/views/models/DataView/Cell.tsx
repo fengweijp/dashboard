@@ -1,33 +1,32 @@
 import * as React from 'react'
-import { PropTypes } from 'react'
 import { findDOMNode } from 'react-dom'
-import * as Loading from 'react-loading'
+import Icon from '../../../components/Icon/Icon'
 import { classnames } from '../../../utils/classnames'
-import { isScalar } from '../../../utils/graphql'
 import { valueToString, isValidValue, stringToValue } from './utils'
 import { Field } from '../../../types/types'
 import ToggleButton from '../../../components/ToggleButton/ToggleButton'
 import { ToggleSide } from '../../../components/ToggleButton/ToggleButton'
 const classes: any = require('./Cell.scss')
 
-type UpdateCallback = (boolean) => void
+type UpdateCallback = (success: boolean) => void
 
 interface Props {
   field: Field
   value?: any
   width: number
-  update: (any, Field, UpdateCallback) => void
+  update: (value: any, field: Field, callback: UpdateCallback) => void
 }
 
 interface State {
-  editing?: boolean
-  loading?: boolean
-  value?: any
+  editing: boolean
+  loading: boolean
+  value: any
 }
 
 export default class Cell extends React.Component<Props, State> {
 
   refs: {
+    [key: string]: any;
     input: HTMLInputElement
   }
 
@@ -49,11 +48,11 @@ export default class Cell extends React.Component<Props, State> {
 
   _startEditing () {
     if (this.props.field.fieldName !== 'id') {
-      this.setState({ editing: true })
+      this.setState({ editing: true } as State)
     }
   }
 
-  _save (inputValue) {
+  _save (inputValue: string) {
     if (!isValidValue(inputValue, this.props.field)) {
       alert(`'${inputValue}' is not a valid value for field ${this.props.field.fieldName}`)
       return
@@ -61,14 +60,12 @@ export default class Cell extends React.Component<Props, State> {
 
     const value = stringToValue(inputValue, this.props.field)
 
-    //const currentValue
-
     if (value === this.state.value) {
-      this.setState({ editing: false })
+      this.setState({ editing: false } as State)
       return
     }
 
-    this.setState({ loading: true })
+    this.setState({ loading: true } as State)
 
     this.props.update(value, this.props.field, (success) => {
       this.setState({
@@ -83,7 +80,12 @@ export default class Cell extends React.Component<Props, State> {
     if (this.state.loading) {
       return (
         <div className={classes.loading}>
-          <Loading type='bubbles' delay={0} color='#B9B9C8' />
+          <Icon
+            color='#B9B9C8'
+            width={64}
+            height={32}
+            src={require('assets/icons/loading-bubbles.svg')}
+          />
         </div>
       )
     }
@@ -120,8 +122,9 @@ export default class Cell extends React.Component<Props, State> {
             <ToggleButton
               leftText='false'
               rightText='true'
-              side={valueString === 'true' ? ToggleSide.Right : ToggleSide.Right}
-              onUpdateSide={(side) => null}
+              side={valueString === 'true' ? ToggleSide.Right : ToggleSide.Left}
+              onUpdateSide={(side) => this._save(side === ToggleSide.Left ? 'false' : 'true')}
+              onClickOutside={() => this.setState({ editing: false } as State)}
             />
           )
         case 'Enum':
@@ -152,14 +155,14 @@ export default class Cell extends React.Component<Props, State> {
     }
 
     return (
-      <span>{valueString}</span>
+      <span className={classes.value}>{valueString}</span>
     )
   }
 
   render () {
     const rootClassnames = classnames({
       [classes.root]: true,
-      [classes.null]: this.props.value === null,
+      [classes.null]: this.state.value === null,
       [classes.editing]: this.state.editing,
     })
 

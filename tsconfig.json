@@ -14,10 +14,6 @@
   ],
   "files": [
     "typings/index.d.ts",
-    "custom.d.ts",
-    "src/utils/graphql.ts",
-    "src/types/types.ts",
-    "src/views/models/DataView/utils.ts",
-    "src/views/models/DataView/Cell.tsx"
+    "custom.d.ts"
   ]
 }
