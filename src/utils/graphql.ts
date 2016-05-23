@@ -18,10 +18,15 @@ export function isValidName (name: string): boolean {
   return /^[_a-zA-Z][_a-zA-Z0-9]*$/.test(name)
 }
 
-// returns whether the string conforms to ISO8601
-// 2015 is a valid ISO 8601, so is 2015-12-31T23:00:00Z
+
 export function isValidDateTime (dateTime: string): boolean {
-  return moment(dateTime).isValid()
+  const ISO8601 = 'YYYY-MM-DDTHH:mm:ss.SSSZ'
+
+  return (
+    // returns whether the string conforms to ISO8601
+    // the strict format is '2016-05-19T17:09:24.123Z' but we also accept simpler versions like '2016'
+    moment.utc(dateTime, ISO8601).isValid()
+  )
 }
 
 export function parseValue (value: string, typeIdentifier: string): any {
