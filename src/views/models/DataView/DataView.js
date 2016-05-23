@@ -322,6 +322,13 @@ class DataView extends React.Component {
     }
   }
 
+  _deleteSelectedItems () {
+    if (confirm(`Do you really want to delete ${this.state.selectedItemIds.length} item(s)?`)) {
+      // TODO: delete items mutation
+      this.setState({selectedItemIds: []})
+    }
+  }
+
   render () {
     const columnWidths = this._calculateColumnWidths()
     const tableWidth = this.props.fields.reduce((sum, { fieldName }) => sum + columnWidths[fieldName], 0)
@@ -371,6 +378,16 @@ class DataView extends React.Component {
               />
               <span>Edit Structure</span>
             </Link>
+            {this.state.selectedItemIds.length > 0 &&
+              <div className={`${classes.button} ${classes.red}`} onClick={::this._deleteSelectedItems}>
+                <Icon
+                  width={16}
+                  height={16}
+                  src={require('assets/icons/delete.svg')}
+                />
+                <span>Delete Selected Items</span>
+              </div>
+            }
             <div className={classes.button} onClick={::this._toggleMenuDropdown}>
               <Icon
                 width={16}
