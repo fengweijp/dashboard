@@ -37,7 +37,7 @@ class FieldPopup extends React.Component {
       isRequired: field.isRequired || false,
       isList: field.isList || false,
       enumValues: field.enumValues || [],
-      defaultValue: field.fieldName || null,
+      defaultValue: null,
       backRelation: false,
     }
   }
