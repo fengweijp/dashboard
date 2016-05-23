@@ -164,6 +164,9 @@ class DataView extends React.Component {
     const { filter } = this.state
     filter[field.fieldName] = value
     this.setState({ filter }, this._reloadData)
+
+    // TODO: select cut set of selected and filtered items
+    this.setState({selectedItemIds: []})
   }
 
   _deleteItem (item) {
