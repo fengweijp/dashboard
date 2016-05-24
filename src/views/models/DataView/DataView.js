@@ -170,12 +170,12 @@ class DataView extends React.Component {
     this.setState({selectedItemIds: []})
   }
 
-  _deleteItem (item) {
+  _deleteItem (itemId) {
     this.setState({ loading: true })
     const mutation = `
       {
         delete${this.props.model.name}(input: {
-          id: "${item.id}",
+          id: "${itemId}",
           clientMutationId: "lokka-${Math.random().toString(36).substring(7)}"
         }) {
           clientMutationId
@@ -184,7 +184,7 @@ class DataView extends React.Component {
     `
     this._lokka.mutate(mutation)
       .then(() => {
-        const items = this.state.items.filter((i) => i.id !== item.id)
+        const items = this.state.items.filter((i) => i.id !== itemId)
         this.setState({ items, loading: false })
 
         analytics.track('models/data: deleted item', {
@@ -328,7 +328,10 @@ class DataView extends React.Component {
 
   _deleteSelectedItems () {
     if (confirm(`Do you really want to delete ${this.state.selectedItemIds.length} item(s)?`)) {
-      // TODO: delete items mutation
+      var itemId
+      for (itemId of this.state.selectedItemIds) {
+        this._deleteItem(itemId)
+      }
       this.setState({selectedItemIds: []})
     }
   }
