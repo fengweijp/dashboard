@@ -40,6 +40,18 @@
     color: $grey4;
     margin-top: 1px;
   }
+
+  input {
+    border: 0;
+    background: none;
+    width: 100%;
+    padding: 10px 0;
+    margin: -10px 0;
+
+    @include placeholder {
+      color: $grey4;
+    }
+  }
 }
 
 .headRight {
