@@ -14,6 +14,7 @@ import HeaderCell from './HeaderCell'
 import CheckboxCell from './CheckboxCell'
 import Row from './Row'
 import NewRow from './NewRow'
+import ModelDescription from '../ModelDescription'
 import { valueToString, toGQL } from './utils'
 import classes from './DataView.scss'
 
@@ -345,6 +346,7 @@ class DataView extends React.Component {
               <span className={classes.itemCount}>{this.props.model.itemCount} items</span>
             </div>
             <div className={classes.titleDescription}>
+              <ModelDescription model={this.props.model} />
             </div>
           </div>
           <div className={classes.headRight}>
@@ -492,6 +494,7 @@ export default Relay.createContainer(MappedDataView, {
               }
             }
           }
+          ${ModelDescription.getFragment('model')}
         }
         project: projectByName(projectName: $projectName) {
           id
