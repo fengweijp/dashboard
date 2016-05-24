@@ -10,8 +10,6 @@ class ModelDescription extends React.Component {
   }
 
   state = {
-    showPopup: false,
-    menuDropdownVisible: false,
     editDescription: false,
     editDescriptionPending: false,
   }

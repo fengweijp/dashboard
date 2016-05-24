@@ -16,9 +16,8 @@ export default class Row extends React.Component {
 
   render () {
     return (
-      <div className={classes.root}>
+      <div className={`${classes.root} ${this.props.isSelected ? classes.isSelected : ''}`}>
         <CheckboxCell
-          name='field'
           onChange={this.props.onSelect}
           checked={this.props.isSelected}
         />

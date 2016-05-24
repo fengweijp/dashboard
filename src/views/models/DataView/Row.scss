@@ -6,4 +6,8 @@
   &:nth-child(2n) {
     background: $blue1;
   }
+
+  &.isSelected {
+    background: $blue2;
+  }
 }

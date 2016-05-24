@@ -317,8 +317,8 @@ class DataView extends React.Component {
     return this.state.selectedItemIds.indexOf(itemId) > -1
   }
 
-  _selectAllOnClick (event) {
-    if (event.target.checked) {
+  _selectAllOnClick (checked) {
+    if (checked) {
       const selectedItemIds = this.state.items.map((item) => item.id)
       this.setState({selectedItemIds: selectedItemIds})
     } else {
@@ -396,6 +396,13 @@ class DataView extends React.Component {
                 <span>Delete Selected Items</span>
               </div>
             }
+            <div className={classes.button} onClick={::this._reloadData}>
+              <Icon
+                width={16}
+                height={16}
+                src={require('assets/icons/refresh.svg')}
+              />
+            </div>
             <div className={classes.button} onClick={::this._toggleMenuDropdown}>
               <Icon
                 width={16}
@@ -419,9 +426,8 @@ class DataView extends React.Component {
           <div className={classes.tableContainer} style={{ width: tableWidth }}>
             <div className={classes.tableHead}>
               <CheckboxCell
-                name='all'
-                onChange={(event) => this._selectAllOnClick(event)}
-                checked={this.state.selectedItemIds.length === this.state.items.length}
+                onChange={::this._selectAllOnClick}
+                checked={this.state.selectedItemIds.length === this.state.items.length && this.state.items.length > 0}
               />
               {this.props.fields.map((field) => (
                 <HeaderCell
