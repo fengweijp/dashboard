@@ -71,6 +71,25 @@
         fill: $accent;
       }
     }
+
+    &.red {
+      border-color: rgb(255, 31, 0);
+      color: rgb(255, 31, 0);
+      background: #fff;
+
+      &:hover {
+        background: rgb(255, 31, 0);
+        color: #fff;
+
+        svg {
+          fill: #fff;
+        }
+      }
+
+      svg {
+        fill: rgb(255, 31, 0);
+      }
+    }
   }
 
   .menuDropdown {

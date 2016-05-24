@@ -11,6 +11,7 @@ import * as cookiestore from 'utils/cookiestore'
 import Loading from 'components/Loading/Loading'
 import Tether from 'components/Tether/Tether'
 import HeaderCell from './HeaderCell'
+import CheckboxCell from './CheckboxCell'
 import Row from './Row'
 import NewRow from './NewRow'
 import { valueToString, toGQL } from './utils'
@@ -57,6 +58,7 @@ class DataView extends React.Component {
       lastCursor: null,
       lastLoadedCursor: null,
       newRowVisible: false,
+      selectedItemIds: [],
     }
   }
 
@@ -162,6 +164,9 @@ class DataView extends React.Component {
     const { filter } = this.state
     filter[field.fieldName] = value
     this.setState({ filter }, this._reloadData)
+
+    // TODO: select cut set of selected and filtered items
+    this.setState({selectedItemIds: []})
   }
 
   _deleteItem (item) {
@@ -295,6 +300,38 @@ class DataView extends React.Component {
     )
   }
 
+  _onSelectRow (itemId) {
+    const index = this.state.selectedItemIds.indexOf(itemId)
+    if (index > -1) {
+      this.state.selectedItemIds.splice(index, 1)
+      const selectedItemIds = this.state.selectedItemIds
+      this.setState({selectedItemIds: selectedItemIds})
+    } else {
+      const selectedItemIds = this.state.selectedItemIds.concat(itemId)
+      this.setState({selectedItemIds: selectedItemIds})
+    }
+  }
+
+  _isSelected (itemId) {
+    return this.state.selectedItemIds.indexOf(itemId) > -1
+  }
+
+  _selectAllOnClick (event) {
+    if (event.target.checked) {
+      const selectedItemIds = this.state.items.map((item) => item.id)
+      this.setState({selectedItemIds: selectedItemIds})
+    } else {
+      this.setState({selectedItemIds: []})
+    }
+  }
+
+  _deleteSelectedItems () {
+    if (confirm(`Do you really want to delete ${this.state.selectedItemIds.length} item(s)?`)) {
+      // TODO: delete items mutation
+      this.setState({selectedItemIds: []})
+    }
+  }
+
   render () {
     const columnWidths = this._calculateColumnWidths()
     const tableWidth = this.props.fields.reduce((sum, { fieldName }) => sum + columnWidths[fieldName], 0)
@@ -344,6 +381,16 @@ class DataView extends React.Component {
               />
               <span>Edit Structure</span>
             </Link>
+            {this.state.selectedItemIds.length > 0 &&
+              <div className={`${classes.button} ${classes.red}`} onClick={::this._deleteSelectedItems}>
+                <Icon
+                  width={16}
+                  height={16}
+                  src={require('assets/icons/delete.svg')}
+                />
+                <span>Delete Selected Items</span>
+              </div>
+            }
             <div className={classes.button} onClick={::this._toggleMenuDropdown}>
               <Icon
                 width={16}
@@ -366,6 +413,11 @@ class DataView extends React.Component {
         <div className={classes.table}>
           <div className={classes.tableContainer} style={{ width: tableWidth }}>
             <div className={classes.tableHead}>
+              <CheckboxCell
+                name='all'
+                onChange={(event) => this._selectAllOnClick(event)}
+                checked={this.state.selectedItemIds.length === this.state.items.length}
+              />
               {this.props.fields.map((field) => (
                 <HeaderCell
                   key={field.id}
@@ -392,6 +444,8 @@ class DataView extends React.Component {
                   columnWidths={columnWidths}
                   item={item}
                   update={(key, value, callback) => this._updateItem(key, value, callback, item.id, index)}
+                  isSelected={this._isSelected(item.id)}
+                  onSelect={(event) => this._onSelectRow(item.id)}
                 />
               ))}
             </div>
