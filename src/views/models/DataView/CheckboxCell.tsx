@@ -1,9 +1,8 @@
 import * as React from 'react'
-import { PropTypes } from 'react'
 const classes: any = require('./CheckboxCell.scss')
 
 interface Props {
-  onChange: (boolean) => void
+  onChange: (checked: boolean) => void
   checked: boolean
 }
 

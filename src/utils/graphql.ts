@@ -18,7 +18,6 @@ export function isValidName (name: string): boolean {
   return /^[_a-zA-Z][_a-zA-Z0-9]*$/.test(name)
 }
 
-
 export function isValidDateTime (dateTime: string): boolean {
   const ISO8601 = 'YYYY-MM-DDTHH:mm:ss.SSSZ'
 
