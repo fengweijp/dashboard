@@ -138,10 +138,9 @@
   }
 
   .tableBody {
-    overflow-y: scroll;
     overflow-x: hidden;
     height: calc(100% - 68px);
-    width: calc(100% + 17px);
+    width: 100%;
     padding-bottom: 60px;
   }
 }

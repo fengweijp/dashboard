@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
+import ScrollBox from 'components/ScrollBox/ScrollBox'
 import Icon from 'components/Icon/Icon'
 import classes from './ProjectSelection.scss'
 
@@ -67,25 +68,27 @@ export default class ProjectSelection extends React.Component {
         </div>
         {this.state.expanded &&
           <div className={classes.overlay}>
-            <div className={classes.listHead}>All Projects</div>
-            {this.props.projects.map((project) => (
-              <Link
-                key={project.name}
-                className={classes.listElement}
-                onClick={::this._onSelectProject}
-                to={`/${project.name}`}
-                activeClassName={classes.listElementActive}
-                >
-                {project.name}
-                <div title='Duplicate' className={classes.listElementDuplicate}>
-                  <Icon
-                    src={require('assets/icons/model.svg')}
-                    color='#fff'
-                    />
-                </div>
-              </Link>
-            ))}
-            <div className={classes.add} onClick={::this._onAdd}>+ New Project</div>
+            <ScrollBox>
+              <div className={classes.listHead}>All Projects</div>
+              {this.props.projects.map((project) => (
+                <Link
+                  key={project.name}
+                  className={classes.listElement}
+                  onClick={::this._onSelectProject}
+                  to={`/${project.name}`}
+                  activeClassName={classes.listElementActive}
+                  >
+                  {project.name}
+                  <div title='Duplicate' className={classes.listElementDuplicate}>
+                    <Icon
+                      src={require('assets/icons/model.svg')}
+                      color='#fff'
+                      />
+                  </div>
+                </Link>
+              ))}
+              <div className={classes.add} onClick={::this._onAdd}>+ New Project</div>
+            </ScrollBox>
           </div>
         }
       </div>

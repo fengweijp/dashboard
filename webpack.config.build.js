@@ -47,7 +47,7 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      __BACKEND_ADDR__: JSON.stringify(process.env.BACKEND_ADDR || ''),
+      __BACKEND_ADDR__: JSON.stringify(process.env.BACKEND_ADDR.toString()),
       __SEGMENT_TOKEN__: '"M96lXuD90ZxkbQEQG716aySwBLllabOn"',
       __ENABLE_SEGMENT__: true,
       __SMOOCH_TOKEN__: '"505tvtkv5udrd4kc5dbpppa6x"',

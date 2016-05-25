@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
 import { Link } from 'react-router'
+import ScrollBox from 'components/ScrollBox/ScrollBox'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import mapProps from 'map-props'
 import Icon from 'components/Icon/Icon'
@@ -109,114 +110,116 @@ export class SideNav extends React.Component {
 
     return (
       <div className={classes.root}>
+        {this.state.projectSettingsVisible &&
+          <ProjectSettingsOverlay
+            viewer={this.props.viewer}
+            project={this.props.project}
+            params={this.props.params}
+            hide={::this._toggleProjectSettings}
+          />
+        }
         <div className={classes.container}>
-          {gettingStartedIsActive &&
-            <div className={`${showsGettingStarted ? classes.active : ''}`}>
-              <div className={classes.gettingStarted}>
-                <Link
-                  to={`/${this.props.params.projectName}/getting-started`}
-                  className={classes.head}
-                  onClick={thirdStepOnClick}
-                >
-                  <Icon width={19} height={19} src={require('assets/icons/cake.svg')} />
-                  <span>Getting Started</span>
-                </Link>
-                <div className={classes.gettingStartedList}>
-                  <div className={gettingStartedStepClass(1)}>
-                    <Link
-                      to={`/${this.props.params.projectName}/getting-started`}
-                      onClick={firstStepOnClick}
-                    >
-                      1. Create Todo model
-                    </Link>
-                  </div>
-                  <div className={gettingStartedStepClass(2)}>
-                    <Link
-                      to={`/${this.props.params.projectName}/models/Todo/data`}
-                      onClick={secondStepOnClick}
-                    >
-                      2. Add some data
-                    </Link>
-                  </div>
-                  <div className={gettingStartedStepClass(3)}>
-                    <Tether
-                      steps={{
-                        STEP8_GOTO_GETTING_STARTED: 'You\'re almost done. Let\'s run an example app now...',
-                      }}
-                      offsetY={-5}
-                      width={260}
-                    >
+          <ScrollBox>
+            {gettingStartedIsActive &&
+              <div className={`${showsGettingStarted ? classes.active : ''}`}>
+                <div className={classes.gettingStarted}>
+                  <Link
+                    to={`/${this.props.params.projectName}/getting-started`}
+                    className={classes.head}
+                    onClick={thirdStepOnClick}
+                  >
+                    <Icon width={19} height={19} src={require('assets/icons/cake.svg')} />
+                    <span>Getting Started</span>
+                  </Link>
+                  <div className={classes.gettingStartedList}>
+                    <div className={gettingStartedStepClass(1)}>
                       <Link
                         to={`/${this.props.params.projectName}/getting-started`}
-                        onClick={thirdStepOnClick}
+                        onClick={firstStepOnClick}
                       >
-                        3. Run example app
+                        1. Create Todo model
                       </Link>
-                    </Tether>
-                  </div>
-                  <div onClick={::this._skipGettingStarted} className={classes.gettingStartedSkip}>
-                    Skip getting started
+                    </div>
+                    <div className={gettingStartedStepClass(2)}>
+                      <Link
+                        to={`/${this.props.params.projectName}/models/Todo/data`}
+                        onClick={secondStepOnClick}
+                      >
+                        2. Add some data
+                      </Link>
+                    </div>
+                    <div className={gettingStartedStepClass(3)}>
+                      <Tether
+                        steps={{
+                          STEP8_GOTO_GETTING_STARTED: 'You\'re almost done. Let\'s run an example app now...',
+                        }}
+                        offsetY={-5}
+                        width={260}
+                      >
+                        <Link
+                          to={`/${this.props.params.projectName}/getting-started`}
+                          onClick={thirdStepOnClick}
+                        >
+                          3. Run example app
+                        </Link>
+                      </Tether>
+                    </div>
+                    <div onClick={::this._skipGettingStarted} className={classes.gettingStartedSkip}>
+                      Skip getting started
+                    </div>
                   </div>
                 </div>
               </div>
+            }
+            <div className={`${classes.listBlock} ${showsModels ? classes.active : ''}`}>
+              <Link
+                to={`/${this.props.params.projectName}/models`}
+                className={classes.head}
+                >
+                <Icon width={19} height={19} src={require('assets/icons/model.svg')} />
+                <span>Models</span>
+              </Link>
+              <div className={classes.list}>
+                {this.props.models &&
+                  this.props.models.map((model) => {
+                    const tab = model.itemCount === 0 ? 'fields' : 'data'
+                    const modelUrl = `/${this.props.params.projectName}/models/${model.name}/${tab}`
+                    return (
+                      <Link
+                        key={model.name}
+                        to={modelUrl}
+                        className={classes.listElement}
+                        activeClassName={classes.listElementActive}
+                        >
+                        {model.name}
+                        <span className={classes.itemCount}>{model.itemCount}</span>
+                      </Link>
+                    )
+                  })
+                }
+              </div>
+              <div className={classes.add} onClick={::this._addModel}>
+                <Tether
+                  steps={{
+                    STEP2_CREATE_TODO_MODEL: 'First you need to create a new model called "Todo"',
+                  }}
+                  offsetY={-5}
+                  width={260}
+                >
+                  <div>+ Add model</div>
+                </Tether>
+              </div>
             </div>
-          }
-          <div className={`${classes.listBlock} ${showsModels ? classes.active : ''}`}>
-            <Link
-              to={`/${this.props.params.projectName}/models`}
-              className={classes.head}
-              >
-              <Icon width={19} height={19} src={require('assets/icons/model.svg')} />
-              <span>Models</span>
-            </Link>
-            <div className={classes.list}>
-              {this.props.models &&
-                this.props.models.map((model) => {
-                  const tab = model.itemCount === 0 ? 'fields' : 'data'
-                  const modelUrl = `/${this.props.params.projectName}/models/${model.name}/${tab}`
-                  return (
-                    <Link
-                      key={model.name}
-                      to={modelUrl}
-                      className={classes.listElement}
-                      activeClassName={classes.listElementActive}
-                      >
-                      {model.name}
-                      <span className={classes.itemCount}>{model.itemCount}</span>
-                    </Link>
-                  )
-                })
-              }
+            <div className={`${classes.listBlock} ${showsPlayground ? classes.active : ''}`}>
+              <Link
+                to={`/${this.props.params.projectName}/playground`}
+                className={classes.head}
+                >
+                <Icon width={19} height={19} src={require('assets/icons/play.svg')} />
+                <span>Playground</span>
+              </Link>
             </div>
-            <div className={classes.add} onClick={::this._addModel}>
-              <Tether
-                steps={{
-                  STEP2_CREATE_TODO_MODEL: 'First you need to create a new model called "Todo"',
-                }}
-                offsetY={-5}
-                width={260}
-              >
-                <div>+ Add model</div>
-              </Tether>
-            </div>
-          </div>
-          <div className={`${classes.listBlock} ${showsPlayground ? classes.active : ''}`}>
-            <Link
-              to={`/${this.props.params.projectName}/playground`}
-              className={classes.head}
-              >
-              <Icon width={19} height={19} src={require('assets/icons/play.svg')} />
-              <span>Playground</span>
-            </Link>
-          </div>
-          {this.state.projectSettingsVisible &&
-            <ProjectSettingsOverlay
-              viewer={this.props.viewer}
-              project={this.props.project}
-              params={this.props.params}
-              hide={::this._toggleProjectSettings}
-            />
-          }
+          </ScrollBox>
         </div>
         <div className={classes.foot} onClick={::this._toggleProjectSettings}>
           <Icon

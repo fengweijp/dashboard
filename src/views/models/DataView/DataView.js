@@ -6,6 +6,7 @@ import calculateSize from 'calculate-size'
 import { Lokka } from 'lokka'
 import { Transport } from 'lokka-transport-http'
 import { isScalar } from 'utils/graphql'
+import ScrollBox from 'components/ScrollBox/ScrollBox'
 import Icon from 'components/Icon/Icon'
 import * as cookiestore from 'utils/cookiestore'
 import Loading from 'components/Loading/Loading'
@@ -448,17 +449,19 @@ class DataView extends React.Component {
               />
             }
             <div className={classes.tableBody} onScroll={::this._handleScroll}>
-              {this.state.items.map((item, index) => (
-                <Row
-                  key={item.id}
-                  fields={this.props.fields}
-                  columnWidths={columnWidths}
-                  item={item}
-                  update={(key, value, callback) => this._updateItem(key, value, callback, item.id, index)}
-                  isSelected={this._isSelected(item.id)}
-                  onSelect={(event) => this._onSelectRow(item.id)}
-                />
-              ))}
+              <ScrollBox>
+                {this.state.items.map((item, index) => (
+                  <Row
+                    key={item.id}
+                    fields={this.props.fields}
+                    columnWidths={columnWidths}
+                    item={item}
+                    update={(key, value, callback) => this._updateItem(key, value, callback, item.id, index)}
+                    isSelected={this._isSelected(item.id)}
+                    onSelect={(event) => this._onSelectRow(item.id)}
+                  />
+                ))}
+              </ScrollBox>
             </div>
           </div>
         </div>

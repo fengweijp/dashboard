@@ -1,23 +1,14 @@
-<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="19px" height="22px" viewBox="0 0 19 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 3.8.2 (29753) - http://www.bohemiancoding.com/sketch -->
+    <title>relation-many</title>
     <desc>Created with Sketch.</desc>
-    <defs>
-        <path d="M0,3.9998873 C0,1.79081054 1.78818655,0 3.99513245,0 L16.502377,0 L26.4766594,0 C28.6855394,0 30.4761905,1.79264574 30.4761905,3.9998873 L30.4761905,26.4763032 C30.4761905,28.6853799 28.6835447,30.4761905 26.4763032,30.4761905 L3.9998873,30.4761905 C1.79081054,30.4761905 0,28.6835447 0,26.4763032 L0,3.9998873 Z" id="path-1"></path>
-        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="30.4761905" height="30.4761905">
-            <use xlink:href="#path-1"></use>
-        </mask>
-        <path d="M35.2380952,9.52380952 L35.2380952,8.76179206 C35.2380952,6.5545505 33.4474442,4.76190476 31.2385642,4.76190476 L30.4761905,4.76190476 L30.4761905,3.9998873 C30.4761905,1.79264574 28.6855394,0 26.4766594,0 L16.502377,0 L3.99513245,0 C1.78818655,0 0,1.79081054 0,3.9998873 L0,26.4763032 C0,28.6835447 1.79081054,30.4761905 3.9998873,30.4761905 L4.76190476,30.4761905 L4.76190476,31.2382079 C4.76190476,33.4454495 6.55271531,35.2380952 8.76179206,35.2380952 L9.52380952,35.2380952 L9.52380952,36.0001127 C9.52380952,38.2073543 11.3146201,40 13.5236968,40 L36.0001127,40 C38.2073543,40 40,38.2091895 40,36.0001127 L40,13.5236968 C40,11.3164553 38.209349,9.52380952 36.0004689,9.52380952 L35.2380952,9.52380952 Z" id="path-3"></path>
-        <mask id="mask-4" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="40" height="40">
-            <use xlink:href="#path-3"></use>
-        </mask>
-        <path d="M30.4761905,4.76190476 L31.2385642,4.76190476 C33.4474442,4.76190476 35.2380952,6.5545505 35.2380952,8.76179206 L35.2380952,31.2382079 C35.2380952,33.4472847 33.4454495,35.2380952 31.2382079,35.2380952 L8.76179206,35.2380952 C6.55271531,35.2380952 4.76190476,33.4454495 4.76190476,31.2382079 L4.76190476,30.4761905 L3.9998873,30.4761905 C1.79081054,30.4761905 0,28.6835447 0,26.4763032 L0,3.9998873 C0,1.79081054 1.78818655,0 3.99513245,0 L16.502377,0 L26.4766594,0 C28.6855394,0 30.4761905,1.79264574 30.4761905,3.9998873 L30.4761905,4.76190476 Z" id="path-5"></path>
-        <mask id="mask-6" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="35.2380952" height="35.2380952">
-            <use xlink:href="#path-5"></use>
-        </mask>
-    </defs>
-    <g id="Rectangle-62-Copy-2" stroke-width="1">
-        <use id="Rectangle-62-Copy" mask="url(#mask-2)" stroke-width="4" xlink:href="#path-1"></use>
-        <use id="Combined-Shape" mask="url(#mask-4)" stroke-width="4" xlink:href="#path-3"></use>
-        <use id="Combined-Shape" mask="url(#mask-6)" stroke-width="4" xlink:href="#path-5"></use>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill-rule="evenodd">
+        <g id="ic_content_copy_black_24px">
+            <g id="Group">
+                <path d="M14,0 L2,0 C0.9,0 0,0.9 0,2 L0,16 L2,16 L2,2 L14,2 L14,0 L14,0 Z M17,4 L6,4 C4.9,4 4,4.9 4,6 L4,20 C4,21.1 4.9,22 6,22 L17,22 C18.1,22 19,21.1 19,20 L19,6 C19,4.9 18.1,4 17,4 L17,4 Z M17,20 L6,20 L6,6 L17,6 L17,20 L17,20 Z" id="relation-many"></path>
+            </g>
+        </g>
     </g>
 </svg>

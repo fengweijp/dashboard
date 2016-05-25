@@ -5,6 +5,7 @@ import mapProps from 'map-props'
 import Field from './Field'
 import FieldPopup from './FieldPopup'
 import ModelDescription from '../ModelDescription'
+import ScrollBox from 'components/ScrollBox/ScrollBox'
 import Icon from 'components/Icon/Icon'
 import Tether from 'components/Tether/Tether'
 import DeleteModelMutation from 'mutations/DeleteModelMutation'
@@ -157,15 +158,17 @@ class FieldsView extends React.Component {
             <div className={classes.controls} />
           </div>
           <div className={classes.tableBody}>
-            {this.props.fields.map((field) => (
-              <Field
-                key={field.id}
-                field={field}
-                params={this.props.params}
-                modelId={this.props.model.id}
-                allModels={this.props.allModels}
-              />
-            ))}
+            <ScrollBox>
+              {this.props.fields.map((field) => (
+                <Field
+                  key={field.id}
+                  field={field}
+                  params={this.props.params}
+                  modelId={this.props.model.id}
+                  allModels={this.props.allModels}
+                />
+              ))}
+            </ScrollBox>
           </div>
         </div>
       </div>

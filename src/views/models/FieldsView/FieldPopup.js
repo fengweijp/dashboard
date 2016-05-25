@@ -368,6 +368,13 @@ class FieldPopup extends React.Component {
                     <Icon
                       width={40}
                       height={40}
+                      color='#000'
+                      src={require('assets/icons/relation-one.svg')}
+                    />
+                    <Icon
+                      width={40}
+                      height={40}
+                      color='#000'
                       src={require('assets/icons/relation-many.svg')}
                     />
                   </div>
