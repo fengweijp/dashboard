@@ -11,6 +11,7 @@
   "globals": {
     "__BACKEND_ADDR__": false,
     "__SEGMENT_TOKEN__": false,
+    "__ENABLE_SEGMENT__": false,
     "__SMOOCH_TOKEN__": false,
     "analytics": false
   },
