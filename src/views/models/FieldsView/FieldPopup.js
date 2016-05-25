@@ -38,7 +38,7 @@ class FieldPopup extends React.Component {
       isList: field.isList || false,
       enumValues: field.enumValues || [],
       defaultValue: null,
-      backRelation: false,
+      backRelation: true,
     }
   }
 
@@ -354,6 +354,15 @@ class FieldPopup extends React.Component {
                         </label>
                       </div>
                     </div>
+                  </div>
+                }
+                {this.state.backRelation &&
+                  <div className={classes.row}>
+                    <Icon
+                      width={40}
+                      height={40}
+                      src={require('assets/icons/relation-many.svg')}
+                    />
                   </div>
                 }
               </div>

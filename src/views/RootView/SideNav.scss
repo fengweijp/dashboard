@@ -5,6 +5,7 @@
   height: 100%;
   background: $grey5;
   position: relative;
+  overflow: hidden;
   color: #fff;
 
   a {
@@ -13,7 +14,9 @@
 }
 
 .container {
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  width: calc(100% + 17px);
   height: 100%;
   padding-bottom: 62px;
 }
