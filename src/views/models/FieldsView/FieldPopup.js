@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { findDOMNode } from 'react-dom'
 import Relay from 'react-relay'
 import TypeSelection from './TypeSelection'
 import TagsInput from 'react-tagsinput'
@@ -165,6 +166,12 @@ class FieldPopup extends React.Component {
     this.setState({ enumValues })
   }
 
+  _clickBackground (e) {
+    if (e.target === findDOMNode(this.refs.background)) {
+      this.props.close()
+    }
+  }
+
   render () {
     if (this.state.loading) {
       return (
@@ -175,7 +182,7 @@ class FieldPopup extends React.Component {
     }
 
     return (
-      <div className={classes.background}>
+      <div ref='background' className={classes.background} onClick={::this._clickBackground}>
         <div className={classes.container} onKeyUp={(e) => e.keyCode === 27 ? this.props.close() : null}>
           <div className={classes.head}>
             <div className={classes.title}>
