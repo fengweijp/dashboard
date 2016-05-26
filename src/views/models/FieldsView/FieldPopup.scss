@@ -10,12 +10,20 @@
   background: rgba(0, 0, 0, 0.7);
   z-index: 30;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+}
+
+.scrollBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .container {
   width: 600px;
+  max-height: 100%;
+  margin: 20px 0;
   background: #fff;
   border-radius: 6px;
   overflow: hidden;
@@ -126,6 +134,150 @@
         &:focus {
           border-color: $grey5;
         }
+      }
+    }
+  }
+
+  .modelName {
+    font-family: Monaco, monospace;
+    background: $grey1;
+    color: $grey4;
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 4px;
+  }
+
+  .reverseRelationSelection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 15px 0;
+    font-size: 15px;
+
+    input {
+      margin-right: 7px;
+    }
+
+    .relatedField {
+      font-family: Monaco, monospace;
+      color: $grey4;
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.03);
+      margin-left: 10px;
+      cursor: pointer;
+
+      &.selected {
+        color: #fff;
+        background: $accent-blue;
+      }
+    }
+  }
+
+  .relationPhrase {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    height: 110px;
+    padding: 20px 0;
+
+    & > div {
+      margin: 0 5px;
+    }
+
+    .modelName {
+      background: rgba(0, 0, 0, 0.03);
+    }
+
+    .select {
+      text-align: center;
+      margin: 0 12px;
+      font-size: 14px;
+      font-weight: 600;
+
+      &.top {
+        align-self: flex-start;
+      }
+
+      &.bottom {
+        align-self: flex-end;
+      }
+
+      .option {
+        color: $grey3;
+        cursor: pointer;
+
+        &:first-child {
+          margin-bottom: 7px;
+        }
+
+        &:hover {
+          color: $grey4;
+        }
+
+        &.selected {
+          color: $accent-blue;
+        }
+      }
+    }
+  }
+
+  .relationSchema {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 0 30px;
+
+    .modelName {
+      margin: 0 20px;
+    }
+
+    svg {
+      fill: $grey2;
+    }
+
+    .arrows {
+      margin: 0 33px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+
+      .hidden {
+        display: none;
+      }
+
+      .back {
+        transform: scaleX(-1);
+        svg {
+          fill: $blue4;
+        }
+      }
+    }
+  }
+
+  .reverseRelation {
+    display: flex;
+    justify-content: center;
+
+    .button {
+      background: $blue1;
+      border-radius: 4px;
+      font-weight: 300;
+      font-size: 12px;
+      color: $grey4;
+      padding: 8px 12px;
+      text-transform: uppercase;
+
+      &:hover {
+        background: $blue2;
+      }
+
+      .accent {
+        color: $accent-blue;
+        font-weight: 600;
+        text-transform: none;
       }
     }
   }

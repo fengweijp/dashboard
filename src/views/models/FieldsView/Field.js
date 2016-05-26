@@ -13,7 +13,7 @@ class Field extends React.Component {
     field: PropTypes.object.isRequired,
     allModels: PropTypes.array.isRequired,
     params: PropTypes.object.isRequired,
-    modelId: PropTypes.string.isRequired,
+    model: PropTypes.object.isRequired,
   }
 
   state = {
@@ -30,7 +30,7 @@ class Field extends React.Component {
     if (window.confirm(`Do you really want to delete "${this.props.field.fieldName}"?`)) {
       Relay.Store.commitUpdate(new DeleteFieldMutation({
         fieldId: this.props.field.id,
-        modelId: this.props.modelId,
+        modelId: this.props.model.id,
       }), {
         onSuccess: () => {
           analytics.track('models/fields: deleted field', {
@@ -136,7 +136,7 @@ class Field extends React.Component {
             field={field}
             close={() => this.setState({ showPopup: false })}
             params={this.props.params}
-            modelId={this.props.modelId}
+            model={this.props.model}
             allModels={this.props.allModels}
           />
         }

@@ -3,6 +3,7 @@ const classes: any = require('./ScrollBox.scss')
 
 interface Props {
   children: Element
+  innerContainerClassName?: string
 }
 
 let scrollBarWidth = null
@@ -25,8 +26,8 @@ export default class ScrollBox extends React.Component<Props, {}> {
   render() {
     return (
       <div className={classes.rootContainer}>
-        <div className={classes.outerContainer} style={{width: `calc(100% + ${scrollBarWidth}px)`}}>
-          <div className={classes.innerContainer}>
+        <div className={classes.outerContainer}>
+          <div className={`${classes.innerContainer} ${this.props.innerContainerClassName}`}>
             {this.props.children}
           </div>
         </div>

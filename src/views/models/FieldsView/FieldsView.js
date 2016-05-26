@@ -72,7 +72,7 @@ class FieldsView extends React.Component {
         {this.state.showPopup &&
           <FieldPopup
             close={() => this.setState({ showPopup: false })}
-            modelId={this.props.model.id}
+            model={this.props.model}
             field={null}
             params={this.props.params}
             allModels={this.props.allModels}
@@ -164,7 +164,7 @@ class FieldsView extends React.Component {
                   key={field.id}
                   field={field}
                   params={this.props.params}
-                  modelId={this.props.model.id}
+                  model={this.props.model}
                   allModels={this.props.allModels}
                 />
               ))}
@@ -218,6 +218,13 @@ export default Relay.createContainer(MappedFieldsView, {
               node {
                 id
                 name
+                unconnectedReverseRelationFieldsFrom(relatedModelName: $modelName) {
+                  id
+                  fieldName
+                  relation {
+                    id
+                  }
+                }
               }
             }
           }

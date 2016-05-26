@@ -27,8 +27,8 @@
     ]
   },
   "dependencies": {
-    "classnames": "^2.2.5",
     "calculate-size": "^0.2.0",
+    "classnames": "^2.2.5",
     "graphiql": "^0.7.1",
     "js-cookie": "^2.1.1",
     "lokka": "^1.7.0",
@@ -38,6 +38,7 @@
     "normalize.css": "^4.1.1",
     "react": "^15.1.0",
     "react-addons-pure-render-mixin": "^15.1.0",
+    "react-click-outside": "github:tj/react-click-outside",
     "react-dom": "^15.1.0",
     "react-relay": "^0.8.1",
     "react-router": "^2.4.1",

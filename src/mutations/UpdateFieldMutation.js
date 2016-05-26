@@ -33,6 +33,7 @@ export default class UpdateFieldMutation extends Relay.Mutation {
       isList: this.props.isList,
       isUnique: false,
       defaultValue: this.props.defaultValue,
+      relationId: this.props.relationId,
     }
   }
 
