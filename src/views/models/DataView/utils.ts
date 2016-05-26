@@ -1,10 +1,11 @@
-import { isScalar, isValidValueForType } from '../../../utils/graphql'
+import { isScalar, isValidValueForType, parseValue } from '../../../utils/graphql'
 import { Field } from '../../../types/types'
 
 function valueOrDefault (value: any, field: Field): any {
   if (value !== null && value !== undefined) {
     return value
   }
+
   if (field.defaultValue !== undefined) {
     return field.defaultValue
   }
@@ -62,12 +63,7 @@ export function stringToValue (rawValue: string, field: Field): any {
   if (isList) {
     return JSON.parse(rawValue)
   } else {
-    switch (typeIdentifier) {
-      case 'Int': return parseInt(rawValue, 10)
-      case 'Float': return parseFloat(rawValue)
-      case 'Boolean': return rawValue.toLowerCase() === 'true'
-      default: return rawValue
-    }
+    return parseValue(rawValue, typeIdentifier)
   }
 }
 
@@ -98,4 +94,3 @@ export function isValidValue (value: string, field: Field): boolean {
 
   return !invalidValue
 }
-
