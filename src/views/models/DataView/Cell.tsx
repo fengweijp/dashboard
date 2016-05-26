@@ -86,6 +86,18 @@ export default class Cell extends React.Component<Props, State> {
     const valueString = valueToString(this.props.value, this.props.field, true)
 
     if (this.state.editing) {
+      if (this.props.field.isList) {
+        return (
+          <input
+            autoFocus
+            type='text'
+            ref='input'
+            defaultValue={valueString}
+            onKeyDown={(e) => e.keyCode === 13 ? this._save((e.target as HTMLInputElement).value) : null}
+            onBlur={(e) => this._save((e.target as HTMLInputElement).value)}
+          />
+        )
+      }
       switch (this.props.field.typeIdentifier) {
         case 'Int':
           return (
