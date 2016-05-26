@@ -123,6 +123,7 @@ class FieldPopup extends React.Component {
       },
       onFailure: (transaction) => {
         alert(transaction.getError())
+        this._close()
       },
     })
   }
@@ -165,6 +166,7 @@ class FieldPopup extends React.Component {
       },
       onFailure: (transaction) => {
         alert(transaction.getError())
+        this._close()
       },
     })
   }

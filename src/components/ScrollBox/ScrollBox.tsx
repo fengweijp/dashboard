@@ -17,7 +17,6 @@ export default class ScrollBox extends React.Component<Props, {}> {
       document.body.appendChild(scrollDiv)
 
       scrollBarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth
-      console.warn(scrollBarWidth)
 
       document.body.removeChild(scrollDiv)
     }
