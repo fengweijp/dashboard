@@ -30,7 +30,7 @@ class FieldsView extends React.Component {
   }
 
   componentDidMount () {
-    analytics.track('models/fields: viewed', {
+    analytics.track('models/structure: viewed', {
       model: this.props.params.modelName,
     })
   }
@@ -92,7 +92,7 @@ class FieldsView extends React.Component {
             >
               <Link
                 className={`${classes.button} ${classes.green}`}
-                to={`/${this.props.params.projectName}/models/${this.props.params.modelName}/fields/create`}
+                to={`/${this.props.params.projectName}/models/${this.props.params.modelName}/structure/create`}
               >
                 <Icon
                   width={16}

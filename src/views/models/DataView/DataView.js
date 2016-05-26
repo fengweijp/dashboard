@@ -377,7 +377,7 @@ class DataView extends React.Component {
               </div>
             </Tether>
             <Link
-              to={`/${this.props.params.projectName}/models/${this.props.params.modelName}/fields`}
+              to={`/${this.props.params.projectName}/models/${this.props.params.modelName}/structure`}
               className={classes.button}
               >
               <Icon

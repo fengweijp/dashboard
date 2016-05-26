@@ -181,22 +181,17 @@ export class SideNav extends React.Component {
               </Link>
               <div className={classes.list}>
                 {this.props.models &&
-                  this.props.models.map((model) => {
-                    const tab = model.itemCount === 0 ? 'fields' : 'data'
-                    const modelUrl = `/${this.props.params.projectName}/models/${model.name}/${tab}`
-                    return (
-                      <Link
-                        key={model.name}
-                        to={modelUrl}
-                        className={classes.listElement}
-                        activeClassName={classes.listElementActive}
-                        >
-                        {model.name}
-                        <span className={classes.itemCount}>{model.itemCount}</span>
-                      </Link>
-                    )
-                  })
-                }
+                  this.props.models.map((model) => (
+                    <Link
+                      key={model.name}
+                      to={`/${this.props.params.projectName}/models/${model.name}`}
+                      className={classes.listElement}
+                      activeClassName={classes.listElementActive}
+                      >
+                      {model.name}
+                      <span className={classes.itemCount}>{model.itemCount}</span>
+                    </Link>
+                  ))}
               </div>
               <div className={classes.add} onClick={::this._addModel}>
                 <Tether

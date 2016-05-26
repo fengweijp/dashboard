@@ -63,7 +63,7 @@ class FieldPopup extends React.Component {
   }
 
   _close () {
-    this.context.router.push(`/${this.props.params.projectName}/models/${this.props.params.modelName}/fields`)
+    this.context.router.push(`/${this.props.params.projectName}/models/${this.props.params.modelName}/structure`)
   }
 
   _submit () {
@@ -102,7 +102,7 @@ class FieldPopup extends React.Component {
       relationId: ((reverseRelationField || {}).relation || {}).id,
     }), {
       onSuccess: (response) => {
-        analytics.track('models/fields: created field', {
+        analytics.track('models/structure: created field', {
           project: this.props.params.projectName,
           model: this.props.params.modelName,
           field: fieldName,
@@ -156,7 +156,7 @@ class FieldPopup extends React.Component {
       relationId: ((reverseRelationField || {}).relation || {}).id,
     }), {
       onSuccess: (response) => {
-        analytics.track('models/fields: updated field', {
+        analytics.track('models/structure: updated field', {
           project: this.props.params.projectName,
           model: this.props.params.modelName,
           field: fieldName,
@@ -212,7 +212,7 @@ class FieldPopup extends React.Component {
     const showReverseRelationSection = selectedModel &&
       selectedModel.unconnectedReverseRelationFieldsFrom.length > 0 &&
       !this.props.field
-    const reverseRelationFieldLink = `/${this.props.params.projectName}/models/${this.state.typeIdentifier}/fields/edit/${(this.state.reverseRelationField || {}).fieldName}` // eslint-disable-line
+    const reverseRelationFieldLink = `/${this.props.params.projectName}/models/${this.state.typeIdentifier}/structure/edit/${(this.state.reverseRelationField || {}).fieldName}` // eslint-disable-line
 
     return (
       <div className={classes.background}>
@@ -436,7 +436,10 @@ class FieldPopup extends React.Component {
                           className={classes.button}
                           to={reverseRelationFieldLink}
                         >
-                          Reverse Relation From <span className={classes.accent}>{this.state.typeIdentifier}</span>
+                          Reverse Relation From&nbsp;
+                          <span className={classes.accent}>
+                            {this.state.typeIdentifier} ({this.state.reverseRelationField.fieldName})
+                          </span>
                         </Link>
                       </div>
                     }

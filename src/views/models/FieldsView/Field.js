@@ -32,7 +32,7 @@ class Field extends React.Component {
         modelId: this.props.model.id,
       }), {
         onSuccess: () => {
-          analytics.track('models/fields: deleted field', {
+          analytics.track('models/structure: deleted field', {
             project: this.props.params.projectName,
             model: this.props.params.modelName,
             field: this.props.field.fieldName,
@@ -62,7 +62,7 @@ class Field extends React.Component {
         })
       },
       onSuccess: () => {
-        analytics.track('models/fields: edited description')
+        analytics.track('models/structure: edited description')
 
         this.setState({
           editDescription: false,
@@ -124,7 +124,7 @@ class Field extends React.Component {
       type = `${type}!`
     }
 
-    const editLink = `/${this.props.params.projectName}/models/${this.props.params.modelName}/fields/edit/${this.props.field.fieldName}` // eslint-disable-line
+    const editLink = `/${this.props.params.projectName}/models/${this.props.params.modelName}/structure/edit/${this.props.field.fieldName}` // eslint-disable-line
 
     return (
       <div className={classes.row}>
