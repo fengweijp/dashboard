@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { findDOMNode } from 'react-dom'
 import Icon from 'components/Icon/Icon'
+import ClickOutside from 'react-click-outside'
 import classes from './TypeSelection.scss'
 
 const types = [
@@ -100,36 +101,35 @@ export default class TypeSelection extends React.Component {
     }
 
     return (
-      <div
-        className={classes.root}
-        onMouseLeave={::this._close}
-      >
-        <div className={classes.overlay} ref='overlay'>
-          <div className={classes.head} onClick={::this._close}>Scalar Types</div>
-          <div className={classes.list}>
-            {types.map((type) => (
-              <div
-                key={type}
-                onClick={() => this._select(type)}
-                className={type === this.props.selected ? classes.selected : ''}
-              >
-                {type}
-              </div>
-            ))}
+      <div className={classes.root}>
+        <ClickOutside onClickOutside={::this._close}>
+          <div className={classes.overlay} ref='overlay'>
+            <div className={classes.head} onClick={::this._close}>Scalar Types</div>
+            <div className={classes.list}>
+              {types.map((type) => (
+                <div
+                  key={type}
+                  onClick={() => this._select(type)}
+                  className={type === this.props.selected ? classes.selected : ''}
+                >
+                  {type}
+                </div>
+              ))}
+            </div>
+            <div className={classes.head} onClick={::this._close}>Model Types</div>
+            <div className={classes.list}>
+              {this.props.modelNames.map((type) => (
+                <div
+                  key={type}
+                  onClick={() => this._select(type)}
+                  className={type === this.props.selected ? classes.selected : ''}
+                >
+                  {type}
+                </div>
+              ))}
+            </div>
           </div>
-          <div className={classes.head} onClick={::this._close}>Model Types</div>
-          <div className={classes.list}>
-            {this.props.modelNames.map((type) => (
-              <div
-                key={type}
-                onClick={() => this._select(type)}
-                className={type === this.props.selected ? classes.selected : ''}
-              >
-                {type}
-              </div>
-            ))}
-          </div>
-        </div>
+        </ClickOutside>
       </div>
     )
   }

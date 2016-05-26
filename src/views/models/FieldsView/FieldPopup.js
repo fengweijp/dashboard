@@ -83,7 +83,7 @@ class FieldPopup extends React.Component {
       isList,
       isRequired,
       defaultValue,
-      relationId,
+      reverseRelationField,
     } = this.state
 
     Relay.Store.commitUpdate(new AddFieldMutation({
@@ -94,7 +94,7 @@ class FieldPopup extends React.Component {
       isList,
       isRequired,
       defaultValue,
-      relationId,
+      relationId: ((reverseRelationField || {}).relation || {}).id,
     }), {
       onSuccess: (response) => {
         analytics.track('models/fields: created field', {
@@ -136,7 +136,7 @@ class FieldPopup extends React.Component {
       isList,
       isRequired,
       defaultValue,
-      relationId,
+      reverseRelationField,
     } = this.state
 
     Relay.Store.commitUpdate(new UpdateFieldMutation({
@@ -147,7 +147,7 @@ class FieldPopup extends React.Component {
       isList,
       isRequired,
       defaultValue,
-      relationId,
+      relationId: ((reverseRelationField || {}).relation || {}).id,
     }), {
       onSuccess: (response) => {
         analytics.track('models/fields: updated field', {
@@ -173,8 +173,8 @@ class FieldPopup extends React.Component {
 
     this.setState({
       typeIdentifier,
-      isList: field.isList,
-      isRequired: field.isRequired,
+      isRequired: field.isRequired || false,
+      isList: field.isList || false,
       reverseRelationField: field.reverseRelationField,
     })
   }
@@ -202,6 +202,9 @@ class FieldPopup extends React.Component {
     }
 
     const selectedModel = this.props.allModels.find((m) => m.name === this.state.typeIdentifier)
+    const showReverseRelationSection = selectedModel &&
+      selectedModel.unconnectedReverseRelationFieldsFrom.length > 0 &&
+      !this.props.field
 
     return (
       <div className={classes.background}>
@@ -318,7 +321,7 @@ class FieldPopup extends React.Component {
                 }
                 {!isScalar(this.state.typeIdentifier) &&
                   <div className={classes.rowBlock}>
-                    {selectedModel.unconnectedReverseRelationFieldsFrom.length > 0 &&
+                    {showReverseRelationSection &&
                       <div className={classes.reverseRelationSelection}>
                         <input
                           type='checkbox'
