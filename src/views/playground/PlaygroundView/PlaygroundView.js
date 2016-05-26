@@ -36,7 +36,7 @@ class PlaygroundView extends React.Component {
   constructor (props) {
     super(props)
 
-    const clientEndpoint = `${__BACKEND_ADDR__}/graphql/${this.props.projectId}`
+    const clientEndpoint = `${__BACKEND_ADDR__}/relay/v1/${this.props.projectId}`
     const token = cookiestore.get('graphcool_token')
     const headers = { Authorization: `Bearer ${token}`, 'X-GraphCool-Source': 'dashboard:playground' }
     const transport = new Transport(clientEndpoint, { headers })

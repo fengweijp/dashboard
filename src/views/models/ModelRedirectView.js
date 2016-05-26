@@ -13,7 +13,7 @@ class ModelRedirectView extends React.Component {
   };
 
   componentWillMount () {
-    const subView = this.props.model.itemCount === 0 ? 'structure' : 'data'
+    const subView = this.props.model.itemCount === 0 ? 'structure' : 'browser'
     this.context.router.replace(`/${this.props.params.projectName}/models/${this.props.model.name}/${subView}`)
   }
 

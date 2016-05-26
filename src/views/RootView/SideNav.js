@@ -142,7 +142,7 @@ export class SideNav extends React.Component {
                     </div>
                     <div className={gettingStartedStepClass(2)}>
                       <Link
-                        to={`/${this.props.params.projectName}/models/Todo/data`}
+                        to={`/${this.props.params.projectName}/models/Todo/browser`}
                         onClick={secondStepOnClick}
                       >
                         2. Add some data

@@ -8,9 +8,9 @@ import ScrollBox from 'components/ScrollBox/ScrollBox'
 import Icon from 'components/Icon/Icon'
 import Tether from 'components/Tether/Tether'
 import DeleteModelMutation from 'mutations/DeleteModelMutation'
-import classes from './FieldsView.scss'
+import classes from './StructureView.scss'
 
-class FieldsView extends React.Component {
+class StructureView extends React.Component {
   static propTypes = {
     params: PropTypes.object.isRequired,
     fields: PropTypes.array.isRequired,
@@ -48,7 +48,7 @@ class FieldsView extends React.Component {
         modelId: this.props.model.id,
       }), {
         onSuccess: () => {
-          analytics.track('models: deleted model', {
+          analytics.track('models/structure: deleted model', {
             project: this.props.params.projectName,
             model: this.props.params.modelName,
           })
@@ -111,7 +111,7 @@ class FieldsView extends React.Component {
               offsetY={5}
             >
               <Link
-                to={`/${this.props.params.projectName}/models/${this.props.params.modelName}/data`}
+                to={`/${this.props.params.projectName}/models/${this.props.params.modelName}/browser`}
                 className={classes.button}
                 onClick={dataViewOnClick}
                 >
@@ -120,7 +120,7 @@ class FieldsView extends React.Component {
                   height={16}
                   src={require('assets/icons/data.svg')}
                 />
-                <span>Show Data</span>
+                <span>Data Browser</span>
               </Link>
             </Tether>
             <div className={classes.button} onClick={::this._toggleMenuDropdown}>
@@ -167,7 +167,7 @@ class FieldsView extends React.Component {
   }
 }
 
-const MappedFieldsView = mapProps({
+const MappedStructureView = mapProps({
   params: (props) => props.params,
   allModels: (props) => props.viewer.project.models.edges.map((edge) => edge.node),
   fields: (props) => (
@@ -177,9 +177,9 @@ const MappedFieldsView = mapProps({
   ),
   model: (props) => props.viewer.model,
   projectId: (props) => props.viewer.project.id,
-})(FieldsView)
+})(StructureView)
 
-export default Relay.createContainer(MappedFieldsView, {
+export default Relay.createContainer(MappedStructureView, {
   initialVariables: {
     modelName: null, // injected from router
     projectName: null, // injected from router

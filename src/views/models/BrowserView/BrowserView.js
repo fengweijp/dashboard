@@ -17,7 +17,7 @@ import Row from './Row'
 import NewRow from './NewRow'
 import ModelDescription from '../ModelDescription'
 import { valueToString, toGQL } from './utils'
-import classes from './DataView.scss'
+import classes from './BrowserView.scss'
 
 function compareFields (a, b) {
   if (a.fieldName === 'id') return -1
@@ -25,7 +25,7 @@ function compareFields (a, b) {
   return a.fieldName.localeCompare(b.fieldName)
 }
 
-class DataView extends React.Component {
+class BrowserView extends React.Component {
   static propTypes = {
     params: PropTypes.object.isRequired,
     fields: PropTypes.array.isRequired,
@@ -41,7 +41,7 @@ class DataView extends React.Component {
   constructor (props) {
     super(props)
 
-    const clientEndpoint = `${__BACKEND_ADDR__}/graphql/${this.props.projectId}`
+    const clientEndpoint = `${__BACKEND_ADDR__}/relay/v1/${this.props.projectId}`
     const token = cookiestore.get('graphcool_token')
     const headers = { Authorization: `Bearer ${token}`, 'X-GraphCool-Source': 'dashboard:data-tab' }
     const transport = new Transport(clientEndpoint, { headers })
@@ -49,7 +49,6 @@ class DataView extends React.Component {
     this._lokka = new Lokka({ transport })
 
     this.state = {
-      menuDropdownVisible: false,
       items: [],
       loading: true,
       sortBy: {
@@ -69,13 +68,9 @@ class DataView extends React.Component {
   }
 
   componentDidMount () {
-    analytics.track('models/data: viewed', {
+    analytics.track('models/browser: viewed', {
       model: this.props.params.modelName,
     })
-  }
-
-  _toggleMenuDropdown () {
-    this.setState({ menuDropdownVisible: !this.state.menuDropdownVisible })
   }
 
   _handleScroll (e) {
@@ -188,7 +183,7 @@ class DataView extends React.Component {
         const items = this.state.items.filter((i) => i.id !== itemId)
         this.setState({ items, loading: false })
 
-        analytics.track('models/data: deleted item', {
+        analytics.track('models/browser: deleted item', {
           project: this.props.params.projectName,
           model: this.props.params.modelName,
         })
@@ -216,7 +211,7 @@ class DataView extends React.Component {
 
         this.setState({ items })
 
-        analytics.track('models/data: updated item', {
+        analytics.track('models/browser: updated item', {
           project: this.props.params.projectName,
           model: this.props.params.modelName,
           field: field.fieldName,
@@ -248,7 +243,7 @@ class DataView extends React.Component {
       .then(() => {
         this.setState({ newRowVisible: false })
 
-        analytics.track('models/data: created item', {
+        analytics.track('models/browser: created item', {
           project: this.props.params.projectName,
           model: this.props.params.modelName,
         })
@@ -404,18 +399,6 @@ class DataView extends React.Component {
                 src={require('assets/icons/refresh.svg')}
               />
             </div>
-            <div className={classes.button} onClick={::this._toggleMenuDropdown}>
-              <Icon
-                width={16}
-                height={16}
-                src={require('assets/icons/more.svg')}
-              />
-            </div>
-            {this.state.menuDropdownVisible &&
-              <div className={classes.menuDropdown}>
-
-              </div>
-            }
           </div>
         </div>
         {this.state.loading &&
@@ -472,7 +455,7 @@ class DataView extends React.Component {
   }
 }
 
-const MappedDataView = mapProps({
+const MappedBrowserView = mapProps({
   params: (props) => props.params,
   fields: (props) => (
     props.viewer.model.fields.edges
@@ -482,9 +465,9 @@ const MappedDataView = mapProps({
   ),
   model: (props) => props.viewer.model,
   projectId: (props) => props.viewer.project.id,
-})(DataView)
+})(BrowserView)
 
-export default Relay.createContainer(MappedDataView, {
+export default Relay.createContainer(MappedBrowserView, {
   initialVariables: {
     modelName: null, // injected from router
     projectName: null, // injected from router

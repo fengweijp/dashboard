@@ -5,13 +5,10 @@ import Loading from 'components/Loading/Loading'
 import RootView from 'views/RootView/RootView'
 import RootRedirectView from 'views/RootView/RootRedirectView'
 import TokenRedirectView from 'views/RootView/TokenRedirectView'
-import FieldsView from 'views/models/FieldsView/FieldsView'
-import FieldPopup from 'views/models/FieldsView/FieldPopup'
-import DataView from 'views/models/DataView/DataView'
-// import ModelView from 'views/ModelView/ModelView'
+import StructureView from 'views/models/StructureView/StructureView'
+import FieldPopup from 'views/models/StructureView/FieldPopup'
+import BrowserView from 'views/models/BrowserView/BrowserView'
 import ModelRedirectView from 'views/models/ModelRedirectView'
-// import FieldsTab from 'views/ModelView/FieldsTab'
-// import DataTab from 'views/ModelView/DataTab'
 import PlaygroundView from 'views/playground/PlaygroundView/PlaygroundView'
 import GettingStartedView from 'views/GettingStartedView/GettingStartedView'
 import AccountView from 'views/account/AccountView/AccountView'
@@ -81,11 +78,11 @@ export default (
       </Route>
       <Route path='models'>
         <IndexRoute component={ModelRedirectView} queries={ViewerQuery} render={render} />
-        <Route path=':modelName/structure' component={FieldsView} queries={ViewerQuery} render={render}>
+        <Route path=':modelName/structure' component={StructureView} queries={ViewerQuery} render={render}>
           <Route path='edit/:fieldName' component={FieldPopup} queries={ViewerQuery} render={render} />
           <Route path='create' component={FieldPopup} queries={ViewerQuery} render={render} />
         </Route>
-        <Route path=':modelName/data' component={DataView} queries={ViewerQuery} render={render} />
+        <Route path=':modelName/browser' component={BrowserView} queries={ViewerQuery} render={render} />
         <Route path=':modelName' component={ModelRedirectView} queries={ViewerQuery} render={render} />
       </Route>
       <Route path='playground' component={PlaygroundView} queries={ViewerQuery} render={render} />

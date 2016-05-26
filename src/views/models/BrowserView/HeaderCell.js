@@ -73,6 +73,14 @@ export default class HeaderCell extends React.Component {
           <option value={false}>false</option>
         </select>
       )
+      case 'Enum': return (
+        <select onChange={::this._onFilterChangeBoolean}>
+          <option value={''}>{`Filter by ${this.props.field.fieldName}`}</option>
+          {this.props.field.enumValues.map((enumValue) => (
+            <option key={enumValue}>{enumValue}</option>
+          ))}
+        </select>
+      )
       default: return (
         <input
           type='string'
