@@ -450,17 +450,19 @@ class DataView extends React.Component {
             }
             <div className={classes.tableBody} onScroll={::this._handleScroll}>
               <ScrollBox>
-                {this.state.items.map((item, index) => (
-                  <Row
-                    key={item.id}
-                    fields={this.props.fields}
-                    columnWidths={columnWidths}
-                    item={item}
-                    update={(key, value, callback) => this._updateItem(key, value, callback, item.id, index)}
-                    isSelected={this._isSelected(item.id)}
-                    onSelect={(event) => this._onSelectRow(item.id)}
-                  />
-                ))}
+                <div className={classes.tableBodyContainer}>
+                  {this.state.items.map((item, index) => (
+                    <Row
+                      key={item.id}
+                      fields={this.props.fields}
+                      columnWidths={columnWidths}
+                      item={item}
+                      update={(key, value, callback) => this._updateItem(key, value, callback, item.id, index)}
+                      isSelected={this._isSelected(item.id)}
+                      onSelect={(event) => this._onSelectRow(item.id)}
+                    />
+                  ))}
+                </div>
               </ScrollBox>
             </div>
           </div>
