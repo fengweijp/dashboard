@@ -6,6 +6,7 @@ import RootView from 'views/RootView/RootView'
 import RootRedirectView from 'views/RootView/RootRedirectView'
 import TokenRedirectView from 'views/RootView/TokenRedirectView'
 import FieldsView from 'views/models/FieldsView/FieldsView'
+import FieldPopup from 'views/models/FieldsView/FieldPopup'
 import DataView from 'views/models/DataView/DataView'
 // import ModelView from 'views/ModelView/ModelView'
 import ModelRedirectView from 'views/models/ModelRedirectView'
@@ -80,7 +81,10 @@ export default (
       </Route>
       <Route path='models'>
         <IndexRoute component={ModelRedirectView} queries={ViewerQuery} render={render} />
-        <Route path=':modelName/fields' component={FieldsView} queries={ViewerQuery} render={render} />
+        <Route path=':modelName/fields' component={FieldsView} queries={ViewerQuery} render={render}>
+          <Route path='edit/:fieldName' component={FieldPopup} queries={ViewerQuery} render={render} />
+          <Route path='create' component={FieldPopup} queries={ViewerQuery} render={render} />
+        </Route>
         <Route path=':modelName/data' component={DataView} queries={ViewerQuery} render={render} />
         <Redirect path=':modelName' to=':modelName/fields' />
       </Route>

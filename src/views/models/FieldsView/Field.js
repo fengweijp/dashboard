@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
+import { Link } from 'react-router'
 import Loading from '../../../components/Loading/Loading'
-import FieldPopup from './FieldPopup'
 import UpdateFieldDescriptionMutation from 'mutations/UpdateFieldDescriptionMutation'
 import DeleteFieldMutation from 'mutations/DeleteFieldMutation'
 import Icon from 'components/Icon/Icon'
@@ -19,7 +19,6 @@ class Field extends React.Component {
   state = {
     editDescription: false,
     editDescriptionPending: false,
-    showPopup: false,
   }
 
   _save () {
@@ -71,10 +70,6 @@ class Field extends React.Component {
         })
       },
     })
-  }
-
-  _showPopup () {
-    this.setState({ showPopup: true })
   }
 
   _renderDescription () {
@@ -129,21 +124,14 @@ class Field extends React.Component {
       type = `${type}!`
     }
 
+    const editLink = `/${this.props.params.projectName}/models/${this.props.params.modelName}/fields/edit/${this.props.field.fieldName}` // eslint-disable-line
+
     return (
       <div className={classes.row}>
-        {this.state.showPopup &&
-          <FieldPopup
-            field={field}
-            close={() => this.setState({ showPopup: false })}
-            params={this.props.params}
-            model={this.props.model}
-            allModels={this.props.allModels}
-          />
-        }
-        <div className={classes.fieldName} onClick={::this._showPopup}>{field.fieldName}</div>
-        <div className={classes.type} onClick={::this._showPopup}>
+        <Link className={classes.fieldName} to={editLink}>{field.fieldName}</Link>
+        <Link className={classes.type} to={editLink}>
           <span>{type}</span>
-        </div>
+        </Link>
         <div className={classes.description}>
           {this._renderDescription()}
         </div>
@@ -154,13 +142,13 @@ class Field extends React.Component {
           ))}
         </div>
         <div className={classes.controls}>
-          <span onClick={::this._showPopup}>
+          <Link to={editLink}>
             <Icon
               width={20}
               height={20}
               src={require('assets/icons/edit.svg')}
             />
-          </span>
+          </Link>
           <span onClick={::this._delete}>
             <Icon
               width={20}
@@ -193,7 +181,6 @@ export default Relay.createContainer(Field, {
             }
           }
         }
-        ${FieldPopup.getFragment('field')}
       }
     `,
   },

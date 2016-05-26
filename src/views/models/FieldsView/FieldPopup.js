@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
+import mapProps from 'map-props'
 import Relay from 'react-relay'
 import ClickOutside from 'react-click-outside'
 import TypeSelection from './TypeSelection'
@@ -18,14 +19,14 @@ class FieldPopup extends React.Component {
 
   static propTypes = {
     field: PropTypes.object,
-    close: PropTypes.func.isRequired,
-    model: PropTypes.object.isRequired,
+    modelId: PropTypes.string.isRequired,
     params: PropTypes.object.isRequired,
     allModels: PropTypes.array.isRequired,
   }
 
   static contextTypes = {
     gettingStartedState: PropTypes.object.isRequired,
+    router: PropTypes.object.isRequired,
   }
 
   constructor (props) {
@@ -57,8 +58,12 @@ class FieldPopup extends React.Component {
     if (e.keyCode === 13 && e.target === document.body) {
       this._submit()
     } else if (e.keyCode === 27 && e.target === document.body) {
-      this.props.close()
+      this._close()
     }
+  }
+
+  _close () {
+    this.context.router.push(`/${this.props.params.projectName}/models/${this.props.params.modelName}/fields`)
   }
 
   _submit () {
@@ -87,7 +92,7 @@ class FieldPopup extends React.Component {
     } = this.state
 
     Relay.Store.commitUpdate(new AddFieldMutation({
-      modelId: this.props.model.id,
+      modelId: this.props.modelId,
       fieldName,
       typeIdentifier,
       enumValues,
@@ -103,7 +108,7 @@ class FieldPopup extends React.Component {
           field: fieldName,
         })
 
-        this.props.close()
+        this._close()
 
         // getting-started onboarding steps
         const isStep3 = this.context.gettingStartedState.isActive('STEP3_CREATE_TEXT_FIELD')
@@ -156,7 +161,7 @@ class FieldPopup extends React.Component {
           field: fieldName,
         })
 
-        this.props.close()
+        this._close()
       },
       onFailure: (transaction) => {
         alert(transaction.getError())
@@ -205,12 +210,13 @@ class FieldPopup extends React.Component {
     const showReverseRelationSection = selectedModel &&
       selectedModel.unconnectedReverseRelationFieldsFrom.length > 0 &&
       !this.props.field
+    const reverseRelationFieldLink = `/${this.props.params.projectName}/models/${this.state.typeIdentifier}/fields/edit/${(this.state.reverseRelationField || {}).fieldName}` // eslint-disable-line
 
     return (
       <div className={classes.background}>
         <ScrollBox innerContainerClassName={classes.scrollBox}>
-          <ClickOutside onClickOutside={this.props.close}>
-            <div className={classes.container} onKeyUp={(e) => e.keyCode === 27 ? this.props.close() : null}>
+          <ClickOutside onClickOutside={::this._close}>
+            <div className={classes.container} onKeyUp={(e) => e.keyCode === 27 ? this._close() : null}>
               <div className={classes.head}>
                 <div className={classes.title}>
                   {this.props.field ? 'Change field' : 'Create a new field'}
@@ -231,7 +237,7 @@ class FieldPopup extends React.Component {
                   </div>
                   <div className={classes.right}>
                     <input
-                      autoFocus={this.props.field === null}
+                      autoFocus={!this.props.field}
                       type='text'
                       placeholder='Fieldname'
                       defaultValue={this.state.fieldName}
@@ -325,7 +331,7 @@ class FieldPopup extends React.Component {
                       <div className={classes.reverseRelationSelection}>
                         <input
                           type='checkbox'
-                          checked={this.state.reverseRelationField}
+                          checked={!!this.state.reverseRelationField}
                           onChange={::this._toggleReverseRelation}
                         />
                         This field is related to the field
@@ -345,7 +351,7 @@ class FieldPopup extends React.Component {
                     }
                     <div className={classes.relationPhrase}>
                       <div>A</div>
-                      <div className={classes.modelName}>{this.props.model.name}</div>
+                      <div className={classes.modelName}>{this.props.params.modelName}</div>
                       <div>model</div>
                       <div className={`${classes.select} ${this.state.isRequired ? classes.top : classes.bottom}`}>
                         <div
@@ -387,7 +393,7 @@ class FieldPopup extends React.Component {
                   <div>
                     <div className={classes.relationSchema}>
                       <div className={classes.modelName}>
-                        {this.props.model.name}
+                        {this.props.params.modelName}
                       </div>
                       <Icon
                         width={40}
@@ -426,7 +432,7 @@ class FieldPopup extends React.Component {
                       <div className={classes.reverseRelation}>
                         <Link
                           className={classes.button}
-                          to={`/${this.props.params.projectName}/models/${this.state.typeIdentifier}/fields`}
+                          to={reverseRelationFieldLink}
                         >
                           Reverse Relation From <span className={classes.accent}>{this.state.typeIdentifier}</span>
                         </Link>
@@ -436,7 +442,7 @@ class FieldPopup extends React.Component {
                 }
               </div>
               <div className={classes.foot}>
-                <div className={classes.button} onClick={this.props.close}>
+                <div className={classes.button} onClick={::this._close}>
                   Cancel
                 </div>
                 <button
@@ -454,22 +460,64 @@ class FieldPopup extends React.Component {
   }
 }
 
-export default Relay.createContainer(FieldPopup, {
+const MappedFieldPopup = mapProps({
+  params: (props) => props.params,
+  allModels: (props) => props.viewer.project.models.edges.map((edge) => edge.node),
+  field: (props) => props.viewer.field,
+  modelId: (props) => props.viewer.model.id,
+})(FieldPopup)
+
+export default Relay.createContainer(MappedFieldPopup, {
+  initialVariables: {
+    modelName: null, // injected from router
+    projectName: null, // injected from router
+    fieldName: null, // injected from router
+  },
+  prepareVariables: prevVariables => ({
+    ...prevVariables,
+    fieldExists: !!prevVariables.fieldName,
+  }),
   fragments: {
-    field: () => Relay.QL`
-      fragment on Field {
-        id
-        fieldName
-        typeIdentifier
-        isRequired
-        isList
-        enumValues
-        defaultValue
-        relation {
+    viewer: () => Relay.QL`
+      fragment on Viewer {
+        model: modelByName(projectName: $projectName, modelName: $modelName) {
           id
         }
-        reverseRelationField {
+        field: fieldByName(
+          projectName: $projectName
+          modelName: $modelName
+          fieldName: $fieldName
+        ) @include(if: $fieldExists) {
+          id
           fieldName
+          typeIdentifier
+          isRequired
+          isList
+          enumValues
+          defaultValue
+          relation {
+            id
+          }
+          reverseRelationField {
+            fieldName
+          }
+        }
+        project: projectByName(projectName: $projectName) {
+          models(first: 100) {
+            edges {
+              node {
+                id
+                name
+                unconnectedReverseRelationFieldsFrom(relatedModelName: $modelName) {
+                  id
+                  fieldName
+                  relation {
+                    id
+                  }
+                }
+              }
+            }
+          }
         }
       }
     `,

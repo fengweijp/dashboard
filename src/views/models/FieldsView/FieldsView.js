@@ -3,7 +3,6 @@ import Relay from 'react-relay'
 import { Link } from 'react-router'
 import mapProps from 'map-props'
 import Field from './Field'
-import FieldPopup from './FieldPopup'
 import ModelDescription from '../ModelDescription'
 import ScrollBox from 'components/ScrollBox/ScrollBox'
 import Icon from 'components/Icon/Icon'
@@ -18,6 +17,7 @@ class FieldsView extends React.Component {
     allModels: PropTypes.array.isRequired,
     projectId: PropTypes.string.isRequired,
     model: PropTypes.object.isRequired,
+    children: PropTypes.element,
   }
 
   static contextTypes = {
@@ -26,7 +26,6 @@ class FieldsView extends React.Component {
   }
 
   state = {
-    showPopup: false,
     menuDropdownVisible: false,
   }
 
@@ -69,15 +68,7 @@ class FieldsView extends React.Component {
 
     return (
       <div className={classes.root}>
-        {this.state.showPopup &&
-          <FieldPopup
-            close={() => this.setState({ showPopup: false })}
-            model={this.props.model}
-            field={null}
-            params={this.props.params}
-            allModels={this.props.allModels}
-          />
-        }
+        {this.props.children}
         <div className={classes.head}>
           <div className={classes.headLeft}>
             <div className={classes.title}>
@@ -99,9 +90,9 @@ class FieldsView extends React.Component {
               offsetY={5}
               width={320}
             >
-              <div
+              <Link
                 className={`${classes.button} ${classes.green}`}
-                onClick={() => this.setState({ showPopup: true })}
+                to={`/${this.props.params.projectName}/models/${this.props.params.modelName}/fields/create`}
               >
                 <Icon
                   width={16}
@@ -109,7 +100,7 @@ class FieldsView extends React.Component {
                   src={require('assets/icons/add.svg')}
                 />
                 <span>Create Field</span>
-              </div>
+              </Link>
             </Tether>
             <Tether
               steps={{
