@@ -37,6 +37,20 @@ export default class NewCell extends React.Component {
 
     const valueString = valueToString(this.state.value, this.props.field, false)
 
+    if (this.props.field.isList) {
+      return (
+        <input
+          autoFocus={this.props.index === 1}
+          type='text'
+          defaultValue={valueString}
+          onChange={(e) => this._updateValue(e.target.value)}
+          onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : null}
+          onFocus={() => this.setState({ focus: true })}
+          onBlur={() => this.setState({ focus: false })}
+        />
+      )
+    }
+
     switch (this.props.field.typeIdentifier) {
       case 'Int':
         return (
