@@ -22,7 +22,16 @@ describe('stringToValue', () => {
     expect(stringToValue('23', field)).toBe(23)
   })
 
-  it('parses empty float', () => {
+  it('parses negative int', () => {
+    const field = {
+      isRequired: true,
+      isList: false,
+      typeIdentifier: 'Int',
+    }
+    expect(stringToValue('-23', field)).toBe(-23)
+  })
+
+  it('parses empty float when required', () => {
     const field = {
       isRequired: true,
       isList: false,
@@ -31,13 +40,58 @@ describe('stringToValue', () => {
     expect(stringToValue('', field)).toBe(null)
   })
 
-  it('parses float', () => {
+  it('parses float when required', () => {
     const field = {
       isRequired: true,
       isList: false,
       typeIdentifier: 'Float',
     }
     expect(stringToValue('23.32', field)).toBe(23.32)
+  })
+
+  it('parses negative float when required', () => {
+    const field = {
+      isRequired: true,
+      isList: false,
+      typeIdentifier: 'Float',
+    }
+    expect(stringToValue('-23.32', field)).toBe(-23.32)
+  })
+
+  it('parses empty float when not required', () => {
+    const field = {
+      isRequired: false,
+      isList: false,
+      typeIdentifier: 'Float',
+    }
+    expect(stringToValue('', field)).toBe(null)
+  })
+
+  it('parses float when not required', () => {
+    const field = {
+      isRequired: false,
+      isList: false,
+      typeIdentifier: 'Float',
+    }
+    expect(stringToValue('23.32', field)).toBe(23.32)
+  })
+
+  it('parses string', () => {
+    const field = {
+      isRequired: true,
+      isList: false,
+      typeIdentifier: 'String',
+    }
+    expect(stringToValue('abc', field)).toBe('abc')
+  })
+
+  it('parses numeric string', () => {
+    const field = {
+      isRequired: true,
+      isList: false,
+      typeIdentifier: 'String',
+    }
+    expect(stringToValue('12', field)).toBe('12')
   })
 
   it('parses empty string when not required', () => {
@@ -110,5 +164,23 @@ describe('stringToValue', () => {
       typeIdentifier: 'SomeModel',
     }
     expect(stringToValue('someId', field)).toEqual({ id: 'someId' })
+  })
+
+  it('parses GraphQLID', () => {
+    const field = {
+      isRequired: true,
+      isList: false,
+      typeIdentifier: 'GraphQLID',
+    }
+    expect(stringToValue('someId', field)).toBe('someId')
+  })
+
+  it('parses GraphQLID list', () => {
+    const field = {
+      isRequired: true,
+      isList: true,
+      typeIdentifier: 'GraphQLID',
+    }
+    expect(stringToValue('["id","id2"]', field)).toEqual(['id', 'id2'])
   })
 })
