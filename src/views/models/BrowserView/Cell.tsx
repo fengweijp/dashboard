@@ -145,8 +145,7 @@ export default class Cell extends React.Component<Props, State> {
               leftText='false'
               rightText='true'
               side={valueString === 'true' ? ToggleSide.Right : ToggleSide.Left}
-              onUpdateSide={(side) => this._save(side === ToggleSide.Left ? 'false' : 'true')}
-              onClickOutside={() => this.setState({ editing: false } as State)}
+              onClickOutside={(side) => this._save(side === ToggleSide.Left ? 'false' : 'true')}
             />
           )
         case 'Enum':
