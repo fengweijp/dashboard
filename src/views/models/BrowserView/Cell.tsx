@@ -79,6 +79,17 @@ export default class Cell extends React.Component<Props, State> {
     })
   }
 
+  _cancelOnEscape (e: __React.KeyboardEvent) {
+    switch (e.keyCode) {
+      case 13:
+        this._save((e.target as HTMLInputElement).value)
+        break
+      case 27:
+        this._cancel()
+        break
+    }
+  }
+
   _renderContent () {
     if (this.state.loading) {
       return (
@@ -98,11 +109,7 @@ export default class Cell extends React.Component<Props, State> {
             type='text'
             ref='input'
             defaultValue={valueString}
-            onKeyDown={(e) => {
-              e.keyCode === 13 ? this._save((e.target as HTMLInputElement).value)
-                : e.keyCode === 27 ? this._cancel() : null
-              }
-            }
+            onKeyDown={(e) => this._cancelOnEscape(e)}
             onBlur={(e) => this._save((e.target as HTMLInputElement).value)}
           />
         )
@@ -116,11 +123,7 @@ export default class Cell extends React.Component<Props, State> {
               ref='input'
               defaultValue={valueString}
               onBlur={(e) => this._save((e.target as HTMLInputElement).value)}
-              onKeyDown={(e) => {
-                e.keyCode === 13 ? this._save((e.target as HTMLInputElement).value)
-                  : null e.keyCode === 27 ? this._cancel() : null
-                }
-              }
+              onKeyDown={(e) => this._cancelOnEscape(e)}
             />
           )
         case 'Float':
@@ -132,11 +135,7 @@ export default class Cell extends React.Component<Props, State> {
               ref='input'
               defaultValue={valueString}
               onBlur={(e) => this._save((e.target as HTMLInputElement).value)}
-              onKeyDown={(e) => {
-                e.keyCode === 13 ? this._save((e.target as HTMLInputElement).value)
-                  : null e.keyCode === 27 ? this._cancel() : null
-                }
-              }
+              onKeyDown={(e) => this._cancelOnEscape(e)}
             />
           )
         case 'Boolean':
@@ -154,11 +153,7 @@ export default class Cell extends React.Component<Props, State> {
               autoFocus
               defaultValue={valueString}
               onBlur={(e) => this._save((e.target as HTMLInputElement).value)}
-              onKeyDown={(e) => {
-                e.keyCode === 13 ? this._save((e.target as HTMLInputElement).value)
-                  : null e.keyCode === 27 ? this._cancel() : null
-                }
-              }
+              onKeyDown={(e) => this._cancelOnEscape(e)}
             >
               {this.props.field.enumValues.map((enumValue) => (
                 <option key={enumValue}>{enumValue}</option>
@@ -172,11 +167,7 @@ export default class Cell extends React.Component<Props, State> {
               type='text'
               ref='input'
               defaultValue={valueString}
-              onKeyDown={(e) => {
-                e.keyCode === 13 ? this._save((e.target as HTMLInputElement).value)
-                  : null e.keyCode === 27 ? this._cancel() : null
-                }
-              }
+              onKeyDown={(e) => this._cancelOnEscape(e)}
               onBlur={(e) => this._save((e.target as HTMLInputElement).value)}
             />
           )
