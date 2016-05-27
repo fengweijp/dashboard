@@ -11,6 +11,7 @@ export default class NewCell extends React.Component {
     index: PropTypes.number.isRequired,
     update: PropTypes.func.isRequired,
     submit: PropTypes.func.isRequired,
+    cancel: PropTypes.func.isRequired,
   }
 
   constructor (props) {
@@ -44,7 +45,7 @@ export default class NewCell extends React.Component {
           type='text'
           defaultValue={valueString}
           onChange={(e) => this._updateValue(e.target.value)}
-          onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : null}
+          onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : e.keyCode === 27 ? this.props.cancel() : null}
           onFocus={() => this.setState({ focus: true })}
           onBlur={() => this.setState({ focus: false })}
         />
@@ -59,7 +60,7 @@ export default class NewCell extends React.Component {
             type='number'
             defaultValue={valueString}
             onChange={(e) => this._updateValue(e.target.value)}
-            onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : null}
+            onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : e.keyCode === 27 ? this.props.cancel() : null}
             onFocus={() => this.setState({ focus: true })}
             onBlur={() => this.setState({ focus: false })}
           />
@@ -72,7 +73,7 @@ export default class NewCell extends React.Component {
             step='any'
             defaultValue={valueString}
             onChange={(e) => this._updateValue(e.target.value)}
-            onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : null}
+            oonKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : e.keyCode === 27 ? this.props.cancel() : null}
             onFocus={() => this.setState({ focus: true })}
             onBlur={() => this.setState({ focus: false })}
           />
@@ -83,7 +84,7 @@ export default class NewCell extends React.Component {
             autoFocus={this.props.index === 1}
             defaultValue={valueString}
             onChange={(e) => this._updateValue(e.target.value)}
-            onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : null}
+            onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : e.keyCode === 27 ? this.props.cancel() : null}
             onFocus={() => this.setState({ focus: true })}
             onBlur={() => this.setState({ focus: false })}
           >
@@ -98,7 +99,7 @@ export default class NewCell extends React.Component {
             autoFocus={this.props.index === 1}
             defaultValue={valueString}
             onChange={(e) => this._updateValue(e.target.value)}
-            onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : null}
+            onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : e.keyCode === 27 ? this.props.cancel() : null}
             onFocus={() => this.setState({ focus: true })}
             onBlur={() => this.setState({ focus: false })}
           >
@@ -115,7 +116,7 @@ export default class NewCell extends React.Component {
             type='text'
             defaultValue={valueString}
             onChange={(e) => this._updateValue(e.target.value)}
-            onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : null}
+            onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : e.keyCode === 27 ? this.props.cancel() : null}
             onFocus={() => this.setState({ focus: true })}
             onBlur={() => this.setState({ focus: false })}
           />

@@ -167,13 +167,22 @@ class StructureView extends React.Component {
   }
 }
 
+// id field should always be first
+const customCompare = (fieldNameA, fieldNameB) => {
+  if (fieldNameA !== 'id' && fieldNameB !== 'id') {
+    return fieldNameA.localeCompare(fieldNameB)
+  }
+
+  return fieldNameA === 'id' ? -1 : 1
+}
+
 const MappedStructureView = mapProps({
   params: (props) => props.params,
   allModels: (props) => props.viewer.project.models.edges.map((edge) => edge.node),
   fields: (props) => (
     props.viewer.model.fields.edges
       .map((edge) => edge.node)
-      .sort((a, b) => a.fieldName.localeCompare(b.fieldName))
+      .sort((a, b) => customCompare(a.fieldName, b.fieldName))
   ),
   model: (props) => props.viewer.model,
   projectId: (props) => props.viewer.project.id,
