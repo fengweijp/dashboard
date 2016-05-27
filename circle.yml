@@ -7,7 +7,6 @@ machine:
 dependencies:
   override:
     - npm install
-    - npm run build
 
 test:
   override:
@@ -17,8 +16,10 @@ deployment:
   production:
     branch: master
     commands:
+      - BACKEND_ADDR=$BACKEND_MASTER_ADDR npm run build
       - docker run -v $(pwd)/dist:/s3 schickling/s3cmd --access_key=$S3_KEY --secret_key=$S3_SECRET --force --no-preserve --cf-invalidate --acl-public --no-mime-magic --guess-mime-type --default-mime-type="image/svg+xml" sync . s3://$S3_BUCKET
   dev:
     branch: dev
     commands:
+      - BACKEND_ADDR=$BACKEND_DEV_ADDR npm run build
       - docker run -v $(pwd)/dist:/s3 schickling/s3cmd --access_key=$S3_KEY --secret_key=$S3_SECRET --force --no-preserve --acl-public --no-mime-magic --guess-mime-type --default-mime-type="image/svg+xml" sync . s3://$S3_DEV_BUCKET
