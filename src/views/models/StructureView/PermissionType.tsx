@@ -1,11 +1,11 @@
 import * as React from 'react'
-import { Permission, UserType } from '../../../types/types'
+import { UserType } from '../../../types/types'
 const classes: any = require('./PermissionType.scss')
 
 interface Props {
   className?: string
   disabled?: boolean
-  dataCallback?: (any) => void
+  dataCallback?: (data: any) => void
   userType: UserType
   userPath?: string
 }

@@ -62,35 +62,41 @@ export default class PermissionsLayover extends React.Component<Props, State> {
     const allowUpdate = this.allowUpdateInput().checked
     const allowDelete = this.allowDeleteInput().checked
 
-    Relay.Store.commitUpdate(new AddPermissionMutation({
-      fieldId: this.props.field.id,
-      userType: this.state.userType,
-      userPath: this.state.userPath,
-      userRole: '',
-      comment,
-      allowRead,
-      allowCreate,
-      allowUpdate,
-      allowDelete,
-    }), {
-      onSuccess: () => {
-        analytics.track('models/fields: created permission')
+    Relay.Store.commitUpdate(
+      new AddPermissionMutation({
+        fieldId: this.props.field.id,
+        userType: this.state.userType,
+        userPath: this.state.userPath,
+        userRole: '',
+        comment,
+        allowRead,
+        allowCreate,
+        allowUpdate,
+        allowDelete,
+      }),
+      {
+        onSuccess: () => {
+          analytics.track('models/fields: created permission')
 
-        this._resetNewPermission()
-      },
-    })
+          this._resetNewPermission()
+        },
+      }
+    )
   }
 
   _deletePermission (permission: Permission) {
     if (window.confirm('Do you really want to delete this permission')) {
-      Relay.Store.commitUpdate(new DeletePermissionMutation({
-        fieldId: this.props.field.id,
-        permissionId: permission.id,
-      }), {
-        onSuccess: () => {
-          analytics.track('models/fields: deleted permission')
-        },
-      })
+      Relay.Store.commitUpdate(
+        new DeletePermissionMutation({
+          fieldId: this.props.field.id,
+          permissionId: permission.id,
+        }),
+        {
+          onSuccess: () => {
+            analytics.track('models/fields: deleted permission')
+          },
+        }
+      )
     }
   }
 

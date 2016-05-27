@@ -13,6 +13,7 @@
     "dist"
   ],
   "files": [
+    "typings/index.d.ts",
     "custom.d.ts"
   ],
   "atom": {

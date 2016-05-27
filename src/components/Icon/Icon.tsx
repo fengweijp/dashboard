@@ -16,7 +16,7 @@ export default class Icon extends React.Component<Props, {}> {
 
     const fillCode = this.props.color ? `fill="${this.props.color}"` : ''
     const styleCode = `style="width: ${width}px; height: ${height}px"`
-    const __html = this.props.src.replace(/<svg/, `<svg ${fillCode} ${styleCode}`)
+    const html = this.props.src.replace(/<svg/, `<svg ${fillCode} ${styleCode}`)
 
     const restProps = Object.assign({}, this.props)
     delete restProps.width
@@ -29,7 +29,7 @@ export default class Icon extends React.Component<Props, {}> {
       <i
         {...restProps}
         className={`${classes.root} ${this.props.className}`}
-        dangerouslySetInnerHTML={{ __html }}
+        dangerouslySetInnerHTML={{ __html: html }}
       />
     )
   }
