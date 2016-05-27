@@ -39,7 +39,7 @@ module.exports = {
       exclude: /node_modules/,
     }, {
       test: /icons\/.*\.svg$/,
-      loader: 'svg-inline?removeTags=true',
+      loader: 'raw!svgo?{"plugins":[{"removeStyleElement":true}]}',
     }, {
       test: /graphics\/.*\.svg$/,
       loader: 'file',

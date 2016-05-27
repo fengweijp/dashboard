@@ -38,7 +38,7 @@ module.exports = {
       exclude: /node_modules/,
     }, {
       test: /icons\/.*\.svg$/,
-      loader: 'svg-inline?removeTags=true',
+      loader: 'raw!svgo?{"plugins":[{"removeStyleElement":true}]}',
     }, {
       test: /graphics\/.*\.svg$/,
       loader: 'file',
@@ -70,6 +70,11 @@ module.exports = {
       sourcemap: true,
     })
   ],
+  svgo: {
+    plugins: [
+      { removeStyleElement: true },
+    ]
+  },
   resolve: {
     root: [path.resolve('./src'), path.resolve('node_modules')],
     extensions: ['', '.js', '.ts', '.tsx'],

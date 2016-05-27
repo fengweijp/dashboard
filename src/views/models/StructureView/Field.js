@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 import Loading from '../../../components/Loading/Loading'
 import UpdateFieldDescriptionMutation from 'mutations/UpdateFieldDescriptionMutation'
 import DeleteFieldMutation from 'mutations/DeleteFieldMutation'
+import PermissionsLayover from './PermissionsLayover'
 import Icon from 'components/Icon/Icon'
 import classes from './Field.scss'
 
@@ -19,6 +20,7 @@ class Field extends React.Component {
   state = {
     editDescription: false,
     editDescriptionPending: false,
+    showermissionsLayover: false,
   }
 
   _save () {
@@ -126,6 +128,8 @@ class Field extends React.Component {
 
     const editLink = `/${this.props.params.projectName}/models/${this.props.params.modelName}/structure/edit/${this.props.field.fieldName}` // eslint-disable-line
 
+    const permissions = field.permissions.edges.map(({ node }) => node)
+
     return (
       <div className={classes.row}>
         <Link className={classes.fieldName} to={editLink}>{field.fieldName}</Link>
@@ -137,8 +141,21 @@ class Field extends React.Component {
         </div>
         <div className={classes.constraints}></div>
         <div className={classes.permissions}>
-          {field.permissions.edges.map(({ node }) => (
-            <span key={node.id}>{node.userType}</span>
+          {this.state.showermissionsLayover &&
+            <PermissionsLayover
+              permissions={permissions}
+              field={field}
+              close={() => this.setState({ showermissionsLayover: false })}
+            />
+          }
+          {permissions.map((permission) => (
+            <span
+              key={permission.id}
+              className={classes.permission}
+              onClick={() => this.setState({ showermissionsLayover: true })}
+            >
+              {permission.userType}
+            </span>
           ))}
         </div>
         <div className={classes.controls}>
@@ -178,6 +195,10 @@ export default Relay.createContainer(Field, {
               id
               userType
               comment
+              allowRead
+              allowCreate
+              allowUpdate
+              allowDelete
             }
           }
         }
