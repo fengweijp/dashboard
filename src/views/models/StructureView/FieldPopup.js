@@ -32,17 +32,17 @@ class FieldPopup extends React.Component {
   constructor (props) {
     super(props)
 
-    const field = props.field || {}
+    const { field } = props
 
     this.state = {
       loading: false,
-      fieldName: field.fieldName || '',
-      typeIdentifier: field.typeIdentifier || 'Int',
-      isRequired: field.isRequired || false,
-      isList: field.isList || false,
-      enumValues: field.enumValues || [],
-      defaultValue: null,
-      reverseRelationField: field.reverseRelationField,
+      fieldName: field ? field.fieldName : '',
+      typeIdentifier: field ? field.typeIdentifier : 'Int',
+      isRequired: field ? field.isRequired : true,
+      isList: field ? field.isList : false,
+      enumValues: field ? field.enumValues : [],
+      defaultValue: field ? field.defaultValue : null,
+      reverseRelationField: field ? field.reverseRelationField : null,
     }
   }
 
@@ -176,13 +176,13 @@ class FieldPopup extends React.Component {
   }
 
   _onSelectType (typeIdentifier) {
-    const field = this.props.field || {}
+    const { field } = this.props
 
     this.setState({
       typeIdentifier,
-      isRequired: field.isRequired || false,
-      isList: field.isList || false,
-      reverseRelationField: field.reverseRelationField,
+      isRequired: field ? field.isRequired : true,
+      isList: field ? field.isList : false,
+      reverseRelationField: field ? field.reverseRelationField : null,
     })
   }
 

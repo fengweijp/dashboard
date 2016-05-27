@@ -38,6 +38,9 @@ module.exports = {
       loader: 'babel',
       exclude: /node_modules/,
     }, {
+      test: /\.mp3$/,
+      loader: 'file',
+    }, {
       test: /icons\/.*\.svg$/,
       loader: 'raw!svgo?{"plugins":[{"removeStyleElement":true}]}',
     }, {

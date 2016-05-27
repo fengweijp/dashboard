@@ -1,7 +1,12 @@
 @import '~styles/variables';
+@import '~styles/mixins';
 
 .root {
   display: flex;
   background: $blue3;
-  padding-left: 34px;
+}
+
+.empty {
+  width: 34px;
+  @include cellborder($grey2);
 }

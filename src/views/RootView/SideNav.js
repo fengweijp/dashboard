@@ -104,6 +104,11 @@ export class SideNav extends React.Component {
       }
     }
 
+    const modelActive = (model) => (
+      this.context.router.isActive(`/${this.props.params.projectName}/models/${model.name}/structure`) ||
+        this.context.router.isActive(`/${this.props.params.projectName}/models/${model.name}/browser`)
+    )
+
     const showsGettingStarted = this.context.router.isActive(`/${this.props.params.projectName}/getting-started`)
     const showsModels = this.context.router.isActive(`/${this.props.params.projectName}/models`)
     const showsPlayground = this.context.router.isActive(`/${this.props.params.projectName}/playground`)
@@ -185,8 +190,7 @@ export class SideNav extends React.Component {
                     <Link
                       key={model.name}
                       to={`/${this.props.params.projectName}/models/${model.name}`}
-                      className={classes.listElement}
-                      activeClassName={classes.listElementActive}
+                      className={`${classes.listElement} ${modelActive(model) ? classes.active : ''}`}
                       >
                       {model.name}
                       <span className={classes.itemCount}>{model.itemCount}</span>

@@ -79,6 +79,14 @@ class GettingStartedView extends React.Component {
     })
   }
 
+  componentDidUpdate () {
+    if (this.context.gettingStartedState.progress === 4) {
+      const snd = new Audio(require('assets/success.mp3'))
+      snd.volume = 0.5
+      snd.play()
+    }
+  }
+
   _getStarted () {
     if (this.context.gettingStartedState.isActive('STEP1_OVERVIEW')) {
       this.context.gettingStartedState.nextStep()

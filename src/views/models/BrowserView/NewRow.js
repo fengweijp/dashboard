@@ -2,6 +2,21 @@ import React, { PropTypes } from 'react'
 import NewCell from './NewCell'
 import classes from './NewRow.scss'
 
+function browserDefaultValue (field) {
+  if (field.defaultValue) {
+    return field.defaultValue
+  }
+
+  switch (field.typeIdentifier) {
+    case 'String': return ''
+    case 'Int': return 0
+    case 'Float': return 0
+    case 'Boolean': return false
+    case 'Enum': return field.enumValues[0]
+    default: return ''
+  }
+}
+
 export default class NewRow extends React.Component {
 
   static propTypes = {
@@ -20,7 +35,7 @@ export default class NewRow extends React.Component {
         (field) => field.fieldName,
         (field) => ({
           field,
-          value: null,
+          value: browserDefaultValue(field),
         })
       )
 
@@ -46,16 +61,22 @@ export default class NewRow extends React.Component {
   }
 
   render () {
+    const firstAutoFocusField = this.props.fields.find(({ typeIdentifier }) => (
+      ['String', 'Float', 'Integer', 'Enum'].includes(typeIdentifier)
+    ))
+
     return (
       <div className={classes.root}>
-        {this.props.fields.map((field, i) => (
+        <div className={classes.empty} />
+        {this.props.fields.map((field) => (
           <NewCell
             key={field.id}
             field={field}
             width={this.props.columnWidths[field.fieldName]}
             update={::this._update}
             submit={::this._add}
-            index={i}
+            autoFocus={firstAutoFocusField === field}
+            defaultValue={browserDefaultValue(field)}
             cancel={this.props.cancel}
           />
         ))}

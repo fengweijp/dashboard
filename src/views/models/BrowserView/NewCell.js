@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import classnames from 'classnames'
 import { valueToString, stringToValue } from './utils'
+import ToggleButton, { ToggleSide } from '../../../components/ToggleButton/ToggleButton'
 import classes from './Cell.scss'
 
 export default class NewCell extends React.Component {
@@ -8,18 +9,19 @@ export default class NewCell extends React.Component {
   static propTypes = {
     field: PropTypes.object.isRequired,
     width: PropTypes.number.isRequired,
-    index: PropTypes.number.isRequired,
     update: PropTypes.func.isRequired,
     submit: PropTypes.func.isRequired,
     cancel: PropTypes.func.isRequired,
+    autoFocus: PropTypes.bool.isRequired,
+    defaultValue: PropTypes.any.isRequired,
   }
 
   constructor (props) {
     super(props)
 
     this.state = {
-      value: null,
-      focus: false,
+      value: props.defaultValue,
+      focus: props.autoFocus,
     }
   }
 
@@ -41,7 +43,7 @@ export default class NewCell extends React.Component {
     if (this.props.field.isList) {
       return (
         <input
-          autoFocus={this.props.index === 1}
+          autoFocus={this.props.autoFocus}
           type='text'
           defaultValue={valueString}
           onChange={(e) => this._updateValue(e.target.value)}
@@ -56,7 +58,7 @@ export default class NewCell extends React.Component {
       case 'Int':
         return (
           <input
-            autoFocus={this.props.index === 1}
+            autoFocus={this.props.autoFocus}
             type='number'
             defaultValue={valueString}
             onChange={(e) => this._updateValue(e.target.value)}
@@ -68,7 +70,7 @@ export default class NewCell extends React.Component {
       case 'Float':
         return (
           <input
-            autoFocus={this.props.index === 1}
+            autoFocus={this.props.autoFocus}
             type='number'
             step='any'
             defaultValue={valueString}
@@ -80,23 +82,17 @@ export default class NewCell extends React.Component {
         )
       case 'Boolean':
         return (
-          <select
-            autoFocus={this.props.index === 1}
-            defaultValue={valueString}
-            onChange={(e) => this._updateValue(e.target.value)}
-            onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : e.keyCode === 27 ? this.props.cancel() : null}
-            onFocus={() => this.setState({ focus: true })}
-            onBlur={() => this.setState({ focus: false })}
-          >
-            <option disabled={this.state.focus} />
-            <option>true</option>
-            <option>false</option>
-          </select>
+          <ToggleButton
+            leftText='false'
+            rightText='true'
+            side={ToggleSide.Left}
+            onClickOutside={(side) => this._updateValue(side === ToggleSide.Left ? 'false' : 'true')}
+          />
         )
       case 'Enum':
         return (
           <select
-            autoFocus={this.props.index === 1}
+            autoFocus={this.props.autoFocus}
             defaultValue={valueString}
             onChange={(e) => this._updateValue(e.target.value)}
             onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : e.keyCode === 27 ? this.props.cancel() : null}
@@ -112,7 +108,7 @@ export default class NewCell extends React.Component {
       default:
         return (
           <input
-            autoFocus={this.props.index === 1}
+            autoFocus={this.props.autoFocus}
             type='text'
             defaultValue={valueString}
             onChange={(e) => this._updateValue(e.target.value)}
