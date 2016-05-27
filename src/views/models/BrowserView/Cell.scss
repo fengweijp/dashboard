@@ -9,6 +9,7 @@
   overflow: hidden;
   display: flex;
   flex: 1;
+  height: 47px;
 
   .value {
     text-overflow: ellipsis;
@@ -16,6 +17,7 @@
     overflow: hidden;
     padding: 15px 20px;
     display: inline-block;
+    white-space: nowrap;
   }
 
   input {
