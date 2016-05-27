@@ -8,6 +8,7 @@ export default class NewRow extends React.Component {
     fields: PropTypes.array.isRequired,
     columnWidths: PropTypes.object.isRequired,
     add: PropTypes.func.isRequired,
+    cancel: PropTypes.func.isRequired,
   }
 
   constructor (props) {
@@ -55,6 +56,7 @@ export default class NewRow extends React.Component {
             update={::this._update}
             submit={::this._add}
             index={i}
+            cancel={this.props.cancel}
           />
         ))}
       </div>

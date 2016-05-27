@@ -429,6 +429,7 @@ class BrowserView extends React.Component {
                 fields={this.props.fields}
                 columnWidths={columnWidths}
                 add={(data) => this._addItem(data)}
+                cancel={(e) => this.setState({newRowVisible: false})}
               />
             }
             <div className={classes.tableBody} onScroll={::this._handleScroll}>
