@@ -1,5 +1,5 @@
 jest.unmock('../utils')
-jest.unmock('../../../../utils/graphql')
+jest.unmock('../../../utils/graphql')
 
 import { stringToValue, valueToString } from '../utils'
 

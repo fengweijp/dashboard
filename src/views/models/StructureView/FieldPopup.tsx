@@ -14,7 +14,7 @@ const AddFieldMutation: any = (require('../../../mutations/AddFieldMutation') as
 const UpdateFieldMutation: any = (require('../../../mutations/UpdateFieldMutation') as any).default
 import { isScalar } from '../../../utils/graphql'
 import { Field, Model } from '../../../types/types'
-import { valueToString, isValidValue, stringToValue } from '../utils'
+import { valueToString } from '../utils'
 const classes: any = require('./FieldPopup.scss')
 
 require('react-tagsinput/react-tagsinput.css')
@@ -432,7 +432,7 @@ class FieldPopup extends React.Component<Props, State> {
                           type='checkbox'
                           defaultChecked={this.state.useDefaultValue}
                           onChange={(e) => this.setState({
-                            useDefaultValue: (e.target as HTMLInputElement).checked
+                            useDefaultValue: (e.target as HTMLInputElement).checked,
                           } as State)}
                         />
                         Default value
