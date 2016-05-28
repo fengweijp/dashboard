@@ -31,6 +31,17 @@ export default class NewCell extends React.Component {
     this.props.update(value, this.props.field)
   }
 
+  _cancelOnEscape (e) {
+    switch (e.keyCode) {
+      case 13:
+        this.props.submit()
+        break
+      case 27:
+        this.props.cancel()
+        break
+    }
+  }
+
   _renderContent () {
     if (this.props.field.fieldName === 'id') {
       return (
@@ -47,7 +58,7 @@ export default class NewCell extends React.Component {
           type='text'
           defaultValue={valueString}
           onChange={(e) => this._updateValue(e.target.value)}
-          onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : e.keyCode === 27 ? this.props.cancel() : null}
+          onKeyDown={(e) => this._cancelOnEscape(e)}
           onFocus={() => this.setState({ focus: true })}
           onBlur={() => this.setState({ focus: false })}
         />
@@ -62,7 +73,7 @@ export default class NewCell extends React.Component {
             type='number'
             defaultValue={valueString}
             onChange={(e) => this._updateValue(e.target.value)}
-            onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : e.keyCode === 27 ? this.props.cancel() : null}
+            onKeyDown={(e) => this._cancelOnEscape(e)}
             onFocus={() => this.setState({ focus: true })}
             onBlur={() => this.setState({ focus: false })}
           />
@@ -75,7 +86,7 @@ export default class NewCell extends React.Component {
             step='any'
             defaultValue={valueString}
             onChange={(e) => this._updateValue(e.target.value)}
-            oonKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : e.keyCode === 27 ? this.props.cancel() : null}
+            onKeyDown={(e) => this._cancelOnEscape(e)}
             onFocus={() => this.setState({ focus: true })}
             onBlur={() => this.setState({ focus: false })}
           />
@@ -95,7 +106,7 @@ export default class NewCell extends React.Component {
             autoFocus={this.props.autoFocus}
             defaultValue={valueString}
             onChange={(e) => this._updateValue(e.target.value)}
-            onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : e.keyCode === 27 ? this.props.cancel() : null}
+            onKeyDown={(e) => this._cancelOnEscape(e)}
             onFocus={() => this.setState({ focus: true })}
             onBlur={() => this.setState({ focus: false })}
           >
@@ -112,7 +123,7 @@ export default class NewCell extends React.Component {
             type='text'
             defaultValue={valueString}
             onChange={(e) => this._updateValue(e.target.value)}
-            onKeyDown={(e) => e.keyCode === 13 ? this.props.submit() : e.keyCode === 27 ? this.props.cancel() : null}
+            onKeyDown={(e) => this._cancelOnEscape(e)}
             onFocus={() => this.setState({ focus: true })}
             onBlur={() => this.setState({ focus: false })}
           />
