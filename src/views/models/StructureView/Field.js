@@ -148,6 +148,14 @@ class Field extends React.Component {
               close={() => this.setState({ showermissionsLayover: false })}
             />
           }
+          {permissions.length === 0 &&
+            <span
+              className={`${classes.permission} ${classes.add}`}
+              onClick={() => this.setState({ showermissionsLayover: true })}
+            >
+              Add Permission
+            </span>
+          }
           {permissions.map((permission) => (
             <span
               key={permission.id}

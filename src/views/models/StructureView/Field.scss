@@ -103,9 +103,14 @@
     margin-right: 5px;
     cursor: pointer;
 
+    &.add {
+      opacity: 0.4;
+    }
+
     &:hover {
       border-color: $grey4;
       color: $grey5;
+      opacity: 1;
     }
   }
 }
