@@ -75,7 +75,7 @@ class FieldPopup extends React.Component<Props, State> {
   }
 
   _close () {
-    (this.context as any).router.push(`/${this.props.params.projectName}/models/${this.props.params.modelName}/structure`)
+    (this.context as any).router.push(`/${this.props.params.projectName}/models/${this.props.params.modelName}/structure`) // tslint:disable-line
   }
 
   _submit () {
@@ -103,41 +103,44 @@ class FieldPopup extends React.Component<Props, State> {
       reverseRelationField,
     } = this.state
 
-    Relay.Store.commitUpdate(new AddFieldMutation({
-      modelId: this.props.modelId,
-      fieldName,
-      typeIdentifier,
-      enumValues,
-      isList,
-      isRequired,
-      defaultValue,
-      relationId: ((reverseRelationField || {} as any).relation || {} as any).id,
-    }), {
-      onSuccess: (response) => {
-        analytics.track('models/structure: created field', {
-          project: this.props.params.projectName,
-          model: this.props.params.modelName,
-          field: fieldName,
-        })
+    Relay.Store.commitUpdate(
+      new AddFieldMutation({
+        modelId: this.props.modelId,
+        fieldName,
+        typeIdentifier,
+        enumValues,
+        isList,
+        isRequired,
+        defaultValue,
+        relationId: ((reverseRelationField || {} as any).relation || {} as any).id,
+      }),
+      {
+        onSuccess: (response) => {
+          analytics.track('models/structure: created field', {
+            project: this.props.params.projectName,
+            model: this.props.params.modelName,
+            field: fieldName,
+          })
 
-        this._close()
+          this._close()
 
-        // getting-started onboarding steps
-        const isStep3 = (this.context as any).gettingStartedState.isActive('STEP3_CREATE_TEXT_FIELD')
-        if (isStep3 && fieldName === 'text' && typeIdentifier === 'String') {
-          (this.context as any).gettingStartedState.nextStep()
-        }
+          // getting-started onboarding steps
+          const isStep3 = (this.context as any).gettingStartedState.isActive('STEP3_CREATE_TEXT_FIELD')
+          if (isStep3 && fieldName === 'text' && typeIdentifier === 'String') {
+            (this.context as any).gettingStartedState.nextStep()
+          }
 
-        const isStep4 = (this.context as any).gettingStartedState.isActive('STEP4_CREATE_COMPLETED_FIELD')
-        if (isStep4 && fieldName === 'complete' && typeIdentifier === 'Boolean') {
-          (this.context as any).gettingStartedState.nextStep()
-        }
-      },
-      onFailure: (transaction) => {
-        alert(transaction.getError())
-        this._close()
-      },
-    })
+          const isStep4 = (this.context as any).gettingStartedState.isActive('STEP4_CREATE_COMPLETED_FIELD')
+          if (isStep4 && fieldName === 'complete' && typeIdentifier === 'Boolean') {
+            (this.context as any).gettingStartedState.nextStep()
+          }
+        },
+        onFailure: (transaction) => {
+          alert(transaction.getError())
+          this._close()
+        },
+      }
+    )
   }
 
   _update () {
@@ -157,30 +160,33 @@ class FieldPopup extends React.Component<Props, State> {
       reverseRelationField,
     } = this.state
 
-    Relay.Store.commitUpdate(new UpdateFieldMutation({
-      fieldId: this.props.field.id,
-      fieldName,
-      typeIdentifier,
-      enumValues,
-      isList,
-      isRequired,
-      defaultValue,
-      relationId: ((reverseRelationField || {} as any).relation || {} as any).id,
-    }), {
-      onSuccess: (response) => {
-        analytics.track('models/structure: updated field', {
-          project: this.props.params.projectName,
-          model: this.props.params.modelName,
-          field: fieldName,
-        })
+    Relay.Store.commitUpdate(
+      new UpdateFieldMutation({
+        fieldId: this.props.field.id,
+        fieldName,
+        typeIdentifier,
+        enumValues,
+        isList,
+        isRequired,
+        defaultValue,
+        relationId: ((reverseRelationField || {} as any).relation || {} as any).id,
+      }),
+      {
+        onSuccess: (response) => {
+          analytics.track('models/structure: updated field', {
+            project: this.props.params.projectName,
+            model: this.props.params.modelName,
+            field: fieldName,
+          })
 
-        this._close()
-      },
-      onFailure: (transaction) => {
-        alert(transaction.getError())
-        this._close()
-      },
-    })
+          this._close()
+        },
+        onFailure: (transaction) => {
+          alert(transaction.getError())
+          this._close()
+        },
+      }
+    )
   }
 
   _isValid () {
@@ -224,7 +230,7 @@ class FieldPopup extends React.Component<Props, State> {
     const showReverseRelationSection = selectedModel &&
       selectedModel.unconnectedReverseRelationFieldsFrom.length > 0 &&
       !this.props.field
-    const reverseRelationFieldLink = `/${this.props.params.projectName}/models/${this.state.typeIdentifier}/structure/edit/${(this.state.reverseRelationField || {} as any).fieldName}` // eslint-disable-line
+    const reverseRelationFieldLink = `/${this.props.params.projectName}/models/${this.state.typeIdentifier}/structure/edit/${(this.state.reverseRelationField || {} as any).fieldName}` // tslint:disable-line
 
     return (
       <div className={classes.background}>
@@ -309,7 +315,9 @@ class FieldPopup extends React.Component<Props, State> {
                           <input
                             type='checkbox'
                             defaultChecked={this.state.isRequired}
-                            onChange={(e) => this.setState({ isRequired: (e.target as HTMLInputElement).checked } as State)}
+                            onChange={(e) => this.setState({
+                              isRequired: (e.target as HTMLInputElement).checked,
+                            } as State)}
                             onKeyUp={(e) => e.keyCode === 13 ? this._submit() : null}
                           />
                           Required
@@ -422,7 +430,7 @@ class FieldPopup extends React.Component<Props, State> {
                         />
                         {this.state.reverseRelationField &&
                           <Icon
-                            className={true ? classes.back : classes.hidden}
+                            className={classes.back}
                             width={162}
                             height={18}
                             src={require('assets/icons/arrow-hor.svg')}

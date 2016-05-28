@@ -17,52 +17,54 @@ Array.prototype.mapToObject = function (keyFn, valFn) {
 if (!Array.prototype.find) {
   Array.prototype.find = function(predicate) {
     if (this == null) {
-      throw new TypeError('Array.prototype.find called on null or undefined');
+      throw new TypeError('Array.prototype.find called on null or undefined')
     }
     if (typeof predicate !== 'function') {
-      throw new TypeError('predicate must be a function');
+      throw new TypeError('predicate must be a function')
     }
-    var list = Object(this);
-    var length = list.length >>> 0;
-    var thisArg = arguments[1];
-    var value;
+    let list = Object(this)
+    let length = list.length >>> 0
+    let thisArg = arguments[1]
+    let value
 
-    for (var i = 0; i < length; i++) {
-      value = list[i];
+    for (let i = 0; i < length; i++) {
+      value = list[i]
       if (predicate.call(thisArg, value, i, list)) {
-        return value;
+        return value
       }
     }
-    return undefined;
-  };
+    return undefined
+  }
 }
 
 if (!Array.prototype.includes) {
   Array.prototype.includes = function(searchElement) {
-    var O = Object(this);
-    var len = parseInt(O.length) || 0;
+    let O = Object(this)
+    let len = parseInt(O.length, 10) || 0
     if (len === 0) {
-      return false;
+      return false
     }
-    var n = parseInt(arguments[1]) || 0;
-    var k;
+    let n = parseInt(arguments[1], 10) || 0
+    let k
     if (n >= 0) {
-      k = n;
+      k = n
     } else {
-      k = len + n;
-      if (k < 0) {k = 0;}
+      k = len + n
+      if (k < 0) {
+        k = 0
+      }
     }
-    var currentElement;
+    let currentElement
     while (k < len) {
-      currentElement = O[k];
+      currentElement = O[k]
       if (searchElement === currentElement ||
          (searchElement !== searchElement && currentElement !== currentElement)) {
-        return true;
+        return true
       }
-      k++;
+      k++
     }
-    return false;
-  };
+    return false
+  }
 }
 
 interface Object {
@@ -83,26 +85,23 @@ interface ObjectConstructor {
   assign(target: any, ...sources: any[]): any
 }
 
-if (typeof Object.assign != 'function') {
-  (function () {
-    Object.assign = function (target) {
-      'use strict';
-      if (target === undefined || target === null) {
-        throw new TypeError('Cannot convert undefined or null to object');
-      }
+if (typeof Object.assign !== 'function') {
+  Object.assign = function (target) {
+    if (target === undefined || target === null) {
+      throw new TypeError('Cannot convert undefined or null to object')
+    }
 
-      var output = Object(target);
-      for (var index = 1; index < arguments.length; index++) {
-        var source = arguments[index];
-        if (source !== undefined && source !== null) {
-          for (var nextKey in source) {
-            if (source.hasOwnProperty(nextKey)) {
-              output[nextKey] = source[nextKey];
-            }
+    let output = Object(target)
+    for (let index = 1; index < arguments.length; index++) {
+      let source = arguments[index]
+      if (source !== undefined && source !== null) {
+        for (let nextKey in source) {
+          if (source.hasOwnProperty(nextKey)) {
+            output[nextKey] = source[nextKey]
           }
         }
       }
-      return output;
-    };
-  })();
+    }
+    return output
+  }
 }

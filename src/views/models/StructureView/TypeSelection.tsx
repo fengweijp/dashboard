@@ -70,8 +70,12 @@ export default class TypeSelection extends React.Component<Props, State> {
       case 27: // esc
         e.stopPropagation()
         return this._close()
-      case 40: selectedIndex++; break
-      case 38: selectedIndex--; break
+      case 40:
+        selectedIndex++
+        break
+      case 38:
+        selectedIndex--
+        break
     }
 
     selectedIndex = (selectedIndex + allTypes.length) % allTypes.length

@@ -19,19 +19,22 @@ export default class ResetPasswordView extends React.Component<{}, State> {
     const resetPasswordToken = getQueryVariable('token')
     const { newPassword } = this.state
 
-    Relay.Store.commitUpdate(new ResetPasswordMutation({
-      resetPasswordToken,
-      newPassword,
-    }), {
-      onSuccess: (response) => {
-        analytics.track('reset-password', () => {
-          window.location.href = '/'
-        })
-      },
-      onFailure: (transaction) => {
-        alert(transaction.getError())
-      },
-    })
+    Relay.Store.commitUpdate(
+      new ResetPasswordMutation({
+        resetPasswordToken,
+        newPassword,
+      }),
+      {
+        onSuccess: (response) => {
+          analytics.track('reset-password', () => {
+            window.location.href = '/'
+          })
+        },
+        onFailure: (transaction) => {
+          alert(transaction.getError())
+        },
+      }
+    )
   }
 
   render () {
