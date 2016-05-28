@@ -2,20 +2,27 @@ import * as React from 'react'
 import * as Relay from 'react-relay'
 import ResetPasswordMutation from '../../../mutations/ResetPasswordMutation'
 import Icon from '../../../components/Icon/Icon'
+import Loading from '../../../components/Loading/Loading'
 import { getQueryVariable } from '../../../utils/location'
+import * as cookiestore from '../../../utils/cookiestore'
+import { updateNetworkLayer } from '../../../utils/relay'
 const classes: any = require('./ResetPasswordView.scss')
 
 interface State {
   newPassword: string
+  loading: boolean
 }
 
 export default class ResetPasswordView extends React.Component<{}, State> {
 
   state = {
     newPassword: '',
+    loading: false,
   }
 
   _submit () {
+    this.setState({ loading: true } as State)
+
     const resetPasswordToken = getQueryVariable('token')
     const { newPassword } = this.state
 
@@ -26,18 +33,34 @@ export default class ResetPasswordView extends React.Component<{}, State> {
       }),
       {
         onSuccess: (response) => {
+          cookiestore.set('graphcool_token', response.resetPassword.token)
+          cookiestore.set('graphcool_user_id', response.resetPassword.user.id)
+          updateNetworkLayer()
+
           analytics.track('reset-password', () => {
             window.location.href = '/'
           })
         },
         onFailure: (transaction) => {
           alert(transaction.getError())
+
+          this.setState({ loading: false } as State)
         },
       }
     )
   }
 
   render () {
+    if (this.state.loading) {
+      return (
+        <div className={classes.root}>
+          <div style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+            <Loading color='#fff' />
+          </div>
+        </div>
+      )
+    }
+
     return (
       <div className={classes.root}>
         <div className={classes.box}>
@@ -56,7 +79,7 @@ export default class ResetPasswordView extends React.Component<{}, State> {
             <input
               type='password'
               placeholder='Password'
-              onChange={(e) => this.setState({ newPassword: (e.target as HTMLInputElement).value })}
+              onChange={(e) => this.setState({ newPassword: (e.target as HTMLInputElement).value } as State)}
               onKeyUp={(e) => e.keyCode === 13 ? this._submit() : null}
               />
             <button onClick={() => this._submit()}>Set Password</button>

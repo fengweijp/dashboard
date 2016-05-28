@@ -19,6 +19,7 @@ export default class ResetPasswordMutation extends Relay.Mutation<Props, Respons
     return Relay.QL`
       fragment on ResetPasswordPayload {
         token
+        user { id }
       }
     `
   }
@@ -29,6 +30,7 @@ export default class ResetPasswordMutation extends Relay.Mutation<Props, Respons
       children: [Relay.QL`
         fragment on ResetPasswordPayload {
           token
+          user { id }
         }
       `],
     }]
