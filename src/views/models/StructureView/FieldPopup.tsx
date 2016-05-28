@@ -1,35 +1,47 @@
-import React, { PropTypes } from 'react'
+import * as React from 'react'
 import { Link } from 'react-router'
-import mapProps from 'map-props'
-import Relay from 'react-relay'
-import ClickOutside from 'react-click-outside'
+const mapProps: any = require('map-props')
+import * as Relay from 'react-relay'
+const ClickOutside: any = (require('react-click-outside') as any).default
 import TypeSelection from './TypeSelection'
-import ScrollBox from 'components/ScrollBox/ScrollBox'
-import TagsInput from 'react-tagsinput'
-import Icon from 'components/Icon/Icon'
-import Loading from 'components/Loading/Loading'
-import AddFieldMutation from 'mutations/AddFieldMutation'
-import UpdateFieldMutation from 'mutations/UpdateFieldMutation'
-import { isScalar } from 'utils/graphql'
-import classes from './FieldPopup.scss'
+import ScrollBox from '../../../components/ScrollBox/ScrollBox'
+const TagsInput: any = (require('react-tagsinput') as any).default
+import Icon from '../../../components/Icon/Icon'
+import Loading from '../../../components/Loading/Loading'
+const AddFieldMutation: any = (require('../../../mutations/AddFieldMutation') as any).default
+const UpdateFieldMutation: any = (require('../../../mutations/UpdateFieldMutation') as any).default
+import { isScalar } from '../../../utils/graphql'
+import { Field, Model } from '../../../types/types'
+const classes: any = require('./FieldPopup.scss')
 
-import 'react-tagsinput/react-tagsinput.css'
+require('react-tagsinput/react-tagsinput.css')
 
-class FieldPopup extends React.Component {
+interface Props {
+  field?: Field
+  modelId: string
+  params: any
+  allModels: Model[]
+}
 
-  static propTypes = {
-    field: PropTypes.object,
-    modelId: PropTypes.string.isRequired,
-    params: PropTypes.object.isRequired,
-    allModels: PropTypes.array.isRequired,
+interface State {
+  loading: boolean
+  fieldName: string
+  typeIdentifier: string
+  isRequired: boolean
+  isList: boolean
+  enumValues: string[]
+  defaultValue?: any
+  reverseRelationField: Field | any
+}
+
+class FieldPopup extends React.Component<Props, State> {
+
+  static contextTypes: React.ValidationMap<any> = {
+    gettingStartedState: React.PropTypes.object.isRequired,
+    router: React.PropTypes.object.isRequired,
   }
 
-  static contextTypes = {
-    gettingStartedState: PropTypes.object.isRequired,
-    router: PropTypes.object.isRequired,
-  }
-
-  constructor (props) {
+  constructor (props: Props) {
     super(props)
 
     const { field } = props
@@ -54,7 +66,7 @@ class FieldPopup extends React.Component {
     window.removeEventListener('keydown', this._listenForKeys, false)
   }
 
-  _listenForKeys = (e) => {
+  _listenForKeys = (e: KeyboardEvent) => {
     if (e.keyCode === 13 && e.target === document.body) {
       this._submit()
     } else if (e.keyCode === 27 && e.target === document.body) {
@@ -63,7 +75,7 @@ class FieldPopup extends React.Component {
   }
 
   _close () {
-    this.context.router.push(`/${this.props.params.projectName}/models/${this.props.params.modelName}/structure`)
+    (this.context as any).router.push(`/${this.props.params.projectName}/models/${this.props.params.modelName}/structure`)
   }
 
   _submit () {
@@ -79,7 +91,7 @@ class FieldPopup extends React.Component {
       return
     }
 
-    this.setState({ loading: true })
+    this.setState({ loading: true } as State)
 
     const {
       fieldName,
@@ -99,7 +111,7 @@ class FieldPopup extends React.Component {
       isList,
       isRequired,
       defaultValue,
-      relationId: ((reverseRelationField || {}).relation || {}).id,
+      relationId: ((reverseRelationField || {} as any).relation || {} as any).id,
     }), {
       onSuccess: (response) => {
         analytics.track('models/structure: created field', {
@@ -111,14 +123,14 @@ class FieldPopup extends React.Component {
         this._close()
 
         // getting-started onboarding steps
-        const isStep3 = this.context.gettingStartedState.isActive('STEP3_CREATE_TEXT_FIELD')
+        const isStep3 = (this.context as any).gettingStartedState.isActive('STEP3_CREATE_TEXT_FIELD')
         if (isStep3 && fieldName === 'text' && typeIdentifier === 'String') {
-          this.context.gettingStartedState.nextStep()
+          (this.context as any).gettingStartedState.nextStep()
         }
 
-        const isStep4 = this.context.gettingStartedState.isActive('STEP4_CREATE_COMPLETED_FIELD')
+        const isStep4 = (this.context as any).gettingStartedState.isActive('STEP4_CREATE_COMPLETED_FIELD')
         if (isStep4 && fieldName === 'complete' && typeIdentifier === 'Boolean') {
-          this.context.gettingStartedState.nextStep()
+          (this.context as any).gettingStartedState.nextStep()
         }
       },
       onFailure: (transaction) => {
@@ -133,7 +145,7 @@ class FieldPopup extends React.Component {
       return
     }
 
-    this.setState({ loading: true })
+    this.setState({ loading: true } as State)
 
     const {
       fieldName,
@@ -153,7 +165,7 @@ class FieldPopup extends React.Component {
       isList,
       isRequired,
       defaultValue,
-      relationId: ((reverseRelationField || {}).relation || {}).id,
+      relationId: ((reverseRelationField || {} as any).relation || {} as any).id,
     }), {
       onSuccess: (response) => {
         analytics.track('models/structure: updated field', {
@@ -175,7 +187,7 @@ class FieldPopup extends React.Component {
     return this.state.fieldName !== ''
   }
 
-  _onSelectType (typeIdentifier) {
+  _onSelectType (typeIdentifier: string) {
     const { field } = this.props
 
     this.setState({
@@ -183,19 +195,19 @@ class FieldPopup extends React.Component {
       isRequired: field ? field.isRequired : true,
       isList: field ? field.isList : false,
       reverseRelationField: field ? field.reverseRelationField : null,
-    })
+    } as State)
   }
 
-  _updateEnumValues (enumValues) {
-    this.setState({ enumValues })
+  _updateEnumValues (enumValues: string[]) {
+    this.setState({ enumValues } as State)
   }
 
   _toggleReverseRelation () {
-    if (this.state.reverseRelationField) {
-      this.setState({ reverseRelationField: null })
+    if (this.state.reverseRelationField !== null) {
+      this.setState({ reverseRelationField: null } as State)
     } else {
       const selectedModel = this.props.allModels.find((m) => m.name === this.state.typeIdentifier)
-      this.setState({ reverseRelationField: selectedModel.unconnectedReverseRelationFieldsFrom[0] })
+      this.setState({ reverseRelationField: selectedModel.unconnectedReverseRelationFieldsFrom[0] } as State)
     }
   }
 
@@ -212,12 +224,12 @@ class FieldPopup extends React.Component {
     const showReverseRelationSection = selectedModel &&
       selectedModel.unconnectedReverseRelationFieldsFrom.length > 0 &&
       !this.props.field
-    const reverseRelationFieldLink = `/${this.props.params.projectName}/models/${this.state.typeIdentifier}/structure/edit/${(this.state.reverseRelationField || {}).fieldName}` // eslint-disable-line
+    const reverseRelationFieldLink = `/${this.props.params.projectName}/models/${this.state.typeIdentifier}/structure/edit/${(this.state.reverseRelationField || {} as any).fieldName}` // eslint-disable-line
 
     return (
       <div className={classes.background}>
         <ScrollBox innerContainerClassName={classes.scrollBox}>
-          <ClickOutside onClickOutside={::this._close}>
+          <ClickOutside onClickOutside={() => this._close()}>
             <div className={classes.container} onKeyUp={(e) => e.keyCode === 27 ? this._close() : null}>
               <div className={classes.head}>
                 <div className={classes.title}>
@@ -243,7 +255,7 @@ class FieldPopup extends React.Component {
                       type='text'
                       placeholder='Fieldname'
                       defaultValue={this.state.fieldName}
-                      onChange={(e) => this.setState({ fieldName: e.target.value })}
+                      onChange={(e) => this.setState({ fieldName: (e.target as HTMLInputElement).value } as State)}
                       onKeyUp={(e) => e.keyCode === 13 ? this._submit() : null}
                     />
                   </div>
@@ -261,7 +273,7 @@ class FieldPopup extends React.Component {
                     <TypeSelection
                       selected={this.state.typeIdentifier}
                       modelNames={this.props.allModels.map((m) => m.name)}
-                      select={::this._onSelectType}
+                      select={(typeIdentifier) => this._onSelectType(typeIdentifier)}
                     />
                   </div>
                 </div>
@@ -276,7 +288,7 @@ class FieldPopup extends React.Component {
                         addOnBlur
                         addKeys={[9, 13, 32]}
                         value={this.state.enumValues}
-                        onChange={::this._updateEnumValues}
+                        onChange={(enumValues) => this._updateEnumValues(enumValues)}
                       />
                     </div>
                   </div>
@@ -297,7 +309,7 @@ class FieldPopup extends React.Component {
                           <input
                             type='checkbox'
                             defaultChecked={this.state.isRequired}
-                            onChange={(e) => this.setState({ isRequired: e.target.value })}
+                            onChange={(e) => this.setState({ isRequired: (e.target as HTMLInputElement).checked } as State)}
                             onKeyUp={(e) => e.keyCode === 13 ? this._submit() : null}
                           />
                           Required
@@ -318,7 +330,7 @@ class FieldPopup extends React.Component {
                           <input
                             type='checkbox'
                             defaultChecked={this.state.isList}
-                            onChange={(e) => this.setState({ isList: e.target.value })}
+                            onChange={(e) => this.setState({ isList: (e.target as HTMLInputElement).checked } as State)}
                             onKeyUp={(e) => e.keyCode === 13 ? this._submit() : null}
                           />
                           List
@@ -334,7 +346,7 @@ class FieldPopup extends React.Component {
                         <input
                           type='checkbox'
                           checked={!!this.state.reverseRelationField}
-                          onChange={::this._toggleReverseRelation}
+                          onChange={() => this._toggleReverseRelation()}
                         />
                         This field is related to the field
                         {selectedModel.unconnectedReverseRelationFieldsFrom.map((relatedField) => {
@@ -343,7 +355,7 @@ class FieldPopup extends React.Component {
                             <span
                               className={`${classes.relatedField} ${selected ? classes.selected : ''}`}
                               key={relatedField.id}
-                              onClick={() => this.setState({ reverseRelationField: relatedField })}
+                              onClick={() => this.setState({ reverseRelationField: relatedField } as State)}
                             >
                               {relatedField.fieldName}
                             </span>
@@ -358,13 +370,13 @@ class FieldPopup extends React.Component {
                       <div className={`${classes.select} ${this.state.isRequired ? classes.top : classes.bottom}`}>
                         <div
                           className={`${classes.option} ${!this.state.isRequired ? classes.selected : ''}`}
-                          onClick={() => this.setState({ isRequired: false })}
+                          onClick={() => this.setState({ isRequired: false } as State)}
                         >
                           can
                         </div>
                         <div
                           className={`${classes.option} ${this.state.isRequired ? classes.selected : ''}`}
-                          onClick={() => this.setState({ isRequired: true })}
+                          onClick={() => this.setState({ isRequired: true } as State)}
                         >
                           must
                         </div>
@@ -375,13 +387,13 @@ class FieldPopup extends React.Component {
                       <div className={`${classes.select} ${this.state.isList ? classes.top : classes.bottom}`}>
                         <div
                           className={`${classes.option} ${!this.state.isList ? classes.selected : ''}`}
-                          onClick={() => this.setState({ isList: false })}
+                          onClick={() => this.setState({ isList: false } as State)}
                         >
                           one
                         </div>
                         <div
                           className={`${classes.option} ${this.state.isList ? classes.selected : ''}`}
-                          onClick={() => this.setState({ isList: true })}
+                          onClick={() => this.setState({ isList: true } as State)}
                         >
                           many
                         </div>
@@ -447,12 +459,12 @@ class FieldPopup extends React.Component {
                 }
               </div>
               <div className={classes.foot}>
-                <div className={classes.button} onClick={::this._close}>
+                <div className={classes.button} onClick={() => this._close()}>
                   Cancel
                 </div>
                 <button
                   className={`${classes.button} ${this._isValid() ? classes.green : classes.disabled}`}
-                  onClick={::this._submit}
+                  onClick={() => this._submit()}
                 >
                   {this.props.field ? 'Update field' : 'Create field'}
                 </button>
@@ -478,10 +490,9 @@ export default Relay.createContainer(MappedFieldPopup, {
     projectName: null, // injected from router
     fieldName: null, // injected from router
   },
-  prepareVariables: prevVariables => ({
-    ...prevVariables,
+  prepareVariables: (prevVariables) => (Object.assign({}, prevVariables, {
     fieldExists: !!prevVariables.fieldName,
-  }),
+  })),
   fragments: {
     viewer: () => Relay.QL`
       fragment on Viewer {

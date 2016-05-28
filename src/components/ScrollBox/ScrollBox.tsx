@@ -2,7 +2,7 @@ import * as React from 'react'
 const classes: any = require('./ScrollBox.scss')
 
 interface Props {
-  children: Element
+  children?: React.ReactChild
   innerContainerClassName?: string
 }
 

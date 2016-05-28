@@ -8,11 +8,6 @@ declare module 'react-router-relay' {
   export = _temp;
 }
 
-declare module 'react-click-outside' {
-  var _temp: any;
-  export = _temp;
-}
-
 declare var require: {
   <T>(path: string): T;
   (paths: string[], callback: (...modules: any[]) => void): void;

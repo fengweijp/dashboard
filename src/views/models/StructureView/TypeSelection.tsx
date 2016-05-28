@@ -1,8 +1,8 @@
-import React, { PropTypes } from 'react'
+import * as React from 'react'
 import { findDOMNode } from 'react-dom'
-import Icon from 'components/Icon/Icon'
-import ClickOutside from 'react-click-outside'
-import classes from './TypeSelection.scss'
+import Icon from '../../../components/Icon/Icon'
+const ClickOutside: any = (require('react-click-outside') as any).default
+const classes: any = require('./TypeSelection.scss')
 
 const types = [
   'Int',
@@ -14,12 +14,21 @@ const types = [
   'Enum',
 ]
 
-export default class TypeSelection extends React.Component {
+interface Props {
+  modelNames: string[]
+  selected: string
+  select: (typeIdentifier: string) => void
+}
 
-  static propTypes = {
-    modelNames: PropTypes.array.isRequired,
-    selected: PropTypes.string.isRequired,
-    select: PropTypes.func.isRequired,
+interface State {
+  open: boolean
+}
+
+export default class TypeSelection extends React.Component<Props, State> {
+
+  refs: {
+    [key: string]: any;
+    overlay: Element
   }
 
   state = {
@@ -51,7 +60,7 @@ export default class TypeSelection extends React.Component {
     this.setState({ open: false })
   }
 
-  _listenForKeys = (e) => {
+  _listenForKeys = (e: KeyboardEvent) => {
     const allTypes = [...types, ...this.props.modelNames]
     let selectedIndex = allTypes.indexOf(this.props.selected)
 
@@ -80,8 +89,8 @@ export default class TypeSelection extends React.Component {
         <div
           className={classes.root}
           tabIndex={0}
-          onClick={::this._open}
-          onFocus={::this._open}
+          onClick={() => this._open()}
+          onFocus={() => this._open()}
         >
           <div className={classes.preview}>
             <span>
@@ -102,9 +111,9 @@ export default class TypeSelection extends React.Component {
 
     return (
       <div className={classes.root}>
-        <ClickOutside onClickOutside={::this._close}>
+        <ClickOutside onClickOutside={() => this._close()}>
           <div className={classes.overlay} ref='overlay'>
-            <div className={classes.head} onClick={::this._close}>Scalar Types</div>
+            <div className={classes.head} onClick={() => this._close()}>Scalar Types</div>
             <div className={classes.list}>
               {types.map((type) => (
                 <div
@@ -116,7 +125,7 @@ export default class TypeSelection extends React.Component {
                 </div>
               ))}
             </div>
-            <div className={classes.head} onClick={::this._close}>Model Types</div>
+            <div className={classes.head} onClick={() => this._close()}>Model Types</div>
             <div className={classes.list}>
               {this.props.modelNames.map((type) => (
                 <div

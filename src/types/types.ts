@@ -6,6 +6,12 @@ export interface Field {
   typeIdentifier: string
   defaultValue?: string
   enumValues: string[]
+  reverseRelationField?: Field
+  relation?: Relation
+}
+
+export interface Relation {
+  id: string
 }
 
 export type UserType = 'GUEST' | 'AUTHENTICATED' | 'RELATED'
@@ -19,4 +25,11 @@ export interface Permission {
   allowUpdate: boolean
   allowDelete: boolean
   comment: string
+}
+
+export interface Model {
+  id: string
+  name: string
+  fields: Field[]
+  unconnectedReverseRelationFieldsFrom: Field[]
 }
