@@ -13,6 +13,7 @@ import PlaygroundView from 'views/playground/PlaygroundView/PlaygroundView'
 import GettingStartedView from 'views/GettingStartedView/GettingStartedView'
 import AccountView from 'views/account/AccountView/AccountView'
 import SettingsTab from 'views/account/AccountView/SettingsTab'
+import ResetPasswordView from 'views/account/ResetPasswordView/ResetPasswordView'
 
 // TODO https://github.com/relay-tools/react-router-relay/issues/156
 class RedirectOnMount extends React.Component {
@@ -70,6 +71,7 @@ export default (
   <Route path='/'>
     <IndexRoute component={RootRedirectView} queries={ViewerQuery} render={render} />
     <Route path='token' component={TokenRedirectView} />
+    <Route path='reset-password' component={ResetPasswordView} />
     <Route path=':projectName' component={RootView} queries={ViewerQuery} render={render}>
       <Route path='account' component={AccountView}>
         <Route path='settings' component={SettingsTab} queries={ViewerQuery} render={render} />

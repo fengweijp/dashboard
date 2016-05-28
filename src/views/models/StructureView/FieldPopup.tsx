@@ -490,7 +490,7 @@ export default Relay.createContainer(MappedFieldPopup, {
     projectName: null, // injected from router
     fieldName: null, // injected from router
   },
-  prepareVariables: (prevVariables) => (Object.assign({}, prevVariables, {
+  prepareVariables: (prevVariables: any) => (Object.assign({}, prevVariables, {
     fieldExists: !!prevVariables.fieldName,
   })),
   fragments: {

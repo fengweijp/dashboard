@@ -14,10 +14,12 @@
     "dist"
   ],
   "files": [
+    "./src/mutations/ResetPasswordMutation.ts",
     "./src/types/types.ts",
     "./src/utils/classnames.ts",
     "./src/utils/cookiestore.ts",
     "./src/utils/graphql.ts",
+    "./src/utils/location.ts",
     "./src/utils/polyfils.ts",
     "./src/utils/relay.ts",
     "./src/views/models/BrowserView/utils.ts",
@@ -25,6 +27,7 @@
     "./src/components/Loading/Loading.tsx",
     "./src/components/ScrollBox/ScrollBox.tsx",
     "./src/components/ToggleButton/ToggleButton.tsx",
+    "./src/views/account/ResetPasswordView/ResetPasswordView.tsx",
     "./src/views/models/BrowserView/Cell.tsx",
     "./src/views/models/BrowserView/CheckboxCell.tsx",
     "./src/views/models/StructureView/FieldPopup.tsx",
