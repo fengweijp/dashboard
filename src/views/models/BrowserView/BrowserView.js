@@ -16,7 +16,7 @@ import CheckboxCell from './CheckboxCell'
 import Row from './Row'
 import NewRow from './NewRow'
 import ModelDescription from '../ModelDescription'
-import { valueToString, toGQL } from './utils'
+import { valueToString, toGQL } from '../utils'
 import classes from './BrowserView.scss'
 
 function compareFields (a, b) {

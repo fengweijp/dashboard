@@ -22,7 +22,7 @@
     "./src/utils/location.ts",
     "./src/utils/polyfils.ts",
     "./src/utils/relay.ts",
-    "./src/views/models/BrowserView/utils.ts",
+    "./src/views/models/utils.ts",
     "./src/components/Icon/Icon.tsx",
     "./src/components/Loading/Loading.tsx",
     "./src/components/ScrollBox/ScrollBox.tsx",

@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import classnames from 'classnames'
-import { valueToString, stringToValue } from './utils'
+import { valueToString, stringToValue } from '../utils'
 import ToggleButton, { ToggleSide } from '../../../components/ToggleButton/ToggleButton'
 import classes from './Cell.scss'
 

@@ -10,7 +10,8 @@ interface Props {
   side: ToggleSide
   leftText: string
   rightText: string
-  onClickOutside: (ToggleSide) => void
+  onChange?: (ToggleSide) => void
+  onClickOutside?: (ToggleSide) => void
 }
 
 interface State {
@@ -33,7 +34,8 @@ export default class ToggleButton extends React.Component<Props, State> {
   }
 
   _onUpdateSide (side) {
-    this.setState({currentSide: side})
+    this.setState({ currentSide: side })
+    this.props.onChange(side)
   }
 
   _toggle () {
@@ -49,7 +51,7 @@ export default class ToggleButton extends React.Component<Props, State> {
   }
 
   handle = e => {
-    if (!this.refs.container.contains(e.target)) {
+    if (!this.refs.container.contains(e.target) && this.props.onClickOutside) {
       this.props.onClickOutside(this.state.currentSide)
     }
   }

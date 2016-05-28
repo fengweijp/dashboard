@@ -8,10 +8,13 @@ import ScrollBox from '../../../components/ScrollBox/ScrollBox'
 const TagsInput: any = (require('react-tagsinput') as any).default
 import Icon from '../../../components/Icon/Icon'
 import Loading from '../../../components/Loading/Loading'
+import ToggleButton from '../../../components/ToggleButton/ToggleButton'
+import { ToggleSide } from '../../../components/ToggleButton/ToggleButton'
 const AddFieldMutation: any = (require('../../../mutations/AddFieldMutation') as any).default
 const UpdateFieldMutation: any = (require('../../../mutations/UpdateFieldMutation') as any).default
 import { isScalar } from '../../../utils/graphql'
 import { Field, Model } from '../../../types/types'
+import { valueToString, isValidValue, stringToValue } from '../utils'
 const classes: any = require('./FieldPopup.scss')
 
 require('react-tagsinput/react-tagsinput.css')
@@ -30,7 +33,8 @@ interface State {
   isRequired: boolean
   isList: boolean
   enumValues: string[]
-  defaultValue?: any
+  useDefaultValue: boolean
+  defaultValue: any
   reverseRelationField: Field | any
 }
 
@@ -53,6 +57,7 @@ class FieldPopup extends React.Component<Props, State> {
       isRequired: field ? field.isRequired : true,
       isList: field ? field.isList : false,
       enumValues: field ? field.enumValues : [],
+      useDefaultValue: field ? field.defaultValue !== null : null,
       defaultValue: field ? field.defaultValue : null,
       reverseRelationField: field ? field.reverseRelationField : null,
     }
@@ -99,6 +104,7 @@ class FieldPopup extends React.Component<Props, State> {
       enumValues,
       isList,
       isRequired,
+      useDefaultValue,
       defaultValue,
       reverseRelationField,
     } = this.state
@@ -111,7 +117,7 @@ class FieldPopup extends React.Component<Props, State> {
         enumValues,
         isList,
         isRequired,
-        defaultValue,
+        defaultValue: useDefaultValue ? defaultValue : null,
         relationId: ((reverseRelationField || {} as any).relation || {} as any).id,
       }),
       {
@@ -156,6 +162,7 @@ class FieldPopup extends React.Component<Props, State> {
       enumValues,
       isList,
       isRequired,
+      useDefaultValue,
       defaultValue,
       reverseRelationField,
     } = this.state
@@ -168,7 +175,7 @@ class FieldPopup extends React.Component<Props, State> {
         enumValues,
         isList,
         isRequired,
-        defaultValue,
+        defaultValue: useDefaultValue ? defaultValue : null,
         relationId: ((reverseRelationField || {} as any).relation || {} as any).id,
       }),
       {
@@ -214,6 +221,76 @@ class FieldPopup extends React.Component<Props, State> {
     } else {
       const selectedModel = this.props.allModels.find((m) => m.name === this.state.typeIdentifier)
       this.setState({ reverseRelationField: selectedModel.unconnectedReverseRelationFieldsFrom[0] } as State)
+    }
+  }
+
+  _setDefaultValue (defaultValue: any) {
+    if (!this.state.useDefaultValue) {
+      return
+    }
+
+    this.setState({ defaultValue } as State)
+  }
+
+  _renderDefaultValue () {
+    const field = {
+      isList: this.state.isList,
+      typeIdentifier: this.state.typeIdentifier,
+    }
+    const valueString = valueToString(this.state.defaultValue, field as Field, true)
+
+    switch (this.state.typeIdentifier) {
+      case 'Int':
+        return (
+          <input
+            type='number'
+            ref='input'
+            placeholder='Default value'
+            value={valueString}
+            onChange={(e) => this._setDefaultValue((e.target as HTMLInputElement).value)}
+          />
+        )
+      case 'Float':
+        return (
+          <input
+            type='number'
+            step='any'
+            ref='input'
+            placeholder='Default value'
+            value={valueString}
+            onChange={(e) => this._setDefaultValue((e.target as HTMLInputElement).value)}
+          />
+        )
+      case 'Boolean':
+        return (
+          <ToggleButton
+            leftText='false'
+            rightText='true'
+            side={valueString === 'true' ? ToggleSide.Right : ToggleSide.Left}
+            onChange={(side) => this._setDefaultValue(side === ToggleSide.Left ? 'false' : 'true')}
+          />
+        )
+      case 'Enum':
+        return (
+          <select
+            value={valueString}
+            onChange={(e) => this._setDefaultValue((e.target as HTMLInputElement).value)}
+          >
+            {this.state.enumValues.map((enumValue) => (
+              <option key={enumValue}>{enumValue}</option>
+            ))}
+          </select>
+        )
+      default:
+        return (
+          <input
+            type='text'
+            ref='input'
+            placeholder='Default value'
+            value={valueString}
+            onChange={(e) => this._setDefaultValue((e.target as HTMLInputElement).value)}
+          />
+        )
     }
   }
 
@@ -344,6 +421,30 @@ class FieldPopup extends React.Component<Props, State> {
                           List
                         </label>
                       </div>
+                    </div>
+                  </div>
+                }
+                {isScalar(this.state.typeIdentifier) && !this.state.isList &&
+                  <div className={classes.row}>
+                    <div className={classes.left}>
+                      <label>
+                        <input
+                          type='checkbox'
+                          defaultChecked={this.state.useDefaultValue}
+                          onChange={(e) => this.setState({
+                            useDefaultValue: (e.target as HTMLInputElement).checked
+                          } as State)}
+                        />
+                        Default value
+                      </label>
+                      <Icon
+                        width={20}
+                        height={20}
+                        src={require('assets/icons/info.svg')}
+                      />
+                    </div>
+                    <div className={`${classes.right} ${this.state.useDefaultValue ? null : classes.disabled}`}>
+                      {this._renderDefaultValue()}
                     </div>
                   </div>
                 }

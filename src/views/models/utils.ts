@@ -1,5 +1,5 @@
-import { isScalar, isValidValueForType, parseValue } from '../../../utils/graphql'
-import { Field } from '../../../types/types'
+import { isScalar, isValidValueForType, parseValue } from '../../utils/graphql'
+import { Field } from '../../types/types'
 
 function valueOrDefault (value: any, field: Field): any {
   if (value !== null && value !== undefined) {
