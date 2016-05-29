@@ -39,6 +39,7 @@
     "react": "^15.1.0",
     "react-addons-pure-render-mixin": "^15.1.0",
     "react-click-outside": "github:tj/react-click-outside",
+    "react-copy-to-clipboard": "^4.1.0",
     "react-dom": "^15.1.0",
     "react-relay": "^0.8.1",
     "react-router": "^2.4.1",

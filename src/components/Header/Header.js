@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import Icon from 'components/Icon/Icon'
+import ApiLayover from 'components/ApiLayover/ApiLayover'
 import classes from './Header.scss'
 import * as cookiestore from 'utils/cookiestore'
 
@@ -9,10 +10,12 @@ export default class Header extends React.Component {
   static propTypes = {
     user: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
+    projectId: PropTypes.string.isRequired,
   }
 
   state = {
     userDropdownVisible: false,
+    endpointLayoverVisible: false,
   }
 
   _toggleUserDropdown () {
@@ -33,7 +36,25 @@ export default class Header extends React.Component {
     return (
       <div className={classes.root}>
         <div className={classes.left}>
-          <a target='_blank' href='http://docs.graph.cool'>Docs</a>
+          {this.state.endpointLayoverVisible &&
+            <ApiLayover
+              projectId={this.props.projectId}
+              close={() => this.setState({ endpointLayoverVisible: false })}
+            />
+          }
+          <a
+            className={classes.item}
+            target='_blank'
+            href='http://docs.graph.cool'
+          >
+            Docs
+          </a>
+          <span
+            className={classes.item}
+            onClick={() => this.setState({ endpointLayoverVisible: !this.state.endpointLayoverVisible })}
+          >
+            API Endpoint
+          </span>
         </div>
         {this.state.userDropdownVisible &&
           <div className={classes.userDropdown}>

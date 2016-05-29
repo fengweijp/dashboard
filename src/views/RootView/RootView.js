@@ -227,6 +227,7 @@ export class RootView extends React.Component {
           </div>
           <div className={classes.headerRight}>
             <Header
+              projectId={this.props.project.id}
               params={this.props.params}
               user={this.props.user}
             />

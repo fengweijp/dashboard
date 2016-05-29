@@ -14,11 +14,14 @@
   display: flex;
   align-items: center;
   margin-left: 40px;
+  position: relative;
 
-  a {
+  .item {
     font-size: 14px;
     font-weight: 600;
     color: $grey4;
+    margin-right: 20px;
+    cursor: pointer;
   }
 }
 
