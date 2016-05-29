@@ -12,14 +12,14 @@ interface Props {
 }
 
 interface State {
-  selectedEndpoint: Endpoint
+  endpoint: Endpoint
   copied: boolean
 }
 
 export default class ApiLayover extends React.Component<Props, State> {
 
   state = {
-    selectedEndpoint: 'simple/v1' as Endpoint,
+    endpoint: 'simple/v1' as Endpoint,
     copied: false,
   }
 
@@ -28,14 +28,18 @@ export default class ApiLayover extends React.Component<Props, State> {
     setTimeout(this.props.close, 900)
   }
 
+  _selectEndpoint (endpoint: Endpoint) {
+    this.setState({ endpoint } as State)
+  }
+
   render() {
-    const url = `https://api.graph.cool/${this.state.selectedEndpoint}/${this.props.projectId}`
+    const url = `https://api.graph.cool/${this.state.endpoint}/${this.props.projectId}`
 
     return (
       <ClickOutside onClickOutside={() => this.props.close()}>
         <div className={classes.root}>
           <div className={classes.endpoints}>
-            <select>
+            <select onChange={(e) => this._selectEndpoint((e.target as HTMLInputElement).value as Endpoint)}>
               <option>simple/v1</option>
               <option>relay/v1</option>
             </select>
