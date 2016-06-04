@@ -5,7 +5,7 @@ import * as Relay from 'react-relay'
 const ClickOutside: any = (require('react-click-outside') as any).default
 import TypeSelection from './TypeSelection'
 import ScrollBox from '../../../components/ScrollBox/ScrollBox'
-const TagsInput: any = (require('react-tagsinput') as any).default
+const TagsInput: any = require('react-tagsinput')
 import Icon from '../../../components/Icon/Icon'
 import Loading from '../../../components/Loading/Loading'
 import ToggleButton from '../../../components/ToggleButton/ToggleButton'

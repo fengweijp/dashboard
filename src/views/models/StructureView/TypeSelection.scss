@@ -42,12 +42,19 @@
   width: 100%;
   border: 1px solid $grey3;
   border-radius: 4px;
-  padding: 9px 0;
   background: $grey1;
   top: 0;
   left: 0;
+  z-index: 20;
   max-height: 250px;
-  overflow-y: scroll;
+}
+
+.scrollOuterContainer {
+  max-height: 250px;
+}
+
+.scrollInnerContainer {
+  padding: 9px 0;
 }
 
 .head {

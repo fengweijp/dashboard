@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { findDOMNode } from 'react-dom'
 import Icon from '../../../components/Icon/Icon'
+import ScrollBox from '../../../components/ScrollBox/ScrollBox'
 const ClickOutside: any = (require('react-click-outside') as any).default
 const classes: any = require('./TypeSelection.scss')
 
@@ -28,7 +29,7 @@ export default class TypeSelection extends React.Component<Props, State> {
 
   refs: {
     [key: string]: any;
-    overlay: Element
+    scroll: ScrollBox
   }
 
   state = {
@@ -83,8 +84,9 @@ export default class TypeSelection extends React.Component<Props, State> {
     this.props.select(allTypes[selectedIndex])
 
     const relativePosition = selectedIndex / allTypes.length
-    const overlayElement = findDOMNode(this.refs.overlay)
-    overlayElement.scrollTop = overlayElement.clientHeight * relativePosition
+    const outerContainerElement = findDOMNode(this.refs.scroll.refs.outerContainer)
+    const innerContainerElement = findDOMNode(this.refs.scroll.refs.innerContainer)
+    outerContainerElement.scrollTop = innerContainerElement.clientHeight * relativePosition
   }
 
   render () {
@@ -117,30 +119,36 @@ export default class TypeSelection extends React.Component<Props, State> {
       <div className={classes.root}>
         <ClickOutside onClickOutside={() => this._close()}>
           <div className={classes.overlay} ref='overlay'>
-            <div className={classes.head} onClick={() => this._close()}>Scalar Types</div>
-            <div className={classes.list}>
-              {types.map((type) => (
-                <div
-                  key={type}
-                  onClick={() => this._select(type)}
-                  className={type === this.props.selected ? classes.selected : ''}
-                >
-                  {type}
-                </div>
-              ))}
-            </div>
-            <div className={classes.head} onClick={() => this._close()}>Model Types</div>
-            <div className={classes.list}>
-              {this.props.modelNames.map((type) => (
-                <div
-                  key={type}
-                  onClick={() => this._select(type)}
-                  className={type === this.props.selected ? classes.selected : ''}
-                >
-                  {type}
-                </div>
-              ))}
-            </div>
+            <ScrollBox
+              ref='scroll'
+              innerContainerClassName={classes.scrollInnerContainer}
+              outerContainerClassName={classes.scrollOuterContainer}
+            >
+              <div className={classes.head} onClick={() => this._close()}>Scalar Types</div>
+              <div className={classes.list}>
+                {types.map((type) => (
+                  <div
+                    key={type}
+                    onClick={() => this._select(type)}
+                    className={type === this.props.selected ? classes.selected : ''}
+                  >
+                    {type}
+                  </div>
+                ))}
+              </div>
+              <div className={classes.head} onClick={() => this._close()}>Model Types</div>
+              <div className={classes.list}>
+                {this.props.modelNames.map((type) => (
+                  <div
+                    key={type}
+                    onClick={() => this._select(type)}
+                    className={type === this.props.selected ? classes.selected : ''}
+                  >
+                    {type}
+                  </div>
+                ))}
+              </div>
+            </ScrollBox>
           </div>
         </ClickOutside>
       </div>
