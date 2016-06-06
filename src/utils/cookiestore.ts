@@ -1,7 +1,6 @@
 import * as cookies from 'js-cookie'
 
 const domain = extractDomain()
-console.log(domain);
 
 function extractDomain (): string {
   const hostname = window.location.hostname
