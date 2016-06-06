@@ -13,7 +13,7 @@ function browserDefaultValue (field) {
     case 'Float': return 0
     case 'Boolean': return false
     case 'Enum': return field.enumValues[0]
-    default: return ''
+    default: return null
   }
 }
 
